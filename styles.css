@@ -68,6 +68,21 @@ header h1 {
     margin-right: 8px;
 }
 
+.category.two-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.category.two-column .items-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 16px;
+}
+
+.category.two-column .items-grid label {
+    margin-bottom: 6px;
+}
+
 .controls {
     display: flex;
     gap: 12px;
@@ -106,6 +121,21 @@ textarea#pccOutput {
     border-radius: 8px;
     border: 1px solid #e6eef0;
     font-family: inherit;
+}
+
+.output-wrap {
+    position: relative;
+}
+
+.char-count {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    background: rgba(15, 23, 42, 0.05);
+    color: var(--muted);
+    font-size: 0.85rem;
+    padding: 4px 8px;
+    border-radius: 6px;
 }
 
 .output-actions {

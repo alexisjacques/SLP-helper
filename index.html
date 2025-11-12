@@ -19,7 +19,7 @@
             <h2 id="generator-title">Diagnostic Categories</h2>
 
             <div class="categories" role="group" aria-label="Diagnostic categories">
-                <div class="category" id="dysphagia-category">
+                <div class="category" id="dysphagia">
                     <h3>Dysphagia</h3>
                     <label><input type="checkbox" data-label="R13.12" /> R13.12 Oropharyngeal dysphagia</label>
                     <label><input type="checkbox" data-label="R13.11" /> R13.11 Oral phase dysphagia</label>
@@ -44,7 +44,7 @@
                     </div>
                 </div>
 
-                <div class="category" id="cognition-category">
+                <div class="category" id="cognition">
                     <h3>Cognition</h3>
                     <label><input type="checkbox" data-label="R41.841" /> R41.841 Cognitive-Communication
                         Deficit</label>
@@ -85,8 +85,8 @@
 
                 </div>
 
-                <div class="category" id="aphasia-category">
-                    <h3>Aphasia</h3>
+                <div class="category" id="language">
+                    <h3>Language</h3>
                     <label><input type="checkbox" data-label="R47.01" /> R47.01 Aphasia</label>
                     <label><input type="checkbox" data-label="I69.320" /> I69.320 Aphasia following cerebral
                         infarction</label>
@@ -108,7 +108,7 @@
                     </div>
                 </div>
 
-                <div class="category" id="motor-speech-category">
+                <div class="category" id="motor-speech">
                     <h3>Motor Speech</h3>
                     <label><input type="checkbox" data-label="R47.1" /> R47.1: Dysarthria</label>
                     <label><input type="checkbox" data-label="R47.89" /> R47.89 Other speech disturbances</label>
@@ -144,7 +144,7 @@
                     </div>
                 </div>
 
-                <div class="category" id="voice-category">
+                <div class="category" id="voice">
                     <h3>Voice</h3>
                     <label><input type="checkbox" data-label="R49.0" /> R49.0 Dysphonia</label>
                     <label><input type="checkbox" data-label="R49.1" /> R49.1 Aphonia </label>
@@ -155,7 +155,7 @@
 
                 </div>
 
-                <div class="category" id="Freq-category">
+                <div class="category" id="Freq">
                     <h3>Frequency of Tx</h3>
                     <label><input type="checkbox" data-label="5x4" /> 5x4 (Medicare A) </label>
                     <label><input type="checkbox" data-label="3x4" /> 3x4 (Medicare B)</label>
@@ -163,20 +163,24 @@
                     <label><input type="checkbox" data-label="5x2" /> 6 visits (Medicaid)</label>
                 </div>
 
-                <div class="category" id="LTG-solids">
-                    <h3>LTG Solids</h3>
-                    <label><input type="checkbox" data-label="reg7" /> reg7 </label>
-                    <label><input type="checkbox" data-label="sb6" /> sb6</label>
-                    <label><input type="checkbox" data-label="mm5" /> mm5</label>
-                    <label><input type="checkbox" data-label="pu4" /> pu4</label>
+                <div class="category two-column" id="LTG-diet">
+                    <h3>LTG Diet</h3>
+                    <div class="items-grid">
+                        <label><input type="checkbox" data-label="reg7" /> reg7</label>
+                        <label><input type="checkbox" data-label="thins0" /> thins0</label>
+                        <label><input type="checkbox" data-label="sb6" /> sb6</label>
+                        <label><input type="checkbox" data-label="mt2" /> mt2</label>
+                        <label><input type="checkbox" data-label="mm5" /> mm5</label>
+                        <label><input type="checkbox" data-label="mo3" /> mo3</label>
+                        <label><input type="checkbox" data-label="pu4" /> pu4</label>
+                        <label><input type="checkbox" data-label="ex4" /> ex4</label>
+                    </div>
                 </div>
 
-                <div class="category" id="LTG-liquids">
-                    <h3>LTG Liquids</h3>
-                    <label><input type="checkbox" data-label="reg7" /> reg7 </label>
-                    <label><input type="checkbox" data-label="sb6" /> sb6</label>
-                    <label><input type="checkbox" data-label="mm5" /> mm5</label>
-                    <label><input type="checkbox" data-label="pu4" /> pu4</label>
+                <div class="category" id="PMV">
+                    <h3>PMV Trials</h3>
+                    <label><input type="checkbox" data-label="reg7" /> check if yes </label>
+
                 </div>
             </div>
 
@@ -186,7 +190,10 @@
             </div>
 
             <label for="pccOutput" class="output-label">PCC Order Output</label>
-            <textarea id="pccOutput" readonly rows="6" aria-live="polite"></textarea>
+            <div class="output-wrap" style="position:relative">
+                <textarea id="pccOutput" rows="6" aria-live="polite"></textarea>
+                <div id="charCount" aria-hidden="true" class="char-count">0</div>
+            </div>
 
             <div class="output-actions">
                 <button id="copyBtn">Copy to clipboard</button>
