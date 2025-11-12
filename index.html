@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SLP Helper — PCC Order Generator</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <main class="container">
+        <header>
+            <h1>SLP Helper</h1>
+            <p class="lead">PCC Order Generator — select diagnoses to auto-build an order you can copy into PCC.</p>
+        </header>
+
+        <section aria-labelledby="generator-title" class="generator">
+            <h2 id="generator-title">Diagnostic Categories</h2>
+
+            <div class="categories" role="group" aria-label="Diagnostic categories">
+                <div class="category">
+                    <h3>Dysphagia</h3>
+                    <label><input type="checkbox" data-label="R13.12" /> R13.12 Oropharyngeal dysphagia</label>
+                    <label><input type="checkbox" data-label="R13.11" /> R13.11 Oral phase dysphagia</label>
+                    <label><input type="checkbox" data-label="R13.10" /> R13.10 Other dysphagia</label>
+                    <label><input type="checkbox" data-label="I69.391" /> I69.391 Dysphagia following cerebral
+                        infarction</label>
+                    <label><input type="checkbox" data-label="I69.091" /> I69.091 Dysphagia following nontraumatic
+                        subarachnoid hemorrhage </label>
+                    <label><input type="checkbox" data-label="I69.391" /> I69.391 Dysphagia following cerebral
+                        infarction</label>
+                    <label><input type="checkbox" data-label="I69.391" /> I69.391 Dysphagia following cerebral
+                        infarction</label>
+                    <label><input type="checkbox" data-label="R13.13" /> R13.13 Pharyngeal phase dysphagia</label>
+                    <label><input type="checkbox" data-label="R13.14" /> R13.14 Pharyngoesophageal dysphagia</label>
+                </div>
+
+                <div class="category">
+                    <h3>Language</h3>
+                    <label><input type="checkbox" data-label="Receptive language disorder" /> Receptive language
+                        disorder</label>
+                    <label><input type="checkbox" data-label="Expressive language disorder" /> Expressive language
+                        disorder</label>
+                    <label><input type="checkbox" data-label="Mixed receptive-expressive language disorder" /> Mixed
+                        receptive-expressive language disorder</label>
+                </div>
+
+                <div class="category">
+                    <h3>Fluency</h3>
+                    <label><input type="checkbox" data-label="Stuttering / fluency disorder" /> Stuttering / fluency
+                        disorder</label>
+                    <label><input type="checkbox" data-label="Cluttering" /> Cluttering</label>
+                </div>
+
+                <div class="category">
+                    <h3>Voice / Resonance</h3>
+                    <label><input type="checkbox" data-label="Dysphonia / voice disorder" /> Dysphonia / voice
+                        disorder</label>
+                    <label><input type="checkbox" data-label="Resonance disorder (e.g., hypernasality)" /> Resonance
+                        disorder (e.g., hypernasality)</label>
+                </div>
+
+                <div class="category">
+                    <h3>Feeding / Swallowing</h3>
+                    <label><input type="checkbox" data-label="Dysphagia / feeding difficulty" /> Dysphagia / feeding
+                        difficulty</label>
+                    <label><input type="checkbox" data-label="Aspiration risk" /> Aspiration risk</label>
+                    <label><input type="checkbox" data-label="Oral motor dysfunction" /> Oral motor dysfunction</label>
+                </div>
+
+                <div class="category">
+                    <h3>Frequency of Tx</h3>
+                    <label><input type="checkbox" data-label="5x4" /> 5x4 (Medicare A) </label>
+                    <label><input type="checkbox" data-label="3x4" /> 3x4 (Medicare B)</label>
+                    <label><input type="checkbox" data-label="5x2" /> 5x2 (Kaiser)</label>
+                    <label><input type="checkbox" data-label="5x2" /> 6 visits (Medicaid)</label>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button id="generateBtn">Generate Order</button>
+                <button id="clearBtn" class="secondary">Clear Selections</button>
+            </div>
+
+            <label for="pccOutput" class="output-label">PCC Order Output</label>
+            <textarea id="pccOutput" readonly rows="6" aria-live="polite"></textarea>
+
+            <div class="output-actions">
+                <button id="copyBtn">Copy to clipboard</button>
+                <span id="copyStatus" role="status" aria-live="polite" class="copy-status"></span>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <small>Built for quick PCC order creation. Customize diagnoses in the code as needed.</small>
+        </footer>
+    </main>
+
+    <script src="main.js" defer></script>
+</body>
+
+</html>
