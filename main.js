@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Which may include
         const includes = []
-        if (hasDysphagia) includes.push('oropharyngeal retrng, dysphagia management, PO trials')
+        if (hasDysphagia) includes.push('oropharyngeal retraining, dysphagia management, PO trials')
         if (hasCog) includes.push('cognitive-linguistic tx')
         if (hasAphasia) includes.push('rec/exp lang training')
         if (hasDysarthria || hasApraxia) includes.push('motor speech training')
