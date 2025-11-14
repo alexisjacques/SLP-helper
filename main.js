@@ -32,12 +32,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Frequency mapping
-        const freqSel = selected.find(s => /5x4|3x4|5x2|6 visits|6 visit|6 visits/i.test(s)) || ''
+        const freqSel = selected.find(s => /5x4|3x4|5x2|6visits|6 visits/i.test(s)) || ''
         let freqText = ''
-        if (/5x4/.test(freqSel)) freqText = '5x/wk x 4wks'
+        if (/6visits|6 visits/i.test(freqSel)) freqText = '6 visits in 2 wks'
+        else if (/5x4/.test(freqSel)) freqText = '5x/wk x 4wks'
         else if (/3x4/.test(freqSel)) freqText = '3x/wk x 4wks'
         else if (/5x2/.test(freqSel)) freqText = '5x/wk x 2wks'
-        else if (/6 visit/i.test(freqSel)) freqText = '6 visits in 2 wks'
 
         // Category code groups
         const dysphagiaCodes = ['R13.12', 'R13.11', 'R13.10', 'I69.391', 'I69.091', 'I69.191', 'I69.291', 'I69.891', 'R13.13', 'R13.14']
@@ -100,7 +100,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // LTG section - collect any checkboxes under elements whose id starts with 'LTG'
         const ltgInputs = Array.from(document.querySelectorAll('[id^="LTG"] input[type="checkbox"]'))
-        const ltgPairs = ltgInputs.filter(i => i.checked).map(i => (i.dataset.label || i.parentElement.textContent || '').trim()).filter(Boolean)
+        const ltgSelected = ltgInputs.filter(i => i.checked).map(i => (i.dataset.label || i.parentElement.textContent || '').trim()).filter(Boolean)
+
+        // Separate solids and liquids
+        const solids = ['reg7', 'sb6', 'mm5', 'pu4']
+        const liquids = ['thins0', 'mt2', 'mo3', 'ex4']
+
+        const selectedSolids = ltgSelected.filter(item => solids.some(s => item.includes(s)))
+        const selectedLiquids = ltgSelected.filter(item => liquids.some(l => item.includes(l)))
+
+        // Always list solids before liquids
+        const ltgPairs = [...selectedSolids, ...selectedLiquids]
         let ltgClause = ''
 
         // collect category ids (from the category div ids) for selected speech/cognition groups
@@ -108,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hasCog) catIds.push('cognition')
         if (hasAphasia) catIds.push('language')
         // group motor-related categories under motor-speech
-        if (hasDysarthria || hasApraxia || hasOtherSpeech) catIds.push('motor-speech')
+        if (hasDysarthria || hasApraxia || hasOtherSpeech) catIds.push('motor speech')
         if (hasDysphonia || hasAphonia) catIds.push('voice')
         const deduped = catIds.filter((v, i, arr) => v && arr.indexOf(v) === i)
 
