@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const includes = []
         if (hasDysphagia) includes.push('oropharyngeal retraining, dysphagia management, PO trials')
         if (hasCog) includes.push('cognitive-linguistic tx')
-        if (hasAphasia) includes.push('rec/exp lang training')
+        if (hasAphasia) includes.push('rec/exp language training')
         if (hasDysarthria || hasApraxia) includes.push('motor speech training')
         if (hasOtherSpeech) includes.push('speech/lang tx')
         if (hasDysphonia || hasAphonia) includes.push('voice tx')
@@ -122,38 +122,26 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hasDysphonia || hasAphonia) catIds.push('voice')
         const deduped = catIds.filter((v, i, arr) => v && arr.indexOf(v) === i)
 
-        // 1) If dysphagia codes present and LTG items selected -> dysphagia wording
-        if (hasDysphagia && ltgPairs.length) {
-            const two = ltgPairs.slice(0, 2)
-            const pairText = two.join(' & ')
-            ltgClause = ' LTG: Patient will safely tolerate ' + pairText + '.'
+        // Helper to join domains in sentence format: 'a', 'a & b', 'a, b & c'
+        const joinWithAnd = (arr) => {
+            if (!arr || !arr.length) return ''
+            if (arr.length === 1) return arr[0]
+            if (arr.length === 2) return arr[0] + ' & ' + arr[1]
+            return arr.slice(0, -1).join(', ') + ' & ' + arr[arr.length - 1]
         }
 
-        // 2) If any speech/cognition/motor/voice categories present -> always include the "patient to improve ___ function" clause
-        if (deduped.length) {
-            // helper to join domains in sentence format: 'a', 'a & b', 'a, b & c'
-            const joinWithAnd = (arr) => {
-                if (!arr || !arr.length) return ''
-                if (arr.length === 1) return arr[0]
-                if (arr.length === 2) return arr[0] + ' & ' + arr[1]
-                return arr.slice(0, -1).join(', ') + ' & ' + arr[arr.length - 1]
-            }
-
+        // Build LTG clause with diet tolerance first, then improvement goals
+        if (ltgPairs.length && deduped.length) {
+            // Both diet and speech/cognition goals
             const domainText = joinWithAnd(deduped)
-            ltgClause = ' LTG: patient to improve ' + domainText + ' function to least impairment level'
-            if (ltgPairs.length) {
-                // append LTG diet targets after 'target:' per spec
-                ltgClause += ', patient to safely tolerate ' + ltgPairs.join(' & ') + '.'
-            } else {
-                ltgClause += '.'
-            }
-        }
-
-        // 3) Fallback: if no categories but LTG items selected, include general tolerance phrasing
-        if (!ltgClause && ltgPairs.length) {
-            const two = ltgPairs.slice(0, 2)
-            const pairText = two.join(' & ')
-            ltgClause = ' LTG: Patient will safely tolerate ' + pairText + '.'
+            ltgClause = ' LTG: patient to safely tolerate ' + ltgPairs.join(' & ') + ', patient to improve ' + domainText + ' function to least impairment level.'
+        } else if (ltgPairs.length) {
+            // Only diet goals
+            ltgClause = ' LTG: patient to safely tolerate ' + ltgPairs.join(' & ') + '.'
+        } else if (deduped.length) {
+            // Only speech/cognition goals
+            const domainText = joinWithAnd(deduped)
+            ltgClause = ' LTG: patient to improve ' + domainText + ' function to least impairment level.'
         }
 
         // Ensure CPT clause ends with a period + space when present
@@ -171,8 +159,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Build a single-line continuous output (no newlines), using commas not semicolons
         // Ensure there is a space after the first sentence
-        const result = header + includesClause + '. ' + (cptOut || '') + (ltgClause || '') + closing
-        return result.replace(/;+/g, ',')
+        let result = header + includesClause + '. ' + (cptOut || '') + (ltgClause || '') + closing
+        result = result.replace(/;+/g, ',')
+
+        // Progressive shortening if over 500 characters
+        if (result.length > 500) {
+            result = result.replace(/oropharyngeal retraining, dysphagia management, PO trials/g, 'dysphagia tx')
+        }
+        if (result.length > 500) {
+            result = result.replace(/motor speech training/g, 'motor speech tx')
+        }
+        if (result.length > 500) {
+            result = result.replace(/rec\/exp language training/g, 'language tx')
+        }
+        if (result.length > 500) {
+            result = result.replace(/cognitive-linguistic tx/g, 'cog tx')
+        }
+        if (result.length > 500) {
+            result = result.replace(/language, motor speech/g, 'communication')
+        }
+        if (result.length > 500) {
+            result = result.replace(/cognition, communication & voice/g, 'cognition & communication')
+        }
+
+        return result
     }
 
     if (generateBtn) {
