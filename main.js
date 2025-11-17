@@ -43,11 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const dysphagiaCodes = ['R13.12', 'R13.11', 'R13.10', 'I69.391', 'I69.091', 'I69.191', 'I69.291', 'I69.891', 'R13.13', 'R13.14']
         const cogCodes = ['R41.841', 'I69.311', 'I69.319', 'I69.310', 'I69.312', 'I69.314', 'I69.315', 'I69.019', 'I69.119', 'I69.219', 'I69.919']
         const aphasiaCodes = ['R47.01', 'I69.320', 'R48.8', 'I69.020', 'I69.120', 'I69.220', 'I69.820']
-        const dysarthriaCodes = ['R47.1', 'R47.89', 'I69.322', 'I68.328', 'I69.122', 'I69.222', 'I69.822']
+        const dysarthriaCodes = ['R47.1', 'I69.322', 'I69.122', 'I69.222', 'I69.822']
         const apraxiaCodes = ['I69.390', 'I69.090', 'I69.190', 'I69.290', 'I69.890']
         const otherSpeechCodes = ['I68.328']
         const dysphoniaCodes = ['R49.0', 'R49.8', 'R49.9']
         const aphoniaCodes = ['R49.1']
+        const otherspeechdisturbancesCodes = ['R47.89']
 
         const hasDysphagia = matchesAny(dysphagiaCodes)
         const hasCog = matchesAny(cogCodes)
@@ -57,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const hasOtherSpeech = matchesAny(otherSpeechCodes)
         const hasDysphonia = matchesAny(dysphoniaCodes)
         const hasAphonia = matchesAny(aphoniaCodes)
+        const hasOtherSpeechDisturbances = matchesAny(otherspeechdisturbancesCodes)
 
         // Start building the order
         const parts = []
@@ -74,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hasOtherSpeech) conds.push('other speech & lang deficits following stroke (' + matchedLabels(otherSpeechCodes).join(', ') + ')')
         if (hasDysphonia) conds.push('dysphonia (' + matchedLabels(dysphoniaCodes).join(', ') + ')')
         if (hasAphonia) conds.push('aphonia (' + matchedLabels(aphoniaCodes).join(', ') + ')')
+        if (hasOtherSpeechDisturbances) conds.push('other speech disturbances (' + matchedLabels(otherspeechdisturbancesCodes).join(', ') + ')')
 
         header += conds.length ? conds.join(', ') : 'communication / feeding concerns'
 
@@ -82,13 +85,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hasDysphagia) includes.push('oropharyngeal retraining, dysphagia management, PO trials')
         if (hasCog) includes.push('cognitive-linguistic tx')
         if (hasAphasia) includes.push('rec/exp language training')
-        if (hasDysarthria || hasApraxia) includes.push('motor speech training')
+        if (hasDysarthria || hasApraxia || hasOtherSpeechDisturbances) includes.push('motor speech training, intelligibility strategies')
         if (hasOtherSpeech) includes.push('speech/lang tx')
         if (hasDysphonia || hasAphonia) includes.push('voice tx')
 
-        // PMV trials detection (optional checkbox with 'PMV' or 'check if yes')
-        const hasPMV = selected.some(s => /pmv|check if yes/i.test(s))
+        // PMV trials detection
+        const hasPMV = selected.some(s => /pmv/i.test(s))
         if (hasPMV) includes.push('PMV trials')
+
+        // AAC detection 
+        const hasAAC = selected.some(s => /aac/i.test(s))
+        if (hasAAC) includes.push('AAC training')
 
         const includesClause = includes.length ? ' which may include ' + includes.join(', ') : ''
 
@@ -181,6 +188,31 @@ document.addEventListener('DOMContentLoaded', () => {
         if (result.length > 500) {
             result = result.replace(/cognition, communication & voice/g, 'cognition & communication')
         }
+        if (result.length > 500) {
+            result = result.replace(/intelligibility strategies/g, 'intelligibility strats')
+        }
+        if (result.length > 500) {
+            result = result.replace(/intelligibility strats, /g, '')
+        }
+        if (result.length > 500) {
+            result = result.replace(/other speech disturbances/g, 'speech deficit')
+        }
+        if (result.length > 500) {
+            result = result.replace(/other speech & lang deficits following stroke/g, 'speech/lang deficits from cva')
+        }
+        if (result.length > 500) {
+            result = result.replace(/other speech & lang deficits following stroke/g, 'speech/lang deficits from cva')
+        }
+        if (result.length > 500) {
+            result = result.replace(/language tx, motor speech tx, voice tx/g, 'communication tx')
+        }
+        if (result.length > 500) {
+            result = result.replace(/language tx, motor speech tx/g, 'communication tx')
+        }
+        if (result.length > 500) {
+            result = result.replace(/safely /g, '')
+        }
+
 
         return result
     }
