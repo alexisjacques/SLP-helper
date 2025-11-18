@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Category code groups
         const dysphagiaCodes = ['R13.12', 'R13.11', 'R13.10', 'I69.391', 'I69.091', 'I69.191', 'I69.291', 'I69.891', 'R13.13', 'R13.14']
         const cogCodes = ['R41.841', 'I69.311', 'I69.319', 'I69.310', 'I69.312', 'I69.314', 'I69.315', 'I69.019', 'I69.119', 'I69.219', 'I69.919']
-        const aphasiaCodes = ['R47.01', 'I69.320', 'R48.8', 'I69.020', 'I69.120', 'I69.220', 'I69.820']
+        const aphasiaCodes = ['R47.01', 'I69.320', 'I69.020', 'I69.120', 'I69.220', 'I69.820']
         const dysarthriaCodes = ['R47.1', 'I69.322', 'I69.122', 'I69.222', 'I69.822']
         const apraxiaCodes = ['I69.390', 'I69.090', 'I69.190', 'I69.290', 'I69.890']
         const otherSpeechCodes = ['I68.328']
