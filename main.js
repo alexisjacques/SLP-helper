@@ -301,5 +301,527 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem(key, next ? '1' : '0')
         })
     })
+
+    // Initialize productivity calculator if on page
+    if (document.getElementById('productivity-tbody')) {
+        initProductivityCalculator()
+    }
 })
+
+// Local storage functions for productivity data
+function saveProductivityData() {
+    const data = {
+        rows: [],
+        workHours: parseInt(document.getElementById('work-hours')?.value) || 8,
+        workMinutes: parseInt(document.getElementById('work-minutes')?.value) || 0
+    }
+
+    // Save all patient names and minutes
+    document.querySelectorAll('.patient-input').forEach((input, index) => {
+        if (!data.rows[index]) data.rows[index] = {}
+        data.rows[index].patient = input.value
+    })
+
+    document.querySelectorAll('.minutes-input').forEach((input, index) => {
+        if (!data.rows[index]) data.rows[index] = {}
+        data.rows[index].minutes = input.value
+    })
+
+    localStorage.setItem('slp-productivity-data', JSON.stringify(data))
+}
+
+function loadProductivityData() {
+    try {
+        const saved = localStorage.getItem('slp-productivity-data')
+        if (saved) {
+            return JSON.parse(saved)
+        }
+    } catch (e) {
+        console.error('Error loading productivity data:', e)
+    }
+    return { rows: [], workHours: 8, workMinutes: 0 }
+}
+
+// Productivity Calculator functionality
+function initProductivityCalculator() {
+    // Track selected cells
+    let selectedCells = new Set()
+    let isSelecting = false
+    let shiftKeyDown = false
+    let lastSelectedCell = null
+
+    // Initialize the productivity grid
+    const tbody = document.getElementById('productivity-tbody')
+
+    // Load saved data from localStorage
+    const savedData = loadProductivityData()
+
+    // Create 12 rows
+    for (let i = 1; i <= 12; i++) {
+        const row = document.createElement('tr')
+
+        // Column 1: Row number (static)
+        const numCell = document.createElement('td')
+        numCell.textContent = i
+        numCell.className = 'row-number'
+        row.appendChild(numCell)
+
+        // Column 2: Patient name (editable)
+        const patientCell = document.createElement('td')
+        patientCell.className = 'editable-cell'
+        const patientInput = document.createElement('input')
+        patientInput.type = 'text'
+        patientInput.className = 'patient-input'
+        patientInput.placeholder = 'Patient name/initials'
+        patientInput.dataset.row = i - 1
+        patientInput.dataset.col = 0
+        // Load saved value
+        if (savedData.rows[i - 1]) {
+            patientInput.value = savedData.rows[i - 1].patient || ''
+        }
+        patientInput.addEventListener('input', saveProductivityData)
+        patientInput.addEventListener('keydown', handleArrowKeys)
+        patientInput.addEventListener('mousedown', handleCellMouseDown)
+        patientInput.addEventListener('mouseenter', handleCellMouseEnter)
+        patientInput.addEventListener('focus', handleCellFocus)
+        patientCell.appendChild(patientInput)
+        row.appendChild(patientCell)
+
+        // Column 3: Minutes (editable)
+        const minutesCell = document.createElement('td')
+        minutesCell.className = 'editable-cell'
+        const minutesInput = document.createElement('input')
+        minutesInput.type = 'number'
+        minutesInput.className = 'minutes-input'
+        minutesInput.min = '0'
+        minutesInput.value = ''
+        minutesInput.placeholder = '0'
+        minutesInput.dataset.row = i - 1
+        minutesInput.dataset.col = 1
+        // Load saved value
+        if (savedData.rows[i - 1]) {
+            minutesInput.value = savedData.rows[i - 1].minutes || ''
+        }
+        minutesInput.addEventListener('input', () => {
+            calculateProductivity()
+            saveProductivityData()
+        })
+        minutesInput.addEventListener('keydown', handleArrowKeys)
+        minutesInput.addEventListener('mousedown', handleCellMouseDown)
+        minutesInput.addEventListener('mouseenter', handleCellMouseEnter)
+        minutesInput.addEventListener('focus', handleCellFocus)
+        minutesCell.appendChild(minutesInput)
+        row.appendChild(minutesCell)
+
+        tbody.appendChild(row)
+    }
+
+    // Focus on the first minutes input
+    const firstMinutesInput = tbody.querySelector('.minutes-input')
+    if (firstMinutesInput) {
+        firstMinutesInput.focus()
+    }
+
+    // Global mouse up listener
+    document.addEventListener('mouseup', () => {
+        isSelecting = false
+    })
+
+    // Track shift key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Shift') shiftKeyDown = true
+        // Delete key clears selected cells
+        if ((e.key === 'Delete' || e.key === 'Backspace') && selectedCells.size > 0) {
+            if (document.activeElement.tagName !== 'INPUT') {
+                e.preventDefault()
+                clearSelectedCells()
+            }
+        }
+    })
+
+    document.addEventListener('keyup', (e) => {
+        if (e.key === 'Shift') shiftKeyDown = false
+    })
+
+    // Handle cell mouse down for multi-select
+    function handleCellMouseDown(e) {
+        const input = e.target
+
+        if (e.ctrlKey || e.metaKey) {
+            // Toggle selection with Ctrl/Cmd
+            e.preventDefault()
+            toggleCellSelection(input)
+            isSelecting = true
+            lastSelectedCell = input
+        } else if (shiftKeyDown && lastSelectedCell) {
+            // Range selection with Shift
+            e.preventDefault()
+            selectRange(lastSelectedCell, input)
+            lastSelectedCell = input
+        } else {
+            // Start drag selection
+            clearSelection()
+            addCellToSelection(input)
+            isSelecting = true
+            lastSelectedCell = input
+        }
+    }
+
+    // Handle mouse enter during drag selection
+    function handleCellMouseEnter(e) {
+        if (isSelecting && e.buttons === 1) {
+            e.preventDefault()
+            const input = e.target
+            if (input.tagName === 'INPUT' && (input.classList.contains('patient-input') || input.classList.contains('minutes-input'))) {
+                addCellToSelection(input)
+            }
+        }
+    }
+
+    // Handle cell focus
+    function handleCellFocus(e) {
+        if (selectedCells.size === 0 || (!e.ctrlKey && !e.metaKey && !shiftKeyDown)) {
+            // Normal focus behavior when no multi-select keys pressed
+            if (!e.target.classList.contains('selected')) {
+                clearSelection()
+            }
+        }
+    }
+
+    // Toggle cell selection
+    function toggleCellSelection(input) {
+        const cellId = `${input.dataset.row}-${input.dataset.col}`
+        if (selectedCells.has(cellId)) {
+            selectedCells.delete(cellId)
+            input.classList.remove('selected')
+        } else {
+            selectedCells.add(cellId)
+            input.classList.add('selected')
+        }
+        updateClearSelectedButton()
+    }
+
+    // Add cell to selection
+    function addCellToSelection(input) {
+        const cellId = `${input.dataset.row}-${input.dataset.col}`
+        selectedCells.add(cellId)
+        input.classList.add('selected')
+        updateClearSelectedButton()
+    }
+
+    // Select range between two cells
+    function selectRange(fromInput, toInput) {
+        clearSelection()
+
+        const fromRow = parseInt(fromInput.dataset.row)
+        const fromCol = parseInt(fromInput.dataset.col)
+        const toRow = parseInt(toInput.dataset.row)
+        const toCol = parseInt(toInput.dataset.col)
+
+        const minRow = Math.min(fromRow, toRow)
+        const maxRow = Math.max(fromRow, toRow)
+        const minCol = Math.min(fromCol, toCol)
+        const maxCol = Math.max(fromCol, toCol)
+
+        for (let row = minRow; row <= maxRow; row++) {
+            for (let col = minCol; col <= maxCol; col++) {
+                const input = document.querySelector(`input[data-row="${row}"][data-col="${col}"]`)
+                if (input) {
+                    addCellToSelection(input)
+                }
+            }
+        }
+    }
+
+    // Clear selection
+    function clearSelection() {
+        document.querySelectorAll('.selected').forEach(input => {
+            input.classList.remove('selected')
+        })
+        selectedCells.clear()
+        updateClearSelectedButton()
+    }
+
+    // Clear selected cells
+    function clearSelectedCells() {
+        document.querySelectorAll('.selected').forEach(input => {
+            input.value = ''
+        })
+        clearSelection()
+        calculateProductivity()
+        saveProductivityData()
+    }
+
+    // Clear all cells
+    function clearAllCells() {
+        if (confirm('Are you sure you want to clear all data?')) {
+            document.querySelectorAll('.patient-input, .minutes-input').forEach(input => {
+                input.value = ''
+            })
+            clearSelection()
+            calculateProductivity()
+            saveProductivityData()
+        }
+    }
+
+    // Update clear selected button state
+    function updateClearSelectedButton() {
+        const clearSelectedBtn = document.getElementById('clear-selected-btn')
+        if (clearSelectedBtn) {
+            clearSelectedBtn.disabled = selectedCells.size === 0
+        }
+    }
+
+    // Handle arrow key navigation
+    function handleArrowKeys(e) {
+        if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+            return
+        }
+
+        e.preventDefault()
+
+        const currentRow = parseInt(e.target.dataset.row)
+        const currentCol = parseInt(e.target.dataset.col)
+        let newRow = currentRow
+        let newCol = currentCol
+
+        // Calculate new position
+        switch (e.key) {
+            case 'ArrowUp':
+                newRow = Math.max(0, currentRow - 1)
+                break
+            case 'ArrowDown':
+                newRow = Math.min(12, currentRow + 1)
+                break
+            case 'ArrowLeft':
+                newCol = Math.max(0, currentCol - 1)
+                break
+            case 'ArrowRight':
+                newCol = Math.min(1, currentCol + 1)
+                break
+        }
+
+        // Find and focus the target input
+        const targetInput = document.querySelector(`input[data-row="${newRow}"][data-col="${newCol}"]`)
+        if (targetInput) {
+            if (!shiftKeyDown) {
+                clearSelection()
+            } else {
+                // Extend selection with shift + arrow
+                if (!lastSelectedCell) lastSelectedCell = e.target
+                selectRange(lastSelectedCell, targetInput)
+            }
+            targetInput.focus()
+            if (!shiftKeyDown) {
+                targetInput.select()
+            }
+            lastSelectedCell = targetInput
+        }
+    }
+
+    // Calculate productivity
+    function calculateProductivity() {
+        const minutesInputs = document.querySelectorAll('.minutes-input')
+        const workHoursInput = document.getElementById('work-hours')
+        const workMinutesInput = document.getElementById('work-minutes')
+
+        // Calculate total treatment minutes
+        let totalMinutes = 0
+        minutesInputs.forEach(input => {
+            const value = parseFloat(input.value) || 0
+            totalMinutes += value
+        })
+
+        // Convert to hours and minutes
+        const hours = Math.floor(totalMinutes / 60)
+        const minutes = totalMinutes % 60
+
+        // Update treatment minutes display
+        const treatmentMinutesEl = document.getElementById('treatment-minutes')
+        if (treatmentMinutesEl) {
+            treatmentMinutesEl.textContent = `${hours} hrs ${minutes} minutes`
+        }
+
+        // Calculate productivity percentage
+        const workHours = parseFloat(workHoursInput?.value) || 0
+        const workMinutes = parseFloat(workMinutesInput?.value) || 0
+        const totalWorkMinutes = (workHours * 60) + workMinutes
+        const productivityPercentage = totalWorkMinutes > 0 ? (totalMinutes / totalWorkMinutes * 100) : 0
+
+        // Update productivity display
+        const productivityEl = document.getElementById('productivity-percentage')
+        if (productivityEl) {
+            productivityEl.textContent = `${productivityPercentage.toFixed(2)}%`
+        }
+    }
+
+    // Add event listeners to work hours and minutes inputs
+    const workHoursInput = document.getElementById('work-hours')
+    const workMinutesInput = document.getElementById('work-minutes')
+    const clockWorkHoursInput = document.getElementById('clock-work-hours')
+    const clockWorkMinutesInput = document.getElementById('clock-work-minutes')
+
+    // Load saved work hours
+    if (workHoursInput && savedData.workHours !== undefined) {
+        workHoursInput.value = savedData.workHours
+    }
+    if (workMinutesInput && savedData.workMinutes !== undefined) {
+        workMinutesInput.value = savedData.workMinutes
+    }
+    if (clockWorkHoursInput && savedData.workHours !== undefined) {
+        clockWorkHoursInput.value = savedData.workHours
+    }
+    if (clockWorkMinutesInput && savedData.workMinutes !== undefined) {
+        clockWorkMinutesInput.value = savedData.workMinutes
+    }
+
+    if (workHoursInput) {
+        workHoursInput.addEventListener('input', () => {
+            calculateProductivity()
+            saveProductivityData()
+            // Sync with clock inputs
+            if (clockWorkHoursInput) {
+                clockWorkHoursInput.value = workHoursInput.value
+                calculateClockOut()
+            }
+        })
+    }
+    if (workMinutesInput) {
+        workMinutesInput.addEventListener('input', () => {
+            calculateProductivity()
+            saveProductivityData()
+            // Sync with clock inputs
+            if (clockWorkMinutesInput) {
+                clockWorkMinutesInput.value = workMinutesInput.value
+                calculateClockOut()
+            }
+        })
+    }
+    if (clockWorkHoursInput) {
+        clockWorkHoursInput.addEventListener('input', () => {
+            // Sync with productivity inputs
+            if (workHoursInput) {
+                workHoursInput.value = clockWorkHoursInput.value
+                calculateProductivity()
+                saveProductivityData()
+            }
+            calculateClockOut()
+        })
+    }
+    if (clockWorkMinutesInput) {
+        clockWorkMinutesInput.addEventListener('input', () => {
+            // Sync with productivity inputs
+            if (workMinutesInput) {
+                workMinutesInput.value = clockWorkMinutesInput.value
+                calculateProductivity()
+                saveProductivityData()
+            }
+            calculateClockOut()
+        })
+    }
+
+    // Clear all button
+    const clearAllBtn = document.getElementById('clear-all-btn')
+    if (clearAllBtn) {
+        clearAllBtn.addEventListener('click', clearAllCells)
+    }
+
+    // Clear selected button
+    const clearSelectedBtn = document.getElementById('clear-selected-btn')
+    if (clearSelectedBtn) {
+        clearSelectedBtn.addEventListener('click', clearSelectedCells)
+    }
+
+    // Initial calculation
+    calculateProductivity()
+
+    // Initialize time clock
+    initTimeClock()
+}
+
+// Time Clock functionality
+function initTimeClock() {
+    // Update current time and date
+    updateCurrentTime()
+    setInterval(updateCurrentTime, 1000)
+
+    // Add event listeners for clock calculations
+    const clockInInput = document.getElementById('clock-in-input')
+    const lunchBreakInput = document.getElementById('lunch-break-input')
+
+    if (clockInInput) clockInInput.addEventListener('input', calculateClockOut)
+    if (lunchBreakInput) lunchBreakInput.addEventListener('input', calculateClockOut)
+
+    // Calculate clock-out time on page load with default values
+    calculateClockOut()
+}
+
+function updateCurrentTime() {
+    const now = new Date()
+    const currentTimeEl = document.getElementById('current-time')
+    const currentDateEl = document.getElementById('current-date')
+
+    if (currentTimeEl) {
+        // Update time (HH:MM)
+        const timeString = now.toLocaleTimeString('en-US', {
+            hour12: true,
+            hour: 'numeric',
+            minute: '2-digit'
+        })
+        currentTimeEl.textContent = timeString
+    }
+
+    if (currentDateEl) {
+        // Update date
+        const dateString = now.toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        })
+        currentDateEl.textContent = dateString
+    }
+}
+
+function calculateClockOut() {
+    const clockInInput = document.getElementById('clock-in-input')
+    const clockWorkHoursInput = document.getElementById('clock-work-hours')
+    const clockWorkMinutesInput = document.getElementById('clock-work-minutes')
+    const lunchBreakInput = document.getElementById('lunch-break-input')
+    const calculatedClockOutEl = document.getElementById('calculated-clock-out')
+
+    if (!clockInInput || !clockWorkHoursInput || !clockWorkMinutesInput || !lunchBreakInput || !calculatedClockOutEl) {
+        return
+    }
+
+    const clockInValue = clockInInput.value
+    const workHours = parseFloat(clockWorkHoursInput.value) || 0
+    const workMinutes = parseFloat(clockWorkMinutesInput.value) || 0
+    const lunchBreakMinutes = parseFloat(lunchBreakInput.value) || 0
+
+    if (!clockInValue || (workHours === 0 && workMinutes === 0)) {
+        calculatedClockOutEl.textContent = '--:--'
+        return
+    }
+
+    // Parse clock-in time
+    const [hours, minutes] = clockInValue.split(':').map(Number)
+    const clockInDate = new Date()
+    clockInDate.setHours(hours, minutes, 0, 0)
+
+    // Calculate total minutes at work (work hours + work minutes + lunch break)
+    const totalWorkMinutes = (workHours * 60) + workMinutes + lunchBreakMinutes
+
+    // Calculate clock-out time
+    const clockOutDate = new Date(clockInDate.getTime() + (totalWorkMinutes * 60000))
+
+    // Format clock-out time
+    const clockOutString = clockOutDate.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    })
+
+    calculatedClockOutEl.textContent = clockOutString
+}
 
