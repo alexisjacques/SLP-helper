@@ -147,6 +147,162 @@ button:active {
     transform: translateY(1px);
 }
 
+.spreadsheet-link-btn {
+    background: var(--accent);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: opacity 0.2s;
+}
+
+.spreadsheet-link-btn:hover {
+    opacity: 0.9;
+}
+
+.spreadsheet-link-btn:active {
+    transform: translateY(1px);
+}
+
+.iddsi-content-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    margin: 20px 0;
+}
+
+.iddsi-image-section {
+    display: flex;
+    align-items: flex-start;
+}
+
+.iddsi-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.iddsi-handouts-section h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 1.25rem;
+    text-align: center;
+}
+
+.handouts-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.handouts-column h4 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 1rem;
+    color: #374151;
+}
+
+.handout-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.handout-links li {
+    margin-bottom: 8px;
+}
+
+.handout-links a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.handout-links a:hover {
+    opacity: 0.7;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .iddsi-content-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .handouts-columns {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* resources Styles */
+.assessments-columns {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.resources-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.resources-section {
+    margin-bottom: 30px;
+}
+
+.resources-section h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+    color: #374151;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 8px;
+}
+
+.workbook-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.workbook-links li {
+    margin-bottom: 10px;
+}
+
+.workbook-links a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: opacity 0.2s;
+}
+
+.workbook-links a:hover {
+    opacity: 0.7;
+    text-decoration: underline;
+}
+
+@media (max-width: 1024px) {
+    .assessments-columns {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .assessments-columns {
+        grid-template-columns: 1fr;
+    }
+
+    .resources-columns {
+        grid-template-columns: 1fr;
+    }
+}
+
 .output-label {
     display: block;
     margin-bottom: 6px;
