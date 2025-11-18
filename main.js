@@ -430,12 +430,10 @@ function initProductivityCalculator() {
     // Track shift key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Shift') shiftKeyDown = true
-        // Delete key clears selected cells
-        if ((e.key === 'Delete' || e.key === 'Backspace') && selectedCells.size > 0) {
-            if (document.activeElement.tagName !== 'INPUT') {
-                e.preventDefault()
-                clearSelectedCells()
-            }
+        // Delete key clears selected cells when multiple cells are selected
+        if ((e.key === 'Delete' || e.key === 'Backspace') && selectedCells.size > 1) {
+            e.preventDefault()
+            clearSelectedCells()
         }
     })
 
@@ -591,7 +589,7 @@ function initProductivityCalculator() {
                 newRow = Math.max(0, currentRow - 1)
                 break
             case 'ArrowDown':
-                newRow = Math.min(12, currentRow + 1)
+                newRow = Math.min(11, currentRow + 1)
                 break
             case 'ArrowLeft':
                 newCol = Math.max(0, currentCol - 1)
@@ -606,16 +604,17 @@ function initProductivityCalculator() {
         if (targetInput) {
             if (!shiftKeyDown) {
                 clearSelection()
+                lastSelectedCell = targetInput
             } else {
                 // Extend selection with shift + arrow
                 if (!lastSelectedCell) lastSelectedCell = e.target
                 selectRange(lastSelectedCell, targetInput)
+                // Don't update lastSelectedCell when extending so we keep the anchor point
             }
             targetInput.focus()
             if (!shiftKeyDown) {
                 targetInput.select()
             }
-            lastSelectedCell = targetInput
         }
     }
 
