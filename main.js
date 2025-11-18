@@ -32,12 +32,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Frequency mapping
-        const freqSel = selected.find(s => /5x4|3x4|5x2|6visits|6 visits/i.test(s)) || ''
+        const freqSel = selected.find(s => /5x4|3x4|5x2|6visits/i.test(s)) || ''
         let freqText = ''
-        if (/6visits|6 visits/i.test(freqSel)) freqText = '6 visits in 2 wks'
-        else if (/5x4/.test(freqSel)) freqText = '5x/wk x 4wks'
+        if (/5x4/.test(freqSel)) freqText = '5x/wk x 4wks'
         else if (/3x4/.test(freqSel)) freqText = '3x/wk x 4wks'
         else if (/5x2/.test(freqSel)) freqText = '5x/wk x 2wks'
+        else if (/6visits/i.test(freqSel)) freqText = '6 visits in 2 wks'
 
         // Category code groups
         const dysphagiaCodes = ['R13.12', 'R13.11', 'R13.10', 'I69.391', 'I69.091', 'I69.191', 'I69.291', 'I69.891', 'R13.13', 'R13.14']
