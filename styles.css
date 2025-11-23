@@ -386,6 +386,12 @@ textarea#pccOutput {
 }
 
 /* Productivity Calculator Styles */
+.productivity-description {
+    font-size: 0.85rem;
+    color: gray;
+    margin: 4px 0 12px 0;
+}
+
 .productivity-layout {
     display: grid;
     grid-template-columns: 1fr 1fr;

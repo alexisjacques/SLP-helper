@@ -552,14 +552,12 @@ function initProductivityCalculator() {
 
     // Clear all cells
     function clearAllCells() {
-        if (confirm('Are you sure you want to clear all data?')) {
-            document.querySelectorAll('.patient-input, .minutes-input').forEach(input => {
-                input.value = ''
-            })
-            clearSelection()
-            calculateProductivity()
-            saveProductivityData()
-        }
+        document.querySelectorAll('.patient-input, .minutes-input').forEach(input => {
+            input.value = ''
+        })
+        clearSelection()
+        calculateProductivity()
+        saveProductivityData()
     }
 
     // Update clear selected button state
