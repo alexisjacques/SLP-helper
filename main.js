@@ -46,9 +46,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const dysarthriaCodes = ['R47.1', 'I69.322', 'I69.122', 'I69.222', 'I69.822']
         const apraxiaCodes = ['I69.390', 'I69.090', 'I69.190', 'I69.290', 'I69.890']
         const otherSpeechCodes = ['I68.328']
-        const dysphoniaCodes = ['R49.0', 'R49.8', 'R49.9']
-        const aphoniaCodes = ['R49.1']
         const otherspeechdisturbancesCodes = ['R47.89']
+
+        // R49.8 grouping: if R49.1 (aphonia) is selected, R49.8 groups under aphonia
+        // Otherwise, R49.8 groups under dysphonia
+        const hasR49_1 = selected.some(s => s.startsWith('R49.1'))
+        const hasR49_8 = selected.some(s => s.startsWith('R49.8'))
+
+        const dysphoniaCodes = hasR49_1 && hasR49_8
+            ? ['R49.0', 'R49.9']  // Exclude R49.8 from dysphonia when R49.1 is selected
+            : ['R49.0', 'R49.8', 'R49.9']
+        const aphoniaCodes = hasR49_1 && hasR49_8
+            ? ['R49.1', 'R49.8']  // Include R49.8 in aphonia when R49.1 is selected
+            : ['R49.1']
 
         const hasDysphagia = matchesAny(dysphagiaCodes)
         const hasCog = matchesAny(cogCodes)
@@ -83,11 +93,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Which may include
         const includes = []
         if (hasDysphagia) includes.push('oropharyngeal retraining, dysphagia management, PO trials')
-        if (hasCog) includes.push('cognitive-linguistic tx')
-        if (hasAphasia) includes.push('rec/exp language training')
+        if (hasCog) includes.push('cognitive-linguistic tx, compensatory strategies')
+        if (hasAphasia) includes.push('rec/exp language training, word finding strategies')
         if (hasDysarthria || hasApraxia || hasOtherSpeechDisturbances) includes.push('motor speech training, intelligibility strategies')
         if (hasOtherSpeech) includes.push('speech/lang tx')
-        if (hasDysphonia || hasAphonia) includes.push('voice tx')
+        if (hasDysphonia || hasAphonia) includes.push('voice tx, vocal strategies')
 
         // PMV trials detection
         const hasPMV = selected.some(s => /pmv/i.test(s))
@@ -177,22 +187,31 @@ document.addEventListener('DOMContentLoaded', () => {
             result = result.replace(/motor speech training/g, 'motor speech tx')
         }
         if (result.length > 500) {
-            result = result.replace(/rec\/exp language training/g, 'language tx')
+            result = result.replace(/motor speech tx, intelligibility strategies/g, 'motor speech tx, intelligibility strats')
+        }
+        if (result.length > 500) {
+            result = result.replace(/motor speech tx, intelligibility strats/g, 'motor speech tx')
+        }
+        if (result.length > 500) {
+            result = result.replace(/rec\/exp language training, word finding strategies/g, 'language tx, word finding strats')
+        }
+        if (result.length > 500) {
+            result = result.replace(/language tx, word finding strats/g, 'language tx')
         }
         if (result.length > 500) {
             result = result.replace(/cognitive-linguistic tx/g, 'cog tx')
+        }
+        if (result.length > 500) {
+            result = result.replace(/cog tx, compensatory strategies/g, 'cog tx, compensatory strats')
+        }
+        if (result.length > 500) {
+            result = result.replace(/cog tx, compensatory strats/g, 'cog tx')
         }
         if (result.length > 500) {
             result = result.replace(/language, motor speech/g, 'communication')
         }
         if (result.length > 500) {
             result = result.replace(/cognition, communication & voice/g, 'cognition & communication')
-        }
-        if (result.length > 500) {
-            result = result.replace(/intelligibility strategies/g, 'intelligibility strats')
-        }
-        if (result.length > 500) {
-            result = result.replace(/intelligibility strats, /g, '')
         }
         if (result.length > 500) {
             result = result.replace(/other speech disturbances/g, 'speech deficit')

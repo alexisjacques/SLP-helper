@@ -389,7 +389,7 @@ textarea#pccOutput {
 .productivity-description {
     font-size: 0.85rem;
     color: gray;
-    margin: 4px 0 12px 0;
+    margin: -8px 0 12px 0;
 }
 
 .productivity-layout {
