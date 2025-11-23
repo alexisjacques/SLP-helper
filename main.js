@@ -245,6 +245,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // update char count after generating
             const cntEl = document.getElementById('charCount')
             if (cntEl) cntEl.textContent = String(outputEl.value.length)
+            // Save to localStorage after generation
+            savePCCSelections()
         })
     }
 
@@ -262,6 +264,8 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.categories input[type="checkbox"]').forEach(c => c.checked = false)
             outputEl.value = ''
             copyStatus.textContent = ''
+            // Clear localStorage as well
+            clearPCCSelections()
         })
     }
 
@@ -289,12 +293,40 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }
 
-    // keyboard support for checkboxes
+    // keyboard support for checkboxes and auto-save
     document.querySelectorAll('.categories input[type="checkbox"]').forEach(cb => {
         cb.addEventListener('keydown', e => {
             if (e.key === 'Enter') generateBtn && generateBtn.click()
         })
+        // Auto-save when checkbox changes
+        cb.addEventListener('change', savePCCSelections)
     })
+
+    // Load saved PCC selections on page load (only on index.html)
+    if (document.querySelector('.categories')) {
+        const savedPCC = loadPCCSelections()
+
+        // Restore checkbox states
+        document.querySelectorAll('.categories input[type="checkbox"]').forEach(cb => {
+            const id = cb.id || cb.dataset.label || cb.parentElement.textContent.trim()
+            if (savedPCC.checkboxes[id] !== undefined) {
+                cb.checked = savedPCC.checkboxes[id]
+            }
+        })
+
+        // Restore output text
+        if (outputEl && savedPCC.output) {
+            outputEl.value = savedPCC.output
+            // Update char count
+            const cntEl = document.getElementById('charCount')
+            if (cntEl) cntEl.textContent = String(outputEl.value.length)
+        }
+    }
+
+    // Save output when it changes (user edits or generation)
+    if (outputEl) {
+        outputEl.addEventListener('input', savePCCSelections)
+    }
 
     // wire up any .more-toggle buttons found inside categories
     document.querySelectorAll('.category .more-toggle').forEach(toggle => {
@@ -326,6 +358,38 @@ document.addEventListener('DOMContentLoaded', () => {
         initProductivityCalculator()
     }
 })
+
+// Local storage functions for PCC order generator
+function savePCCSelections() {
+    const data = {
+        checkboxes: {},
+        output: document.getElementById('pccOutput')?.value || ''
+    }
+
+    // Save all checkbox states from categories
+    document.querySelectorAll('.categories input[type="checkbox"]').forEach(cb => {
+        const id = cb.id || cb.dataset.label || cb.parentElement.textContent.trim()
+        data.checkboxes[id] = cb.checked
+    })
+
+    localStorage.setItem('slp-pcc-selections', JSON.stringify(data))
+}
+
+function loadPCCSelections() {
+    try {
+        const saved = localStorage.getItem('slp-pcc-selections')
+        if (saved) {
+            return JSON.parse(saved)
+        }
+    } catch (e) {
+        console.error('Error loading PCC selections:', e)
+    }
+    return { checkboxes: {}, output: '' }
+}
+
+function clearPCCSelections() {
+    localStorage.removeItem('slp-pcc-selections')
+}
 
 // Local storage functions for productivity data
 function saveProductivityData() {
