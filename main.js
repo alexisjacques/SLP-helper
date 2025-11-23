@@ -455,7 +455,7 @@ function initProductivityCalculator() {
         const patientInput = document.createElement('input')
         patientInput.type = 'text'
         patientInput.className = 'patient-input'
-        patientInput.placeholder = 'Patient name/initials'
+        patientInput.placeholder = 'Patient'
         patientInput.dataset.row = i - 1
         patientInput.dataset.col = 0
         // Load saved value
