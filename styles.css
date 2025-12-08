@@ -690,6 +690,13 @@ textarea#pccOutput {
     appearance: textfield;
 }
 
+.clock-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
 .clock-summary {
     background: #f9fafb;
     border: 1px solid #e5e7eb;

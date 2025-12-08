@@ -396,7 +396,9 @@ function saveProductivityData() {
     const data = {
         rows: [],
         workHours: parseInt(document.getElementById('work-hours')?.value) || 8,
-        workMinutes: parseInt(document.getElementById('work-minutes')?.value) || 0
+        workMinutes: parseInt(document.getElementById('work-minutes')?.value) || 0,
+        clockInTime: document.getElementById('clock-in-input')?.value || '09:00',
+        lunchBreak: parseInt(document.getElementById('lunch-break-input')?.value) || 30
     }
 
     // Save all patient names and minutes
@@ -422,7 +424,7 @@ function loadProductivityData() {
     } catch (e) {
         console.error('Error loading productivity data:', e)
     }
-    return { rows: [], workHours: 8, workMinutes: 0 }
+    return { rows: [], workHours: 8, workMinutes: 0, clockInTime: '09:00', lunchBreak: 30 }
 }
 
 // Productivity Calculator functionality
@@ -755,6 +757,17 @@ function initProductivityCalculator() {
         clockWorkMinutesInput.value = savedData.workMinutes
     }
 
+    // Load saved clock-in time and lunch break
+    const clockInInput = document.getElementById('clock-in-input')
+    const lunchBreakInput = document.getElementById('lunch-break-input')
+
+    if (clockInInput && savedData.clockInTime !== undefined) {
+        clockInInput.value = savedData.clockInTime
+    }
+    if (lunchBreakInput && savedData.lunchBreak !== undefined) {
+        lunchBreakInput.value = savedData.lunchBreak
+    }
+
     if (workHoursInput) {
         workHoursInput.addEventListener('input', () => {
             calculateProductivity()
@@ -812,11 +825,42 @@ function initProductivityCalculator() {
         clearSelectedBtn.addEventListener('click', clearSelectedCells)
     }
 
+    // Clear clock button
+    const clearClockBtn = document.getElementById('clear-clock-btn')
+    if (clearClockBtn) {
+        clearClockBtn.addEventListener('click', clearClockInputs)
+    }
+
     // Initial calculation
     calculateProductivity()
 
     // Initialize time clock
     initTimeClock()
+}
+
+// Clear clock inputs to default values
+function clearClockInputs() {
+    const clockInInput = document.getElementById('clock-in-input')
+    const clockWorkHoursInput = document.getElementById('clock-work-hours')
+    const clockWorkMinutesInput = document.getElementById('clock-work-minutes')
+    const lunchBreakInput = document.getElementById('lunch-break-input')
+    const workHoursInput = document.getElementById('work-hours')
+    const workMinutesInput = document.getElementById('work-minutes')
+
+    // Reset to default values
+    if (clockInInput) clockInInput.value = '09:00'
+    if (clockWorkHoursInput) clockWorkHoursInput.value = '8'
+    if (clockWorkMinutesInput) clockWorkMinutesInput.value = '0'
+    if (lunchBreakInput) lunchBreakInput.value = '30'
+
+    // Sync with productivity calculator inputs
+    if (workHoursInput) workHoursInput.value = '8'
+    if (workMinutesInput) workMinutesInput.value = '0'
+
+    // Recalculate and save
+    calculateClockOut()
+    calculateProductivity()
+    saveProductivityData()
 }
 
 // Time Clock functionality
@@ -829,8 +873,18 @@ function initTimeClock() {
     const clockInInput = document.getElementById('clock-in-input')
     const lunchBreakInput = document.getElementById('lunch-break-input')
 
-    if (clockInInput) clockInInput.addEventListener('input', calculateClockOut)
-    if (lunchBreakInput) lunchBreakInput.addEventListener('input', calculateClockOut)
+    if (clockInInput) {
+        clockInInput.addEventListener('input', () => {
+            calculateClockOut()
+            saveProductivityData()
+        })
+    }
+    if (lunchBreakInput) {
+        lunchBreakInput.addEventListener('input', () => {
+            calculateClockOut()
+            saveProductivityData()
+        })
+    }
 
     // Calculate clock-out time on page load with default values
     calculateClockOut()
