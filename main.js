@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Frequency mapping
-        const freqSel = selected.find(s => /5x4|3x4|5x2|6visits/i.test(s)) || ''
+        const freqSel = selected.find(s => /5x4|3x4|5x3|6visits/i.test(s)) || ''
         let freqText = ''
         if (/5x4/.test(freqSel)) freqText = '5x/wk x 4wks'
         else if (/3x4/.test(freqSel)) freqText = '3x/wk x 4wks'
