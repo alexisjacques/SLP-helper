@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let freqText = ''
         if (/5x4/.test(freqSel)) freqText = '5x/wk x 4wks'
         else if (/3x4/.test(freqSel)) freqText = '3x/wk x 4wks'
-        else if (/5x2/.test(freqSel)) freqText = '5x/wk x 2wks'
+        else if (/5x3/.test(freqSel)) freqText = '5x/wk x 3wks'
         else if (/6visits/i.test(freqSel)) freqText = '6 visits in 2 wks'
 
         // Category code groups
