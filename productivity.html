@@ -44,7 +44,6 @@
 
                 <div class="grid-controls">
                     <button id="clear-all-btn" class="secondary">Clear All</button>
-                    <button id="clear-selected-btn" class="secondary" disabled>Clear Selected</button>
                 </div>
 
                 <div class="productivity-summary">
@@ -80,7 +79,10 @@
                 <div class="clock-input-section">
                     <div class="clock-input-item">
                         <label for="clock-in-input">Clock In Time:</label>
-                        <input type="time" id="clock-in-input" class="time-input" value="09:00">
+                        <div class="clock-in-inputs">
+                            <input type="text" id="clock-in-input" class="time-input" placeholder="10:00">
+                            <button type="button" id="ampm-toggle" class="ampm-btn">AM</button>
+                        </div>
                     </div>
                     <div class="clock-input-item">
                         <label>Work Hours:</label>

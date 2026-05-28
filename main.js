@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
             result = result.replace(/safely /g, '')
         }
         if (result.length > 500) {
-            result = result.replace(/improve swallow function to /g, '')
+            result = result.replace(/gratification/g, 'grat')
         }
 
 
@@ -412,7 +412,7 @@ function saveProductivityData() {
         rows: [],
         workHours: parseInt(document.getElementById('work-hours')?.value) || 8,
         workMinutes: parseInt(document.getElementById('work-minutes')?.value) || 0,
-        clockInTime: document.getElementById('clock-in-input')?.value || '09:00',
+        clockInTime: document.getElementById('clock-in-input')?.value || '10:00',
         lunchBreak: parseInt(document.getElementById('lunch-break-input')?.value) || 30
     }
 
@@ -439,7 +439,7 @@ function loadProductivityData() {
     } catch (e) {
         console.error('Error loading productivity data:', e)
     }
-    return { rows: [], workHours: 8, workMinutes: 0, clockInTime: '09:00', lunchBreak: 30 }
+    return { rows: [], workHours: 8, workMinutes: 0, clockInTime: '10:00', lunchBreak: 30 }
 }
 
 // Productivity Calculator functionality
@@ -596,7 +596,6 @@ function initProductivityCalculator() {
             selectedCells.add(cellId)
             input.classList.add('selected')
         }
-        updateClearSelectedButton()
     }
 
     // Add cell to selection
@@ -604,7 +603,6 @@ function initProductivityCalculator() {
         const cellId = `${input.dataset.row}-${input.dataset.col}`
         selectedCells.add(cellId)
         input.classList.add('selected')
-        updateClearSelectedButton()
     }
 
     // Select range between two cells
@@ -637,7 +635,6 @@ function initProductivityCalculator() {
             input.classList.remove('selected')
         })
         selectedCells.clear()
-        updateClearSelectedButton()
     }
 
     // Clear selected cells
@@ -660,13 +657,6 @@ function initProductivityCalculator() {
         saveProductivityData()
     }
 
-    // Update clear selected button state
-    function updateClearSelectedButton() {
-        const clearSelectedBtn = document.getElementById('clear-selected-btn')
-        if (clearSelectedBtn) {
-            clearSelectedBtn.disabled = selectedCells.size === 0
-        }
-    }
 
     // Handle arrow key navigation
     function handleArrowKeys(e) {
@@ -834,11 +824,6 @@ function initProductivityCalculator() {
         clearAllBtn.addEventListener('click', clearAllCells)
     }
 
-    // Clear selected button
-    const clearSelectedBtn = document.getElementById('clear-selected-btn')
-    if (clearSelectedBtn) {
-        clearSelectedBtn.addEventListener('click', clearSelectedCells)
-    }
 
     // Clear clock button
     const clearClockBtn = document.getElementById('clear-clock-btn')
@@ -863,7 +848,7 @@ function clearClockInputs() {
     const workMinutesInput = document.getElementById('work-minutes')
 
     // Reset to default values
-    if (clockInInput) clockInInput.value = '09:00'
+    if (clockInInput) clockInInput.value = '10:00'
     if (clockWorkHoursInput) clockWorkHoursInput.value = '8'
     if (clockWorkMinutesInput) clockWorkMinutesInput.value = '0'
     if (lunchBreakInput) lunchBreakInput.value = '30'
@@ -890,6 +875,15 @@ function initTimeClock() {
 
     if (clockInInput) {
         clockInInput.addEventListener('input', () => {
+            calculateClockOut()
+            saveProductivityData()
+        })
+    }
+
+    const ampmToggle = document.getElementById('ampm-toggle')
+    if (ampmToggle) {
+        ampmToggle.addEventListener('click', () => {
+            ampmToggle.textContent = ampmToggle.textContent === 'AM' ? 'PM' : 'AM'
             calculateClockOut()
             saveProductivityData()
         })
@@ -953,8 +947,11 @@ function calculateClockOut() {
         return
     }
 
-    // Parse clock-in time
-    const [hours, minutes] = clockInValue.split(':').map(Number)
+    // Parse clock-in time with AM/PM
+    let [hours, minutes] = clockInValue.split(':').map(Number)
+    const ampm = document.getElementById('ampm-toggle')?.textContent || 'AM'
+    if (ampm === 'PM' && hours !== 12) hours += 12
+    if (ampm === 'AM' && hours === 12) hours = 0
     const clockInDate = new Date()
     clockInDate.setHours(hours, minutes, 0, 0)
 
