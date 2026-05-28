@@ -37,11 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (/5x4/.test(freqSel)) freqText = '5x/wk x 4wks'
         else if (/3x4/.test(freqSel)) freqText = '3x/wk x 4wks'
         else if (/5x3/.test(freqSel)) freqText = '5x/wk x 3wks'
-        else if (/6visits/i.test(freqSel)) freqText = '6 visits in 2 wks'
+        else if (/6visits/i.test(freqSel)) freqText = '6 visits in 4 wks'
 
         // Category code groups
         const dysphagiaCodes = ['R13.12', 'R13.11', 'R13.10', 'I69.391', 'I69.091', 'I69.191', 'I69.291', 'I69.891', 'R13.13', 'R13.14']
-        const cogCodes = ['R41.841', 'I69.311', 'I69.319', 'I69.310', 'I69.312', 'I69.314', 'I69.315', 'I69.019', 'I69.119', 'I69.219', 'I69.919']
+        const cogCodes = ['R41.841', 'I69.311', 'R41.89', 'I69.319', 'I69.310', 'I69.312', 'I69.314', 'I69.315', 'I69.019', 'I69.119', 'I69.219', 'I69.919']
         const aphasiaCodes = ['R47.01', 'I69.320', 'I69.020', 'I69.120', 'I69.220', 'I69.820']
         const dysarthriaCodes = ['R47.1', 'I69.322', 'I69.122', 'I69.222', 'I69.822']
         const apraxiaCodes = ['I69.390', 'I69.090', 'I69.190', 'I69.290', 'I69.890']
@@ -54,8 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const hasR49_8 = selected.some(s => s.startsWith('R49.8'))
 
         const dysphoniaCodes = hasR49_1 && hasR49_8
-            ? ['R49.0', 'R49.9']  // Exclude R49.8 from dysphonia when R49.1 is selected
-            : ['R49.0', 'R49.8', 'R49.9']
+            ? ['R49.0']  // Exclude R49.8 from dysphonia when R49.1 is selected
+            : ['R49.0', 'R49.8']
         const aphoniaCodes = hasR49_1 && hasR49_8
             ? ['R49.1', 'R49.8']  // Include R49.8 in aphonia when R49.1 is selected
             : ['R49.1']
@@ -103,9 +103,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const hasPMV = selected.some(s => /pmv/i.test(s))
         if (hasPMV) includes.push('PMV trials')
 
-        // AAC detection 
+        // AAC detection
         const hasAAC = selected.some(s => /aac/i.test(s))
         if (hasAAC) includes.push('AAC training')
+
+        // Oral gratification detection
+        const hasOralGrat = selected.some(s => /oralgrat/i.test(s))
 
         const includesClause = includes.length ? ' which may include ' + includes.join(', ') : ''
 
@@ -135,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hasCog) catIds.push('cognition')
         if (hasAphasia) catIds.push('language')
         // group motor-related categories under motor-speech
-        if (hasDysarthria || hasApraxia || hasOtherSpeech) catIds.push('motor speech')
+        if (hasDysarthria || hasApraxia || hasOtherSpeech || hasOtherSpeechDisturbances) catIds.push('motor speech')
         if (hasDysphonia || hasAphonia) catIds.push('voice')
         const deduped = catIds.filter((v, i, arr) => v && arr.indexOf(v) === i)
 
@@ -143,22 +146,31 @@ document.addEventListener('DOMContentLoaded', () => {
         const joinWithAnd = (arr) => {
             if (!arr || !arr.length) return ''
             if (arr.length === 1) return arr[0]
-            if (arr.length === 2) return arr[0] + ' & ' + arr[1]
-            return arr.slice(0, -1).join(', ') + ' & ' + arr[arr.length - 1]
+            if (arr.length === 2) return arr[0] + ' and ' + arr[1]
+            return arr.slice(0, -1).join(', ') + ' and ' + arr[arr.length - 1]
         }
 
         // Build LTG clause with diet tolerance first, then improvement goals
+        const dietText = (hasOralGrat ? 'an oral gratification diet of ' : '') + ltgPairs.join(' and ')
         if (ltgPairs.length && deduped.length) {
             // Both diet and speech/cognition goals
             const domainText = joinWithAnd(deduped)
-            ltgClause = ' LTG: patient to safely tolerate ' + ltgPairs.join(' & ') + ', patient to improve ' + domainText + ' function to least impairment level.'
+            ltgClause = ' LTG: patient to improve swallow function to safely tolerate ' + dietText + ', patient to improve ' + domainText + ' function to least impairment level.'
         } else if (ltgPairs.length) {
             // Only diet goals
-            ltgClause = ' LTG: patient to safely tolerate ' + ltgPairs.join(' & ') + '.'
+            ltgClause = ' LTG: patient to improve swallow function to safely tolerate ' + dietText + '.'
         } else if (deduped.length) {
             // Only speech/cognition goals
             const domainText = joinWithAnd(deduped)
             ltgClause = ' LTG: patient to improve ' + domainText + ' function to least impairment level.'
+        }
+
+        // Expand voice goal to include functional communication phrase
+        if (ltgClause) {
+            ltgClause = ltgClause.replace(
+                /voice function to least impairment level/g,
+                'voice function to improve functional communication to least impairment level'
+            )
         }
 
         // Ensure CPT clause ends with a period + space when present
@@ -230,6 +242,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (result.length > 500) {
             result = result.replace(/safely /g, '')
+        }
+        if (result.length > 500) {
+            result = result.replace(/improve swallow function to /g, '')
         }
 
 
