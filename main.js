@@ -246,6 +246,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (result.length > 500) {
             result = result.replace(/gratification/g, 'grat')
         }
+        if (result.length > 500) {
+            result = result.replace(/to improve functional communication /g, '')
+        }
+        if (result.length > 500) {
+            result = result.replace(/improve swallow function to/g, 'safely')
+        }
 
 
         return result
