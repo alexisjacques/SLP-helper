@@ -257,6 +257,16 @@ document.addEventListener('DOMContentLoaded', () => {
             outputEl.value = buildOrder(sel)
             copyStatus.textContent = ''
             outputEl.focus()
+
+            // Show warning if dysphagia is selected but no LTG diet is chosen
+            const warning = document.getElementById('dysphagiaWarning')
+            if (warning) {
+                const dysphagiaCodes = ['R13.12', 'R13.11', 'R13.10', 'I69.391', 'I69.091', 'I69.191', 'I69.291', 'I69.891', 'R13.13', 'R13.14']
+                const hasDysph = sel.some(s => dysphagiaCodes.some(c => s.includes(c)))
+                const ltgInputs = Array.from(document.querySelectorAll('[id^="LTG"] input[type="checkbox"]'))
+                const hasLTGDiet = ltgInputs.some(i => i.checked)
+                warning.hidden = !(hasDysph && !hasLTGDiet)
+            }
             // update char count after generating
             const cntEl = document.getElementById('charCount')
             if (cntEl) cntEl.textContent = String(outputEl.value.length)
