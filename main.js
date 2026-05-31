@@ -264,14 +264,24 @@ document.addEventListener('DOMContentLoaded', () => {
             copyStatus.textContent = ''
             outputEl.focus()
 
-            // Show warning if dysphagia is selected but no LTG diet is chosen
-            const warning = document.getElementById('dysphagiaWarning')
-            if (warning) {
+            // Build combined warning messages
+            const warningBox = document.getElementById('warningBox')
+            if (warningBox) {
+                const messages = []
                 const dysphagiaCodes = ['R13.12', 'R13.11', 'R13.10', 'I69.391', 'I69.091', 'I69.191', 'I69.291', 'I69.891', 'R13.13', 'R13.14']
                 const hasDysph = sel.some(s => dysphagiaCodes.some(c => s.includes(c)))
                 const ltgInputs = Array.from(document.querySelectorAll('[id^="LTG"] input[type="checkbox"]'))
                 const hasLTGDiet = ltgInputs.some(i => i.checked)
-                warning.hidden = !(hasDysph && !hasLTGDiet)
+                if (hasDysph && !hasLTGDiet) messages.push('Message: No LTG diet selected for dysphagia tx.')
+                const freqCodes = ['5x4', '3x4', '5x3', '6visits']
+                const hasFreq = sel.some(s => freqCodes.some(c => s.includes(c)))
+                if (!hasFreq) messages.push('Message: No Frequency of Tx selected.')
+                if (messages.length) {
+                    warningBox.innerHTML = messages.join('<br>')
+                    warningBox.hidden = false
+                } else {
+                    warningBox.hidden = true
+                }
             }
             // update char count after generating
             const cntEl = document.getElementById('charCount')
