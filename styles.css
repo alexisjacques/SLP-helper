@@ -824,6 +824,14 @@ textarea#pccOutput {
     line-height: 1.5;
 }
 
+.bims-inline-prompt {
+    margin: 12px 0 4px 0;
+}
+
+.bims-inline-prompt:first-child {
+    margin-top: 0;
+}
+
 .bims-items {
     display: flex;
     flex-direction: column;
@@ -845,6 +853,10 @@ textarea#pccOutput {
     font-weight: 600;
     font-size: 0.95rem;
     color: #374151;
+}
+
+.bims-label-normal {
+    font-weight: 400;
 }
 
 .bims-btn-group {

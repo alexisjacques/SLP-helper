@@ -463,19 +463,65 @@ function initBIMS() {
         }
     }
 
-    // Wire up all buttons
-    document.querySelectorAll('.bims-item').forEach(item => {
+    const repWordKeys = ['c0200a', 'c0200b', 'c0200c']
+    const recWordKeys = ['c0400a', 'c0400b', 'c0400c']
+
+    function syncAllThreeShortcut(rowId, wordKeys) {
+        const allRow = document.getElementById(rowId)
+        if (!allRow) return
+        allRow.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
+        const vals = wordKeys.map(k => scores[k])
+        if (vals.every(v => v !== undefined) && vals.every(v => v === vals[0])) {
+            allRow.querySelector(`.bims-btn[data-value="${vals[0]}"]`).classList.add('selected')
+        }
+    }
+
+    function wireAllThreeRow(rowId, wordKeys) {
+        const allRow = document.getElementById(rowId)
+        if (!allRow) return
+        allRow.querySelectorAll('.bims-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const alreadySelected = btn.classList.contains('selected')
+                allRow.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
+                const wordVal = parseInt(btn.dataset.value, 10)
+                wordKeys.forEach(k => {
+                    const item = document.querySelector(`[data-question="${k}"]`)
+                    item.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
+                    if (alreadySelected) {
+                        delete scores[k]
+                    } else {
+                        scores[k] = wordVal
+                        item.querySelector(`.bims-btn[data-value="${wordVal}"]`).classList.add('selected')
+                    }
+                })
+                if (!alreadySelected) btn.classList.add('selected')
+                updateDisplay()
+            })
+        })
+    }
+
+    // Wire up all scored buttons
+    document.querySelectorAll('.bims-item[data-question]').forEach(item => {
         const question = item.dataset.question
         item.querySelectorAll('.bims-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                // Deselect siblings
+                const alreadySelected = btn.classList.contains('selected')
                 item.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
-                btn.classList.add('selected')
-                scores[question] = parseInt(btn.dataset.value, 10)
+                if (alreadySelected) {
+                    delete scores[question]
+                } else {
+                    btn.classList.add('selected')
+                    scores[question] = parseInt(btn.dataset.value, 10)
+                }
+                if (repWordKeys.includes(question)) syncAllThreeShortcut('c0200-all-row', repWordKeys)
+                if (recWordKeys.includes(question)) syncAllThreeShortcut('c0400-all-row', recWordKeys)
                 updateDisplay()
             })
         })
     })
+
+    wireAllThreeRow('c0200-all-row', repWordKeys)
+    wireAllThreeRow('c0400-all-row', recWordKeys)
 
     // Reset button
     const resetBtn = document.getElementById('bims-reset-btn')

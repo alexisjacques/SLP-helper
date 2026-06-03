@@ -16,7 +16,7 @@
             <nav class="nav-menu">
                 <a href="index.html" class="nav-link">PCC Order Generator</a>
                 <a href="productivity.html" class="nav-link">Productivity Calculator</a>
-                <a href="bims.html" class="nav-link active">BIMS</a>
+                <a href="bims.html" class="nav-link active">BIMS Scorer</a>
                 <a href="diet-info.html" class="nav-link">Diet Info</a>
                 <a href="resources.html" class="nav-link">Resources</a>
             </nav>
@@ -32,7 +32,7 @@
                     <h3>Repetition of Three Words</h3>
                 </div>
                 <p class="bims-instruction">Say: <em>"I am going to say three words for you to remember. Please repeat
-                        the words after I have said all three: sock, blue, bed."</em></p>
+                        the words after I have said all three:<br>sock, blue, bed."</em></p>
 
                 <div class="bims-items">
                     <div class="bims-item" data-question="c0200a">
@@ -59,6 +59,14 @@
                         </div>
                         <span class="bims-item-score">—</span>
                     </div>
+                    <div class="bims-item bims-all-three-row" id="c0200-all-row">
+                        <span class="bims-item-label bims-label-normal">All 3</span>
+                        <div class="bims-btn-group" role="group" aria-label="All three words">
+                            <button class="bims-btn" data-value="0">No <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Yes <span class="bims-pts">(3)</span></button>
+                        </div>
+                        <span class="bims-item-score"></span>
+                    </div>
                 </div>
                 <div class="bims-subtotal">
                     Repetition subtotal: <strong id="c0200-subtotal">—</strong> / 3
@@ -70,10 +78,10 @@
                 <div class="bims-part-header">
                     <h3>Temporal Orientation</h3>
                 </div>
-                <p class="bims-instruction">Ask: <em>"What year is it right now?"</em> then <em>"What month is it right
-                        now?"</em> then <em>"What day of the week is today?"</em></p>
 
                 <div class="bims-items">
+                    <p class="bims-instruction bims-inline-prompt">Ask: <em>"Please tell me what year it is right
+                            now."</em></p>
                     <div class="bims-item bims-item-wide" data-question="c0300a">
                         <span class="bims-item-label">Year</span>
                         <div class="bims-btn-group" role="group" aria-label="Year response">
@@ -87,6 +95,8 @@
                         </div>
                         <span class="bims-item-score">—</span>
                     </div>
+
+                    <p class="bims-instruction bims-inline-prompt">Ask: <em>"What month are we in right now?"</em></p>
                     <div class="bims-item bims-item-wide" data-question="c0300b">
                         <span class="bims-item-label">Month</span>
                         <div class="bims-btn-group" role="group" aria-label="Month response">
@@ -98,6 +108,8 @@
                         </div>
                         <span class="bims-item-score">—</span>
                     </div>
+
+                    <p class="bims-instruction bims-inline-prompt">Ask: <em>"What day of the week is today?"</em></p>
                     <div class="bims-item" data-question="c0300c">
                         <span class="bims-item-label">Day of Week</span>
                         <div class="bims-btn-group" role="group" aria-label="Day of week response">
@@ -118,9 +130,11 @@
                 <div class="bims-part-header">
                     <h3>Word Recall</h3>
                 </div>
-                <p class="bims-instruction">Ask: <em>"Let's go back to the three words I asked you to remember. What
-                        were they?"</em> If patient cannot recall, offer a semantic cue (e.g., "It was a type of
-                    clothing" for sock).</p>
+                <p class="bims-instruction">Ask: <em>"Let's go back to the earlier question. What were the three words
+                        that I asked you to repeat?"</em>
+                    <br> If unable to remember a word, give cue (something to wear; a color; a piece of furniture) for
+                    that word.
+                </p>
 
                 <div class="bims-items">
                     <div class="bims-item bims-item-wide" data-question="c0400a">
@@ -158,6 +172,15 @@
                                     class="bims-pts">(2)</span></button>
                         </div>
                         <span class="bims-item-score">—</span>
+                    </div>
+                    <div class="bims-item bims-item-wide bims-all-three-row" id="c0400-all-row">
+                        <span class="bims-item-label bims-label-normal">All 3</span>
+                        <div class="bims-btn-group" role="group" aria-label="All three recall">
+                            <button class="bims-btn" data-value="0">Could not recall <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Recalled with cue <span class="bims-pts">(3)</span></button>
+                            <button class="bims-btn" data-value="2">Recalled without cue <span class="bims-pts">(6)</span></button>
+                        </div>
+                        <span class="bims-item-score"></span>
                     </div>
                 </div>
                 <div class="bims-subtotal">
