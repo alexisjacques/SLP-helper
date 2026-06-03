@@ -978,9 +978,11 @@ textarea#pccOutput {
     color: #991b1b;
 }
 
-.bims-controls {
+.bims-controls,
+.reset-row {
     display: flex;
     justify-content: center;
+    margin-top: 16px;
 }
 
 @media (max-width: 600px) {
