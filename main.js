@@ -376,12 +376,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const container = document.getElementById(targetId)
         if (!container) return
 
-        const key = `slp:more:${targetId}`
-        const isOpen = localStorage.getItem(key) === '1'
-        toggle.setAttribute('aria-expanded', String(isOpen))
-        toggle.textContent = isOpen ? 'Show less' : 'Show more'
-        container.classList.toggle('open', isOpen)
-        container.setAttribute('aria-hidden', String(!isOpen))
+        toggle.setAttribute('aria-expanded', 'false')
+        toggle.textContent = 'Show more'
+        container.classList.remove('open')
+        container.setAttribute('aria-hidden', 'true')
 
         toggle.addEventListener('click', () => {
             const expanded = toggle.getAttribute('aria-expanded') === 'true'
@@ -390,7 +388,6 @@ document.addEventListener('DOMContentLoaded', () => {
             toggle.textContent = next ? 'Show less' : 'Show more'
             container.classList.toggle('open', next)
             container.setAttribute('aria-hidden', String(!next))
-            localStorage.setItem(key, next ? '1' : '0')
         })
     })
 
