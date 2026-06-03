@@ -932,16 +932,13 @@ textarea#pccOutput {
 }
 
 .bims-total-row {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
+    display: block;
 }
 
 .bims-total-label {
     font-weight: 700;
     font-size: 1rem;
     color: #374151;
-    flex: 1;
 }
 
 .bims-total-value {
@@ -983,7 +980,7 @@ textarea#pccOutput {
 
 .bims-controls {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
 }
 
 @media (max-width: 600px) {
