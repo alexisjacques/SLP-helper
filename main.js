@@ -252,6 +252,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (result.length > 500) {
             result = result.replace(/improve swallow function to/g, 'safely')
         }
+        if (result.length > 500) {
+            result = result.replace(/thins0/g, 'th0')
+        }
 
 
         return result
