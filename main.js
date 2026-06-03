@@ -398,7 +398,97 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('productivity-tbody')) {
         initProductivityCalculator()
     }
+
+    // Initialize BIMS scorer if on page
+    if (document.getElementById('bims-total')) {
+        initBIMS()
+    }
 })
+
+function initBIMS() {
+    const questions = {
+        c0200a: 1, c0200b: 1, c0200c: 1,
+        c0300a: 3, c0300b: 2, c0300c: 1,
+        c0400a: 2, c0400b: 2, c0400c: 2
+    }
+    const scores = {}
+
+    function getSubtotal(keys) {
+        return keys.reduce((sum, k) => sum + (scores[k] ?? null), 0)
+    }
+
+    function allAnswered(keys) {
+        return keys.every(k => scores[k] !== undefined)
+    }
+
+    function updateDisplay() {
+        const repKeys = ['c0200a', 'c0200b', 'c0200c']
+        const oriKeys = ['c0300a', 'c0300b', 'c0300c']
+        const recKeys = ['c0400a', 'c0400b', 'c0400c']
+        const allKeys = [...repKeys, ...oriKeys, ...recKeys]
+
+        // Update per-item score display
+        allKeys.forEach(k => {
+            const item = document.querySelector(`[data-question="${k}"]`)
+            if (!item) return
+            const scoreEl = item.querySelector('.bims-item-score')
+            if (scoreEl) scoreEl.textContent = scores[k] !== undefined ? scores[k] : '—'
+        })
+
+        // Subtotals
+        const repDone = allAnswered(repKeys)
+        const oriDone = allAnswered(oriKeys)
+        const recDone = allAnswered(recKeys)
+
+        document.getElementById('c0200-subtotal').textContent = repDone ? getSubtotal(repKeys) : '—'
+        document.getElementById('c0300-subtotal').textContent = oriDone ? getSubtotal(oriKeys) : '—'
+        document.getElementById('c0400-subtotal').textContent = recDone ? getSubtotal(recKeys) : '—'
+
+        // Total
+        const totalEl = document.getElementById('bims-total')
+        const interpEl = document.getElementById('bims-interpretation')
+        if (allAnswered(allKeys)) {
+            const total = getSubtotal(allKeys)
+            totalEl.textContent = total
+            let label, cls
+            if (total >= 13) { label = 'Cognitively Intact (13–15)'; cls = 'bims-intact' }
+            else if (total >= 8) { label = 'Moderately Impaired (8–12)'; cls = 'bims-moderate' }
+            else { label = 'Severely Impaired (0–7)'; cls = 'bims-severe' }
+            interpEl.textContent = label
+            interpEl.className = `bims-interpretation ${cls}`
+        } else {
+            totalEl.textContent = '—'
+            interpEl.textContent = ''
+            interpEl.className = 'bims-interpretation'
+        }
+    }
+
+    // Wire up all buttons
+    document.querySelectorAll('.bims-item').forEach(item => {
+        const question = item.dataset.question
+        item.querySelectorAll('.bims-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Deselect siblings
+                item.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
+                btn.classList.add('selected')
+                scores[question] = parseInt(btn.dataset.value, 10)
+                updateDisplay()
+            })
+        })
+    })
+
+    // Reset button
+    const resetBtn = document.getElementById('bims-reset-btn')
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            Object.keys(scores).forEach(k => delete scores[k])
+            document.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
+            updateDisplay()
+        })
+    }
+
+    updateDisplay()
+}
 
 // Local storage functions for PCC order generator
 function savePCCSelections() {

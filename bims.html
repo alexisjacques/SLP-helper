@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SLP Helper</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+</head>
+
+<body>
+    <main class="container">
+        <header>
+            <h1>SLP Helper</h1>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link">PCC Order Generator</a>
+                <a href="productivity.html" class="nav-link">Productivity Calculator</a>
+                <a href="bims.html" class="nav-link active">BIMS</a>
+                <a href="diet-info.html" class="nav-link">Diet Info</a>
+                <a href="resources.html" class="nav-link">Resources</a>
+            </nav>
+            <p class="lead">Brief Interview for Mental Status — score patient responses quickly.</p>
+        </header>
+
+        <section aria-labelledby="bims-title" class="generator bims-section">
+            <h2 id="bims-title">BIMS Scorer</h2>
+
+            <!-- C0200: Word Repetition -->
+            <div class="bims-part">
+                <div class="bims-part-header">
+                    <h3>Repetition of Three Words</h3>
+                </div>
+                <p class="bims-instruction">Say: <em>"I am going to say three words for you to remember. Please repeat
+                        the words after I have said all three: sock, blue, bed."</em></p>
+
+                <div class="bims-items">
+                    <div class="bims-item" data-question="c0200a">
+                        <span class="bims-item-label">Sock</span>
+                        <div class="bims-btn-group" role="group" aria-label="Sock response">
+                            <button class="bims-btn" data-value="0">No <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Yes <span class="bims-pts">(1)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                    <div class="bims-item" data-question="c0200b">
+                        <span class="bims-item-label">Blue</span>
+                        <div class="bims-btn-group" role="group" aria-label="Blue response">
+                            <button class="bims-btn" data-value="0">No <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Yes <span class="bims-pts">(1)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                    <div class="bims-item" data-question="c0200c">
+                        <span class="bims-item-label">Bed</span>
+                        <div class="bims-btn-group" role="group" aria-label="Bed response">
+                            <button class="bims-btn" data-value="0">No <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Yes <span class="bims-pts">(1)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                </div>
+                <div class="bims-subtotal">
+                    Repetition subtotal: <strong id="c0200-subtotal">—</strong> / 3
+                </div>
+            </div>
+
+            <!-- C0300: Temporal Orientation -->
+            <div class="bims-part">
+                <div class="bims-part-header">
+                    <h3>Temporal Orientation</h3>
+                </div>
+                <p class="bims-instruction">Ask: <em>"What year is it right now?"</em> then <em>"What month is it right
+                        now?"</em> then <em>"What day of the week is today?"</em></p>
+
+                <div class="bims-items">
+                    <div class="bims-item bims-item-wide" data-question="c0300a">
+                        <span class="bims-item-label">Year</span>
+                        <div class="bims-btn-group" role="group" aria-label="Year response">
+                            <button class="bims-btn" data-value="0">Missed by 5+ yrs<br>or no answer <span
+                                    class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Missed by<br>2–4 years <span
+                                    class="bims-pts">(1)</span></button>
+                            <button class="bims-btn" data-value="2">Missed by<br>1 year <span
+                                    class="bims-pts">(2)</span></button>
+                            <button class="bims-btn" data-value="3">Correct <span class="bims-pts">(3)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                    <div class="bims-item bims-item-wide" data-question="c0300b">
+                        <span class="bims-item-label">Month</span>
+                        <div class="bims-btn-group" role="group" aria-label="Month response">
+                            <button class="bims-btn" data-value="0">Missed by 2+ months<br>or no answer <span
+                                    class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Missed by<br>1 month <span
+                                    class="bims-pts">(1)</span></button>
+                            <button class="bims-btn" data-value="2">Correct <span class="bims-pts">(2)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                    <div class="bims-item" data-question="c0300c">
+                        <span class="bims-item-label">Day of Week</span>
+                        <div class="bims-btn-group" role="group" aria-label="Day of week response">
+                            <button class="bims-btn" data-value="0">Incorrect or<br>no answer <span
+                                    class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                </div>
+                <div class="bims-subtotal">
+                    Orientation subtotal: <strong id="c0300-subtotal">—</strong> / 6
+                </div>
+            </div>
+
+            <!-- C0400: Word Recall -->
+            <div class="bims-part">
+                <div class="bims-part-header">
+                    <h3>Word Recall</h3>
+                </div>
+                <p class="bims-instruction">Ask: <em>"Let's go back to the three words I asked you to remember. What
+                        were they?"</em> If patient cannot recall, offer a semantic cue (e.g., "It was a type of
+                    clothing" for sock).</p>
+
+                <div class="bims-items">
+                    <div class="bims-item bims-item-wide" data-question="c0400a">
+                        <span class="bims-item-label">Sock</span>
+                        <div class="bims-btn-group" role="group" aria-label="Sock recall">
+                            <button class="bims-btn" data-value="0">Could not recall <span
+                                    class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Recalled with cue <span
+                                    class="bims-pts">(1)</span></button>
+                            <button class="bims-btn" data-value="2">Recalled without cue <span
+                                    class="bims-pts">(2)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                    <div class="bims-item bims-item-wide" data-question="c0400b">
+                        <span class="bims-item-label">Blue</span>
+                        <div class="bims-btn-group" role="group" aria-label="Blue recall">
+                            <button class="bims-btn" data-value="0">Could not recall <span
+                                    class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Recalled with cue <span
+                                    class="bims-pts">(1)</span></button>
+                            <button class="bims-btn" data-value="2">Recalled without cue <span
+                                    class="bims-pts">(2)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                    <div class="bims-item bims-item-wide" data-question="c0400c">
+                        <span class="bims-item-label">Bed</span>
+                        <div class="bims-btn-group" role="group" aria-label="Bed recall">
+                            <button class="bims-btn" data-value="0">Could not recall <span
+                                    class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Recalled with cue <span
+                                    class="bims-pts">(1)</span></button>
+                            <button class="bims-btn" data-value="2">Recalled without cue <span
+                                    class="bims-pts">(2)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                </div>
+                <div class="bims-subtotal">
+                    Recall subtotal: <strong id="c0400-subtotal">—</strong> / 6
+                </div>
+            </div>
+
+            <!-- Score Summary -->
+            <div class="bims-score-summary" id="bims-score-summary" aria-live="polite">
+                <div class="bims-total-row">
+                    <span class="bims-total-label">BIMS Total Score</span>
+                    <span class="bims-total-value" id="bims-total">—</span>
+                    <span class="bims-total-denom">/ 15</span>
+                </div>
+                <div class="bims-interpretation" id="bims-interpretation"></div>
+            </div>
+
+            <div class="bims-controls">
+                <button id="bims-reset-btn" class="secondary">Reset</button>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <small>Made with love by Alexis, SLP</small>
+        </footer>
+    </main>
+
+    <script src="main.js" defer></script>
+</body>
+
+</html>
