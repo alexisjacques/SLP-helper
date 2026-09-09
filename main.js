@@ -276,10 +276,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 const hasDysph = sel.some(s => dysphagiaCodes.some(c => s.includes(c)))
                 const ltgInputs = Array.from(document.querySelectorAll('[id^="LTG"] input[type="checkbox"]'))
                 const hasLTGDiet = ltgInputs.some(i => i.checked)
+
+                const dxInputs = Array.from(document.querySelectorAll('#dysphagia input[type="checkbox"], #cognition input[type="checkbox"], #language input[type="checkbox"], #motor-speech input[type="checkbox"], #voice input[type="checkbox"]'))
+                const hasAnyDx = dxInputs.some(i => i.checked)
+                if (!hasAnyDx) messages.push('Message: No dx is selected.')
+
+                if (hasAnyDx && hasLTGDiet && !hasDysph) messages.push('Message: No dysphagia dx is selected for LTG diet.')
                 if (hasDysph && !hasLTGDiet) messages.push('Message: No LTG diet selected for dysphagia tx.')
-                const freqCodes = ['5x4', '3x4', '5x3', '6visits2wk', '6visits4wk']
-                const hasFreq = sel.some(s => freqCodes.some(c => s.includes(c)))
-                if (!hasFreq) messages.push('Message: No Frequency of Tx selected.')
+
+                const freqChecked = Array.from(document.querySelectorAll('#Freq input[type="checkbox"]')).filter(i => i.checked)
+                if (freqChecked.length === 0) messages.push('Message: No Frequency of Tx selected.')
+                else if (freqChecked.length > 1) messages.push('Message: More than one frequency of tx is selected.')
+
+                const solidCodes = ['reg7', 'sb6', 'mm5', 'pu4']
+                const liquidCodes = ['thins0', 'mt2', 'mo3', 'ex4']
+                const solidChecked = ltgInputs.filter(i => i.checked && solidCodes.includes(i.dataset.label))
+                const liquidChecked = ltgInputs.filter(i => i.checked && liquidCodes.includes(i.dataset.label))
+                if (solidChecked.length > 1) messages.push('Message: More than one solid consistency is selected in LTG diet.')
+                if (liquidChecked.length > 1) messages.push('Message: More than one liquid consistency is selected in LTG diet.')
+
                 if (messages.length) {
                     warningBox.innerHTML = messages.join('<br>')
                     warningBox.hidden = false
