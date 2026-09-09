@@ -164,11 +164,13 @@
 
                 <div class="category" id="Freq">
                     <h3>Frequency of Tx</h3>
-                    <label><input type="checkbox" data-label="5x4" /> 5x4 (Medicare A) </label>
-                    <label><input type="checkbox" data-label="3x4" /> 3x4 (Medicare B)</label>
-                    <label><input type="checkbox" data-label="5x3" /> 5x3 (Kaiser)</label>
-                    <label><input type="checkbox" data-label="6visits2wk" /> 6 visits in 2 weeks (Medicaid)</label>
-                    <label><input type="checkbox" data-label="6visits4wk" /> 6 visits in 4 weeks (Kaiser B)</label>
+                    <div class="freq-table">
+                        <div class="freq-row"><label><input type="checkbox" data-label="5x4" /> 5x4</label><span class="freq-insurance">Medicare A</span></div>
+                        <div class="freq-row"><label><input type="checkbox" data-label="3x4" /> 3x4</label><span class="freq-insurance">Medicare B</span></div>
+                        <div class="freq-row"><label><input type="checkbox" data-label="5x3" /> 5x3</label><span class="freq-insurance">Kaiser</span></div>
+                        <div class="freq-row"><label><input type="checkbox" data-label="6visits2wk" /> 6 visits in 2 weeks</label><span class="freq-insurance">Medicaid</span></div>
+                        <div class="freq-row"><label><input type="checkbox" data-label="6visits4wk" /> 6 visits in 4 weeks</label><span class="freq-insurance">Kaiser B</span></div>
+                    </div>
                 </div>
 
                 <div class="category two-column" id="LTG-diet">

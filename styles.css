@@ -122,6 +122,29 @@ header h1 {
     margin-bottom: 6px;
 }
 
+.freq-table {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.freq-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 16px;
+    row-gap: 2px;
+}
+
+.freq-row label {
+    margin-bottom: 0;
+}
+
+.freq-insurance {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
 .controls {
     display: flex;
     gap: 12px;
