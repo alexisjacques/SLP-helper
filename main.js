@@ -130,8 +130,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedSolids = ltgSelected.filter(item => solids.some(s => item.includes(s)))
         const selectedLiquids = ltgSelected.filter(item => liquids.some(l => item.includes(l)))
 
+        // When more than one consistency is selected within a group (solid or liquid),
+        // express them as a single slash-joined term in ascending order (e.g. sb6/reg7)
+        const byAscendingLevel = (arr) => [...arr].sort((a, b) => {
+            const numA = parseInt((a.match(/\d+/) || [0])[0], 10)
+            const numB = parseInt((b.match(/\d+/) || [0])[0], 10)
+            return numA - numB
+        })
+        const solidText = selectedSolids.length > 1 ? byAscendingLevel(selectedSolids).join('/') : (selectedSolids[0] || '')
+        const liquidText = selectedLiquids.length > 1 ? byAscendingLevel(selectedLiquids).join('/') : (selectedLiquids[0] || '')
+
         // Always list solids before liquids
-        const ltgPairs = [...selectedSolids, ...selectedLiquids]
+        const ltgPairs = [solidText, liquidText].filter(Boolean)
         let ltgClause = ''
 
         // collect category ids (from the category div ids) for selected speech/cognition groups
@@ -324,6 +334,15 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.categories input[type="checkbox"]').forEach(c => c.checked = false)
             outputEl.value = ''
             copyStatus.textContent = ''
+            // Clear warning messages
+            const warningBox = document.getElementById('warningBox')
+            if (warningBox) {
+                warningBox.innerHTML = ''
+                warningBox.hidden = true
+            }
+            // Clear character count
+            const cntEl = document.getElementById('charCount')
+            if (cntEl) cntEl.textContent = '0'
             // Clear localStorage as well
             clearPCCSelections()
         })
