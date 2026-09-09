@@ -32,12 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Frequency mapping
-        const freqSel = selected.find(s => /5x4|3x4|5x3|6visits/i.test(s)) || ''
+        const freqSel = selected.find(s => /5x4|3x4|5x3|6visits2wk|6visits4wk/i.test(s)) || ''
         let freqText = ''
         if (/5x4/.test(freqSel)) freqText = '5x/wk x 4wks'
         else if (/3x4/.test(freqSel)) freqText = '3x/wk x 4wks'
         else if (/5x3/.test(freqSel)) freqText = '5x/wk x 3wks'
-        else if (/6visits/i.test(freqSel)) freqText = '6 visits in 4 wks'
+        else if (/6visits2wk/i.test(freqSel)) freqText = '6 visits in 2 wks'
+        else if (/6visits4wk/i.test(freqSel)) freqText = '6 visits in 4 wks'
 
         // Category code groups
         const dysphagiaCodes = ['R13.12', 'R13.11', 'R13.10', 'I69.391', 'I69.091', 'I69.191', 'I69.291', 'I69.891', 'R13.13', 'R13.14']
@@ -276,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const ltgInputs = Array.from(document.querySelectorAll('[id^="LTG"] input[type="checkbox"]'))
                 const hasLTGDiet = ltgInputs.some(i => i.checked)
                 if (hasDysph && !hasLTGDiet) messages.push('Message: No LTG diet selected for dysphagia tx.')
-                const freqCodes = ['5x4', '3x4', '5x3', '6visits']
+                const freqCodes = ['5x4', '3x4', '5x3', '6visits2wk', '6visits4wk']
                 const hasFreq = sel.some(s => freqCodes.some(c => s.includes(c)))
                 if (!hasFreq) messages.push('Message: No Frequency of Tx selected.')
                 if (messages.length) {
