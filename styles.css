@@ -1002,6 +1002,17 @@ textarea#pccOutput {
 }
 
 /* BCRS Scorer Styles */
+.bcrs-note {
+    margin: 0 0 24px 0;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: #374151;
+    background: rgba(14, 165, 160, 0.08);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+}
+
 .bcrs-questions {
     margin: 0 0 16px 0;
     padding-left: 28px;
@@ -1077,6 +1088,15 @@ textarea#pccOutput {
     margin-top: 14px;
     padding-top: 14px;
     border-top: 1px solid #e5e7eb;
+}
+
+.bcrs-stage-label {
+    margin: 0 0 4px 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .bcrs-stage-title {
