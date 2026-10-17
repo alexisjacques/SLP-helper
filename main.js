@@ -438,6 +438,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('bims-total')) {
         initBIMS()
     }
+
+    // Initialize BCRS scorer if on page
+    if (document.getElementById('bcrs-total')) {
+        initBCRS()
+    }
 })
 
 function initBIMS() {
@@ -564,6 +569,90 @@ function initBIMS() {
         resetBtn.addEventListener('click', () => {
             Object.keys(scores).forEach(k => delete scores[k])
             document.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
+            updateDisplay()
+        })
+    }
+
+    updateDisplay()
+}
+
+function initBCRS() {
+    const stages = {
+        1: {
+            title: 'Stage 1: No Cognitive Decline (Normal)',
+            desc: 'No subjective complaints of memory deficit. No memory deficit evident on clinical interview; normal adult.'
+        },
+        2: {
+            title: 'Stage 2: Very Mild Cognitive Decline (Age Associated Memory Impairment)',
+            desc: 'Subjective complaints of memory deficit, most frequently in the following areas: forgetting where one has placed familiar objects, forgetting names one formerly knew well. Subjective deficit in word finding. No objective evidence of memory deficit on clinical interview. No objective deficits in employment or social situations. Appropriate concern with respect to symptomatology.'
+        },
+        3: {
+            title: 'Stage 3: Mild Cognitive Decline (Mild Cognitive Impairment)',
+            desc: 'Earliest clear-cut deficits on careful interview. Manifestations in more than one of the following areas: patient may have gotten lost when traveling to an unfamiliar location, word and name finding deficit become evident to others, patient may read a passage or a book and retain relatively little material, patient may demonstrate decreased ability in remembering names upon introduction, patient may have lost or misplaced an object of value. Objective evidence of memory deficit obtained only with an intensive interview. Denial begins to become apparent in patient. Mild to moderate anxiety accompanies symptoms.'
+        },
+        4: {
+            title: 'Stage 4: Moderate Cognitive Decline (Mild Dementia)',
+            desc: 'Clear-cut deficits on careful clinical interview. Deficits are apparent in the following areas: decreased knowledge of current and recent events, may exhibit some deficit in memory of one’s personal history, concentration deficit elicited on serial subtractions, decreased ability to travel, handle finances, etc. Frequently no deficit in the following areas: orientation to time and place, recognition of familiar persons and faces, ability to travel to familiar locations. Assistance required to perform complex tasks (handling finances, planning dinner for guests). Denial is a dominant defense mechanism. Flattening of affect and withdrawal from challenging situations frequently occur.'
+        },
+        5: {
+            title: 'Stage 5: Moderately Severe Cognitive Decline (Moderate Dementia)',
+            desc: 'Patient can no longer survive without some assistance. Patient is unable during interview to recall a major relevant aspect of their current lives (an address or telephone number of many years, the names of close family members, the name of the high school or college from which they graduated). Frequently some disorientation to time (date, day of week, season) or to place. Require no assistance with toileting or eating, but may have difficulty with choosing the proper clothing to wear.'
+        },
+        6: {
+            title: 'Stage 6: Severe Cognitive Decline (Moderately Severe Dementia)',
+            desc: 'Patient will be largely unaware of all recent experiences and events in their lives. Retain some knowledge of their past lives but this is very sketchy. Generally unaware of their surroundings, the year, season, etc. Personality and emotional changes occur. Assistance required in putting on clothing, bathing properly, toileting mechanics. May become incontinent of bowel and bladder. Almost always recall their own name. Frequently continue to be able to distinguish familiar from unfamiliar persons in their environment.'
+        },
+        7: {
+            title: 'Stage 7: Very Severe Cognitive Decline (Severe Dementia or Late Dementia)',
+            desc: 'All verbal abilities are lost over the course of this stage. Frequently there is no speech at all, only unintelligible utterances and rare emergence of forgotten words and phrases. Speech ability limited to approx. a half-dozen intelligible words. Incontinent of urine, requires assistance with toileting and feeding. Basic psychomotor skills (ability to walk, sit up) are lost with the progression of this stage. Ability to smile lost. The brain appears to no longer be able to tell the body what to do. Generalized rigidity and developmental neurologic reflexes are frequently present.'
+        }
+    }
+    const groups = document.querySelectorAll('.bcrs-rating[data-axis]')
+    const scores = {}
+
+    function updateDisplay() {
+        const totalEl = document.getElementById('bcrs-total')
+        const gdsEl = document.getElementById('bcrs-gds')
+        const stageEl = document.getElementById('bcrs-stage')
+        const values = Object.values(scores)
+
+        totalEl.textContent = values.length ? values.reduce((a, b) => a + b, 0) : '—'
+
+        if (values.length === groups.length) {
+            const gds = values.reduce((a, b) => a + b, 0) / groups.length
+            const stage = stages[Math.round(gds)]
+            gdsEl.textContent = Number.isInteger(gds) ? gds : gds.toFixed(1)
+            document.getElementById('bcrs-stage-title').textContent = stage.title
+            document.getElementById('bcrs-stage-desc').textContent = stage.desc
+            stageEl.hidden = false
+        } else {
+            gdsEl.textContent = '—'
+            stageEl.hidden = true
+        }
+    }
+
+    groups.forEach(group => {
+        const axis = group.dataset.axis
+        group.querySelectorAll('.bcrs-option').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const alreadySelected = btn.classList.contains('selected')
+                group.querySelectorAll('.bcrs-option').forEach(b => b.classList.remove('selected'))
+                if (alreadySelected) {
+                    delete scores[axis]
+                } else {
+                    btn.classList.add('selected')
+                    scores[axis] = parseInt(btn.dataset.value, 10)
+                }
+                updateDisplay()
+            })
+        })
+    })
+
+    const resetBtn = document.getElementById('bcrs-reset-btn')
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            Object.keys(scores).forEach(k => delete scores[k])
+            document.querySelectorAll('.bcrs-option').forEach(b => b.classList.remove('selected'))
             updateDisplay()
         })
     }

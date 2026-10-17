@@ -1001,6 +1001,98 @@ textarea#pccOutput {
     color: #991b1b;
 }
 
+/* BCRS Scorer Styles */
+.bcrs-questions {
+    margin: 0 0 16px 0;
+    padding-left: 28px;
+    font-size: 0.92rem;
+    color: #374151;
+    line-height: 1.5;
+}
+
+.bcrs-questions li {
+    margin-bottom: 6px;
+}
+
+.bcrs-rating {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.bcrs-rating-title {
+    margin: 0 0 2px 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.bcrs-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    background: rgba(14, 165, 160, 0.06);
+    color: #374151;
+    border: 1.5px solid rgba(14, 165, 160, 0.2);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.86rem;
+    font-weight: 400;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.bcrs-option:hover {
+    background: rgba(14, 165, 160, 0.16);
+    border-color: rgba(14, 165, 160, 0.45);
+}
+
+.bcrs-option.selected {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.bcrs-option-num {
+    flex-shrink: 0;
+    font-weight: 700;
+    min-width: 14px;
+    color: var(--accent);
+}
+
+.bcrs-option.selected .bcrs-option-num {
+    color: white;
+}
+
+.bcrs-gds-row {
+    margin-top: 10px;
+}
+
+.bcrs-stage {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.bcrs-stage-title {
+    margin: 0 0 6px 0;
+    font-weight: 700;
+    font-size: 0.98rem;
+    color: #0f172a;
+}
+
+.bcrs-stage-desc {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
 .bims-controls,
 .reset-row {
     display: flex;
