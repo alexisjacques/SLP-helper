@@ -443,7 +443,145 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('bcrs-total')) {
         initBCRS()
     }
+
+    // Initialize SLUMS scorer if on page
+    if (document.getElementById('slums-total')) {
+        initSLUMS()
+    }
 })
+
+function initSLUMS() {
+    const items = document.querySelectorAll('.bims-item[data-question]')
+    const parts = document.querySelectorAll('.bims-part')
+    const educationRow = document.getElementById('slums-education')
+    const scores = {}
+    let education = null
+
+    // Cutoffs from the SLUMS form: [normal min, MNCD min]
+    const cutoffs = {
+        hs: { normal: 27, mncd: 21, label: 'High school education' },
+        lths: { normal: 25, mncd: 20, label: 'Less than high school education' }
+    }
+
+    function sum(keys) {
+        return keys.reduce((total, k) => total + scores[k], 0)
+    }
+
+    function updateDisplay() {
+        items.forEach(item => {
+            const k = item.dataset.question
+            item.querySelector('.bims-item-score').textContent = scores[k] !== undefined ? scores[k] : '—'
+        })
+
+        // Subtotal for each part that has scored items
+        parts.forEach(part => {
+            const subtotalEl = part.querySelector('.bims-subtotal strong')
+            if (!subtotalEl) return
+            const keys = [...part.querySelectorAll('.bims-item[data-question]')].map(i => i.dataset.question)
+            subtotalEl.textContent = keys.every(k => scores[k] !== undefined) ? sum(keys) : '—'
+        })
+
+        const allKeys = [...items].map(i => i.dataset.question)
+        const totalEl = document.getElementById('slums-total')
+        const interpEl = document.getElementById('slums-interpretation')
+        interpEl.className = 'bims-interpretation'
+        interpEl.textContent = ''
+
+        if (!allKeys.every(k => scores[k] !== undefined)) {
+            totalEl.textContent = '—'
+            return
+        }
+
+        const total = sum(allKeys)
+        totalEl.textContent = total
+
+        if (!education) {
+            interpEl.textContent = 'Select education level to interpret score'
+            return
+        }
+
+        const c = cutoffs[education]
+        let label, cls
+        if (total >= c.normal) { label = `Normal (${c.normal}–30)`; cls = 'bims-intact' }
+        else if (total >= c.mncd) { label = `Mild Neurocognitive Disorder (${c.mncd}–${c.normal - 1})`; cls = 'bims-moderate' }
+        else { label = `Dementia (1–${c.mncd - 1})`; cls = 'bims-severe' }
+        interpEl.textContent = `${label} · ${c.label}`
+        interpEl.className = `bims-interpretation ${cls}`
+    }
+
+    items.forEach(item => {
+        const question = item.dataset.question
+        item.querySelectorAll('.bims-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const alreadySelected = btn.classList.contains('selected')
+                item.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
+                if (alreadySelected) {
+                    delete scores[question]
+                } else {
+                    btn.classList.add('selected')
+                    scores[question] = parseInt(btn.dataset.value, 10)
+                }
+                shortcuts.forEach(s => { if (s.keys.includes(question)) syncShortcut(s) })
+                updateDisplay()
+            })
+        })
+    })
+
+    // "All" shortcut rows set every item in their group at once
+    const shortcuts = [
+        { row: document.getElementById('slums-orientation-all-row'), keys: ['day', 'year', 'state'] },
+        { row: document.getElementById('slums-recall-all-row'), keys: ['apple', 'pen', 'tie', 'house', 'car'] },
+        { row: document.getElementById('slums-story-all-row'), keys: ['storyName', 'storyWork', 'storyWhen', 'storyState'] }
+    ]
+
+    function syncShortcut({ row, keys }) {
+        row.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
+        const vals = keys.map(k => scores[k])
+        if (vals.every(v => v !== undefined) && vals.every(v => v === vals[0])) {
+            row.querySelector(`.bims-btn[data-value="${vals[0]}"]`).classList.add('selected')
+        }
+    }
+
+    shortcuts.forEach(shortcut => {
+        shortcut.row.querySelectorAll('.bims-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const alreadySelected = btn.classList.contains('selected')
+                const val = parseInt(btn.dataset.value, 10)
+                shortcut.keys.forEach(k => {
+                    const item = document.querySelector(`[data-question="${k}"]`)
+                    item.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
+                    if (alreadySelected) {
+                        delete scores[k]
+                    } else {
+                        scores[k] = val
+                        item.querySelector(`.bims-btn[data-value="${val}"]`).classList.add('selected')
+                    }
+                })
+                syncShortcut(shortcut)
+                updateDisplay()
+            })
+        })
+    })
+
+    educationRow.querySelectorAll('.bims-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const alreadySelected = btn.classList.contains('selected')
+            educationRow.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
+            education = alreadySelected ? null : btn.dataset.value
+            if (!alreadySelected) btn.classList.add('selected')
+            updateDisplay()
+        })
+    })
+
+    document.getElementById('slums-reset-btn').addEventListener('click', () => {
+        Object.keys(scores).forEach(k => delete scores[k])
+        education = null
+        document.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
+        updateDisplay()
+    })
+
+    updateDisplay()
+}
 
 function initBIMS() {
     const questions = {

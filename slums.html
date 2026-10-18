@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SLP Helper</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+</head>
+
+<body>
+    <main class="container">
+        <header>
+            <h1>SLP Helper</h1>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link">PCC Order Generator</a>
+                <a href="productivity.html" class="nav-link">Productivity Calculator</a>
+                <a href="test-scorers.html" class="nav-link active">Test Scorers</a>
+                <a href="diet-info.html" class="nav-link">Diet Info</a>
+                <a href="resources.html" class="nav-link">Resources</a>
+            </nav>
+            <nav class="subnav" aria-label="Test scorers">
+                <a href="bims.html" class="subnav-link">BIMS</a>
+                <a href="bcrs.html" class="subnav-link">BCRS</a>
+                <a href="slums.html" class="subnav-link active">SLUMS</a>
+            </nav>
+            <p class="lead">Saint Louis University Mental Status. Score patient responses quickly.</p>
+        </header>
+
+        <section aria-labelledby="slums-title" class="generator bims-section">
+
+            <!-- Education -->
+            <div class="bims-part">
+                <div class="bims-part-header">
+                    <h3>Education</h3>
+                </div>
+                <p class="bims-instruction">Cutoff scores depend on the patient's education level.</p>
+                <div class="bims-items">
+                    <div class="bims-item" id="slums-education">
+                        <span class="bims-item-label">Level</span>
+                        <div class="bims-btn-group" role="group" aria-label="Education level">
+                            <button class="bims-btn" data-value="hs">High school or more</button>
+                            <button class="bims-btn" data-value="lths">Less than high school</button>
+                        </div>
+                        <span class="bims-item-score"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q1–3: Orientation -->
+            <div class="bims-part">
+                <div class="bims-part-header">
+                    <h3>Orientation</h3>
+                </div>
+                <div class="bims-items">
+                    <p class="bims-instruction bims-inline-prompt">1. Ask: <em>"What day of the week is it?"</em></p>
+                    <div class="bims-item" data-question="day">
+                        <span class="bims-item-label">Day</span>
+                        <div class="bims-btn-group" role="group" aria-label="Day of week response">
+                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+
+                    <p class="bims-instruction bims-inline-prompt">2. Ask: <em>"What is the year?"</em></p>
+                    <div class="bims-item" data-question="year">
+                        <span class="bims-item-label">Year</span>
+                        <div class="bims-btn-group" role="group" aria-label="Year response">
+                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+
+                    <p class="bims-instruction bims-inline-prompt">3. Ask: <em>"What state are we in?"</em></p>
+                    <div class="bims-item" data-question="state">
+                        <span class="bims-item-label">State</span>
+                        <div class="bims-btn-group" role="group" aria-label="State response">
+                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                    <div class="bims-item bims-all-three-row" id="slums-orientation-all-row">
+                        <span class="bims-item-label bims-label-normal">All 3</span>
+                        <div class="bims-btn-group" role="group" aria-label="All three orientation questions">
+                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(3)</span></button>
+                        </div>
+                        <span class="bims-item-score"></span>
+                    </div>
+                </div>
+                <div class="bims-subtotal">
+                    Orientation subtotal: <strong>—</strong> / 3
+                </div>
+            </div>
+
+            <!-- Q4: Register objects -->
+            <div class="bims-part">
+                <div class="bims-part-header">
+                    <h3>Five Objects</h3>
+                </div>
+                <p class="bims-instruction">4. Say: <em>"Please remember these five objects. I will ask you what they
+                        are later:<br>apple, pen, tie, house, car."</em> (Not scored now.)</p>
+            </div>
+
+            <!-- Q5: Calculation -->
+            <div class="bims-part">
+                <div class="bims-part-header">
+                    <h3>Calculation</h3>
+                </div>
+                <p class="bims-instruction">5. Say: <em>"You have $100 and you go to the store and buy a dozen apples
+                        for $3 and a tricycle for $20." </em><br><br> Inflation Adjusted: <em>a bag of apples
+                        for $3 and a bottle of vitamins for $20.</em></p>
+                <div class="bims-items">
+                    <p class="bims-instruction bims-inline-prompt">Ask: <em>"How much did you spend?"</em> ($23)</p>
+                    <div class="bims-item" data-question="spent">
+                        <span class="bims-item-label">Spent</span>
+                        <div class="bims-btn-group" role="group" aria-label="Amount spent response">
+                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+
+                    <p class="bims-instruction bims-inline-prompt">Ask: <em>"How much do you have left?"</em> ($77)</p>
+                    <div class="bims-item" data-question="left">
+                        <span class="bims-item-label">Left</span>
+                        <div class="bims-btn-group" role="group" aria-label="Amount left response">
+                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="2">Correct <span class="bims-pts">(2)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                </div>
+                <div class="bims-subtotal">
+                    Calculation subtotal: <strong>—</strong> / 3
+                </div>
+            </div>
+
+            <!-- Q6: Animal naming -->
+            <div class="bims-part">
+                <div class="bims-part-header">
+                    <h3>Animal Naming</h3>
+                </div>
+                <p class="bims-instruction">6. Say: <em>"Please name as many animals as you can in one minute."</em></p>
+                <div class="bims-items">
+                    <div class="bims-item" data-question="animals">
+                        <span class="bims-item-label">Animals</span>
+                        <div class="bims-btn-group" role="group" aria-label="Number of animals named">
+                            <button class="bims-btn" data-value="0">0–4 <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">5–9 <span class="bims-pts">(1)</span></button>
+                            <button class="bims-btn" data-value="2">10–14 <span class="bims-pts">(2)</span></button>
+                            <button class="bims-btn" data-value="3">15+ <span class="bims-pts">(3)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                </div>
+                <div class="bims-subtotal">
+                    Animal naming subtotal: <strong>—</strong> / 3
+                </div>
+            </div>
+
+            <!-- Q7: Recall -->
+            <div class="bims-part">
+                <div class="bims-part-header">
+                    <h3>Object Recall</h3>
+                </div>
+                <p class="bims-instruction">7. Ask: <em>"What were the five objects I asked you to remember?"</em></p>
+                <div class="bims-items">
+                    <div class="bims-item" data-question="apple">
+                        <span class="bims-item-label">Apple</span>
+                        <div class="bims-btn-group" role="group" aria-label="Apple recall">
+                            <button class="bims-btn" data-value="0">No <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Yes <span class="bims-pts">(1)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                    <div class="bims-item" data-question="pen">
+                        <span class="bims-item-label">Pen</span>
+                        <div class="bims-btn-group" role="group" aria-label="Pen recall">
+                            <button class="bims-btn" data-value="0">No <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Yes <span class="bims-pts">(1)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                    <div class="bims-item" data-question="tie">
+                        <span class="bims-item-label">Tie</span>
+                        <div class="bims-btn-group" role="group" aria-label="Tie recall">
+                            <button class="bims-btn" data-value="0">No <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Yes <span class="bims-pts">(1)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                    <div class="bims-item" data-question="house">
+                        <span class="bims-item-label">House</span>
+                        <div class="bims-btn-group" role="group" aria-label="House recall">
+                            <button class="bims-btn" data-value="0">No <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Yes <span class="bims-pts">(1)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                    <div class="bims-item" data-question="car">
+                        <span class="bims-item-label">Car</span>
+                        <div class="bims-btn-group" role="group" aria-label="Car recall">
+                            <button class="bims-btn" data-value="0">No <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Yes <span class="bims-pts">(1)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                    <div class="bims-item bims-all-three-row" id="slums-recall-all-row">
+                        <span class="bims-item-label bims-label-normal">All 5</span>
+                        <div class="bims-btn-group" role="group" aria-label="Recalled all five objects">
+                            <button class="bims-btn" data-value="0">No <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Yes <span class="bims-pts">(5)</span></button>
+                        </div>
+                        <span class="bims-item-score"></span>
+                    </div>
+                </div>
+                <div class="bims-subtotal">
+                    Recall subtotal: <strong>—</strong> / 5
+                </div>
+            </div>
+
+            <!-- Q8: Digits backward -->
+            <div class="bims-part">
+                <div class="bims-part-header">
+                    <h3>Digits Backward</h3>
+                </div>
+                <p class="bims-instruction">8. Say: <em>"I am going to give you a series of numbers and I would like you
+                        to give them to me backwards. For example, if I say 42, you would say 24."</em><br>
+                    Practice with 87 (not scored).</p>
+                <div class="bims-items">
+                    <div class="bims-item" data-question="digits648">
+                        <span class="bims-item-label">649</span>
+                        <div class="bims-btn-group" role="group" aria-label="648 backward">
+                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                    <div class="bims-item" data-question="digits8537">
+                        <span class="bims-item-label">8537</span>
+                        <div class="bims-btn-group" role="group" aria-label="8537 backward">
+                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                </div>
+                <div class="bims-subtotal">
+                    Digits subtotal: <strong>—</strong> / 2
+                </div>
+            </div>
+
+            <!-- Q9: Clock -->
+            <div class="bims-part">
+                <div class="bims-part-header">
+                    <h3>Clock Drawing</h3>
+                </div>
+                <p class="bims-instruction">9. Show a clock face and say: <em>"Please put in the hour markers and the
+                        time at ten minutes to eleven o'clock."</em></p>
+                <div class="bims-items">
+                    <div class="bims-item" data-question="clockMarkers">
+                        <span class="bims-item-label">Hour markers</span>
+                        <div class="bims-btn-group" role="group" aria-label="Hour markers">
+                            <button class="bims-btn" data-value="0">Not okay <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="2">Okay <span class="bims-pts">(2)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                    <div class="bims-item" data-question="clockTime">
+                        <span class="bims-item-label">Time</span>
+                        <div class="bims-btn-group" role="group" aria-label="Time on clock">
+                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="2">Correct <span class="bims-pts">(2)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                </div>
+                <div class="bims-subtotal">
+                    Clock subtotal: <strong>—</strong> / 4
+                </div>
+            </div>
+
+            <!-- Q10: Figures -->
+            <div class="bims-part">
+                <div class="bims-part-header">
+                    <h3>Figures</h3>
+                </div>
+                <p class="bims-instruction">10. Show the figures on the form.</p>
+                <div class="bims-items">
+                    <p class="bims-instruction bims-inline-prompt">Say: <em>"Please place an X in the triangle."</em>
+                    </p>
+                    <div class="bims-item" data-question="triangle">
+                        <span class="bims-item-label">Triangle</span>
+                        <div class="bims-btn-group" role="group" aria-label="X in triangle">
+                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+
+                    <p class="bims-instruction bims-inline-prompt">Ask: <em>"Which of the above figures is
+                            largest?"</em></p>
+                    <div class="bims-item" data-question="largest">
+                        <span class="bims-item-label">Largest</span>
+                        <div class="bims-btn-group" role="group" aria-label="Largest figure">
+                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                </div>
+                <div class="bims-subtotal">
+                    Figures subtotal: <strong>—</strong> / 2
+                </div>
+            </div>
+
+            <!-- Q11: Story -->
+            <div class="bims-part">
+                <div class="bims-part-header">
+                    <h3>Story Recall</h3>
+                </div>
+                <p class="bims-instruction">11. Say: <em>"I am going to tell you a story. Please listen carefully
+                        because
+                        afterwards, I'm going to ask you some questions about it.<br>Jill was a very successful
+                        stockbroker. She made a lot of money on the stock market. She then met Jack, a devastatingly
+                        handsome man. She married him and had three children. They lived in Chicago. She then stopped
+                        work and stayed at home to bring up her children. When they were teenagers, she went back to
+                        work. She and Jack lived happily ever after."</em></p>
+                <div class="bims-items">
+                    <p class="bims-instruction bims-inline-prompt">Ask: <em>"What was the woman's name?"</em> (Jill)</p>
+                    <div class="bims-item" data-question="storyName">
+                        <span class="bims-item-label">Name</span>
+                        <div class="bims-btn-group" role="group" aria-label="Woman's name">
+                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="2">Correct <span class="bims-pts">(2)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+
+                    <p class="bims-instruction bims-inline-prompt">Ask: <em>"What work did she do?"</em> (Stockbroker)
+                    </p>
+                    <div class="bims-item" data-question="storyWork">
+                        <span class="bims-item-label">Work</span>
+                        <div class="bims-btn-group" role="group" aria-label="Work she did">
+                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="2">Correct <span class="bims-pts">(2)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+
+                    <p class="bims-instruction bims-inline-prompt">Ask: <em>"When did she go back to work?"</em> (When
+                        the children were teenagers)</p>
+                    <div class="bims-item" data-question="storyWhen">
+                        <span class="bims-item-label">When</span>
+                        <div class="bims-btn-group" role="group" aria-label="When she went back to work">
+                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="2">Correct <span class="bims-pts">(2)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+
+                    <p class="bims-instruction bims-inline-prompt">Ask: <em>"What state did she live in?"</em>
+                        (Illinois)</p>
+                    <div class="bims-item" data-question="storyState">
+                        <span class="bims-item-label">State</span>
+                        <div class="bims-btn-group" role="group" aria-label="State she lived in">
+                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="2">Correct <span class="bims-pts">(2)</span></button>
+                        </div>
+                        <span class="bims-item-score">—</span>
+                    </div>
+                    <div class="bims-item bims-all-three-row" id="slums-story-all-row">
+                        <span class="bims-item-label bims-label-normal">All 4</span>
+                        <div class="bims-btn-group" role="group" aria-label="All four story questions">
+                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="2">Correct <span class="bims-pts">(8)</span></button>
+                        </div>
+                        <span class="bims-item-score"></span>
+                    </div>
+                </div>
+                <div class="bims-subtotal">
+                    Story subtotal: <strong>—</strong> / 8
+                </div>
+            </div>
+
+            <!-- Score Summary -->
+            <div class="bims-score-summary" aria-live="polite">
+                <div class="bims-total-row">
+                    <span class="bims-total-label">SLUMS Total Score: <span class="bims-total-value"
+                            id="slums-total">—</span><span class="bims-total-denom"> / 30</span></span>
+                </div>
+                <div class="bims-interpretation" id="slums-interpretation"></div>
+            </div>
+
+            <div class="bims-controls">
+                <button id="slums-reset-btn" class="secondary">Reset</button>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <small>Made with love by Alexis, SLP</small>
+        </footer>
+    </main>
+
+    <script src="main.js" defer></script>
+</body>
+
+</html>
