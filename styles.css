@@ -68,6 +68,67 @@ header h1 {
     font-weight: 600;
 }
 
+.subnav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.subnav-link {
+    padding: 6px 14px;
+    text-decoration: none;
+    color: var(--muted);
+    font-weight: 500;
+    font-size: 0.9rem;
+    border: 1px solid #e6eef0;
+    border-radius: 999px;
+    transition: all 0.2s;
+}
+
+.subnav-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.subnav-link.active {
+    color: #fff;
+    background: var(--accent);
+    border-color: var(--accent);
+    font-weight: 600;
+}
+
+.scorer-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+.scorer-card {
+    display: block;
+    padding: 20px;
+    border: 1px solid #e6eef0;
+    border-radius: 10px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s;
+}
+
+.scorer-card:hover {
+    border-color: var(--accent);
+    background: rgba(14, 165, 160, 0.05);
+}
+
+.scorer-card h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.8rem;
+    color: var(--accent);
+}
+
+.scorer-card p {
+    margin: 0;
+    color: var(--muted);
+}
+
 .lead {
     color: var(--muted);
     margin-top: 6px;
