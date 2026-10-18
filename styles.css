@@ -1241,3 +1241,59 @@ textarea#pccOutput {
         font-size: 2rem;
     }
 }
+/* Tap counter (e.g. SLUMS animal naming) */
+.tally {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+.tally-tap {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 28px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    touch-action: manipulation;
+    user-select: none;
+    transition: transform 0.08s, filter 0.15s;
+}
+
+.tally-tap:hover {
+    filter: brightness(1.08);
+}
+
+.tally-tap:active {
+    transform: scale(0.96);
+}
+
+.tally-count {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #374151;
+    min-width: 48px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.tally-undo,
+.tally-clear {
+    background: transparent;
+    color: var(--muted);
+    border: 1.5px solid #d1d5db;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.tally-undo:hover,
+.tally-clear:hover {
+    border-color: var(--muted);
+}

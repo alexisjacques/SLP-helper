@@ -721,6 +721,29 @@ function initSLUMS() {
         })
     })
 
+    // Animal naming tap counter: each tap = one animal, auto-selects the score range
+    const tally = document.getElementById('slums-animal-tally')
+    const tallyCountEl = tally.querySelector('.tally-count')
+    const animalItem = document.querySelector('[data-question="animals"]')
+    let animalCount = 0
+
+    function setAnimalCount(n) {
+        animalCount = Math.max(0, n)
+        tallyCountEl.textContent = animalCount
+        animalItem.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
+        if (animalCount === 0) {
+            delete scores.animals
+        } else {
+            scores.animals = Math.min(3, Math.floor(animalCount / 5))
+            animalItem.querySelector(`.bims-btn[data-value="${scores.animals}"]`).classList.add('selected')
+        }
+        updateDisplay()
+    }
+
+    tally.querySelector('.tally-tap').addEventListener('click', () => setAnimalCount(animalCount + 1))
+    tally.querySelector('.tally-undo').addEventListener('click', () => setAnimalCount(animalCount - 1))
+    tally.querySelector('.tally-clear').addEventListener('click', () => setAnimalCount(0))
+
     function setEducation(value) {
         education = value
         educationRow.querySelectorAll('.bims-btn').forEach(b => {
@@ -738,6 +761,8 @@ function initSLUMS() {
     document.getElementById('slums-reset-btn').addEventListener('click', () => {
         Object.keys(scores).forEach(k => delete scores[k])
         document.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
+        animalCount = 0
+        tallyCountEl.textContent = 0
         setEducation('hs')
         updateDisplay()
     })

@@ -119,11 +119,13 @@
                 <div class="bims-part-header">
                     <h3>Five Objects</h3>
                 </div>
-                <p class="bims-instruction">4. Say: <em>"Please remember these five objects. I will ask you what they
-                        are later:"</em> (Not scored now.)</p>
+                <p class="bims-instruction">4. Say: <em>"Now I am going to give you five
+                        objects to remember. I am going to say them to you first, you repeat them back to me, and
+                        then I am going to ask you to remember them a little later. It doesn't have to be in the same
+                        order. And these objects are:"</em> </p>
                 <p class="slums-words">Apple, Pen, Tie, House, Car</p><br>
-                <p class="bims-instruction">Ask the patient to repeat each of the five objects to make sure that the
-                    patient heard and understood what you said.
+                <p class="bims-instruction">Say: <em>"Please repeat them back to me."</em> (Not scored now.)</p>
+                <p class="bims-instruction">
                     Repeat them as many times as it takes for the patient to repeat them back to you correctly</p>
             </div>
 
@@ -132,14 +134,13 @@
                 <div class="bims-part-header">
                     <h3>Calculation</h3>
                 </div>
-                <p class="bims-instruction">5. Say: <em>"You have $100 and you go to the store and buy a dozen apples
+                <p class="bims-instruction">5. Say: <em>"The next question is: You have $100 and you go to the store and
+                        buy a dozen apples
                         for $3 and a tricycle for $20." </em><br><br> Inflation Adjusted: <em>a bag of apples
-                        for $3 and a bottle of vitamins for $20. </em><br><br> Note: Do not prompt or give hints, but do
-                    give
-                    ample time to the patient to answer the questions. <br> If the patient
-                    asks you to repeat the question, you may do so once. </p>
+                        for $3 and a bottle of vitamins for $20. </em></p>
                 <div class="bims-items">
-                    <p class="bims-instruction bims-inline-prompt">Ask: <em>"How much did you spend?"</em> ($23)</p>
+                    <p class="bims-instruction bims-inline-prompt">Ask: <em>"How much moneydid you spend?"</em> ($23)
+                    </p>
                     <div class="bims-item" data-question="spent">
                         <span class="bims-item-label">Spent</span>
                         <div class="bims-btn-group" role="group" aria-label="Amount spent response">
@@ -162,6 +163,10 @@
                 <div class="bims-subtotal">
                     Calculation subtotal: <strong>—</strong> / 3
                 </div>
+                <p class="bims-instruction">Do not prompt or give hints, but do
+                    give
+                    ample time to the patient to answer the questions. <br> If the patient
+                    asks you to repeat the question, you may do so once. </p>
             </div>
 
             <!-- Q6: Animal naming -->
@@ -171,6 +176,12 @@
                 </div>
                 <p class="bims-instruction">6. Say: <em>"Please name as many animals as you can in one minute."</em><br>
                     Be sure to time them.</p>
+                <div class="tally" id="slums-animal-tally">
+                    <button type="button" class="tally-tap" aria-label="Count one animal">+1 Animal</button>
+                    <span class="tally-count" aria-live="polite">0</span>
+                    <button type="button" class="tally-undo" aria-label="Remove one animal">−1</button>
+                    <button type="button" class="tally-clear">Clear</button>
+                </div>
                 <div class="bims-items">
                     <div class="bims-item" data-question="animals">
                         <span class="bims-item-label">Animals</span>
@@ -193,7 +204,8 @@
                 <div class="bims-part-header">
                     <h3>Object Recall</h3>
                 </div>
-                <p class="bims-instruction">7. Ask: <em>"What were the five objects I asked you to remember?"</em></p>
+                <p class="bims-instruction">7. Ask: <em>"Earlier I gave you those five objects and I asked you to
+                        remember them. Can you tell me those five objects I asked about?"</em></p>
                 <div class="bims-items">
                     <div class="bims-item" data-question="apple">
                         <span class="bims-item-label">Apple</span>
