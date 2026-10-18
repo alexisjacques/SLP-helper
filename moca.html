@@ -179,7 +179,8 @@
                 </div>
                 <div class="bims-items">
                     <p class="bims-instruction bims-inline-prompt">Say: <em>"I am going to say some numbers and when I
-                            am through, repeat them to me exactly as I said them."</em> (2 1 8 5 4)</p>
+                            am through, repeat them to me exactly as I said them."</em> <b>(2 1 8 5 4)</b> <br> Note:
+                        Say the numbers at a rate of one digit per second.</p>
                     <div class="bims-item" data-question="digitsFwd">
                         <span class="bims-item-label">Forward</span>
                         <div class="bims-btn-group" role="group" aria-label="Forward digit span">
@@ -189,8 +190,11 @@
                         <span class="bims-item-score">—</span>
                     </div>
                     <p class="bims-instruction bims-inline-prompt">Say: <em>"Now I am going to say some more numbers,
-                            but when I am through you must repeat them to me in the backward order."</em> (7 4 2 → 2 4
-                        7)</p>
+                            but when I am through you must repeat them to me in the backward order."</em> <b>(7 4 2 → 2
+                            4
+                            7)</b><br>Note: Say the numbers at a rate of one digit per second. If the patient repeats
+                        the sequence in the forward order, the
+                        examiner may not ask the patient to repeat the sequence in backward order at this point. </p>
                     <div class="bims-item" data-question="digitsBwd">
                         <span class="bims-item-label">Backward</span>
                         <div class="bims-btn-group" role="group" aria-label="Backward digit span">
@@ -203,7 +207,8 @@
                             Every time I say the letter A, tap your hand once. If I say a different letter, do not tap
                             your hand."</em></p>
                     <p class="moca-letters">F B <b>A</b> C M N <b>A</b> <b>A</b> J K L B <b>A</b> F <b>A</b> K D E
-                        <b>A</b> <b>A</b> <b>A</b> J <b>A</b> M O F <b>A</b> <b>A</b> B</p>
+                        <b>A</b> <b>A</b> <b>A</b> J <b>A</b> M O F <b>A</b> <b>A</b> B
+                    </p>
                     <div class="bims-item" data-question="vigilance">
                         <span class="bims-item-label">Letters</span>
                         <div class="bims-btn-group" role="group" aria-label="Letter tapping vigilance">
@@ -215,18 +220,65 @@
                     </div>
                     <p class="bims-instruction bims-inline-prompt">Say: <em>"Now, I will ask you to count by subtracting
                             7 from 100, and then, keep subtracting 7 from your answer until I tell you to stop."</em>
-                        (93, 86, 79, 72, 65; score each subtraction independently)</p>
-                    <div class="bims-item" data-question="serial7">
-                        <span class="bims-item-label">Serial 7s</span>
-                        <div class="bims-btn-group" role="group" aria-label="Serial 7 subtraction">
-                            <button class="bims-btn" data-value="0">0 correct <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">1 correct <span class="bims-pts">(1)</span></button>
-                            <button class="bims-btn" data-value="2">2–3 correct <span
-                                    class="bims-pts">(2)</span></button>
-                            <button class="bims-btn" data-value="3">4–5 correct <span
-                                    class="bims-pts">(3)</span></button>
+                        The answers are <b>(93, 86, 79, 72, 65)</b>; <br><br>
+                        Note 1: Each subtraction is evaluated independently; that is, if the subject responds
+                        with an incorrect number but continues to correctly subtract 7 from it, each correct
+                        subtraction is counted. <br><br>
+                        Note 2: The patient must
+                        perform
+                        a mental calculation, therefore,
+                        they may not use their fingers nor a pencil and paper to execute the task. The examiner
+                        may not repeat the patient's answers. If the patient asks what their last given answer
+                        was or what number they must subtract from their answer, the examiner responds by
+                        repeating the instructions if not already done so. <br><br>
+                        Scoring: 4–5 correct = 3 pts, 2–3 correct = 2 pts, 1 correct = 1 pt, 0 correct = 0 pts.</p>
+                    <div class="bims-item" data-question="serial7a">
+                        <span class="bims-item-label">1st</span>
+                        <div class="bims-btn-group" role="group" aria-label="Serial 7s, 1st subtraction">
+                            <button class="bims-btn" data-value="0">Incorrect</button>
+                            <button class="bims-btn" data-value="1">Correct: 93</button>
                         </div>
-                        <span class="bims-item-score">—</span>
+                        <span class="bims-item-score"></span>
+                    </div>
+                    <div class="bims-item" data-question="serial7b">
+                        <span class="bims-item-label">2nd</span>
+                        <div class="bims-btn-group" role="group" aria-label="Serial 7s, 2nd subtraction">
+                            <button class="bims-btn" data-value="0">Incorrect</button>
+                            <button class="bims-btn" data-value="1">Correct: 86 (or 7 less than prev answer)</button>
+                        </div>
+                        <span class="bims-item-score"></span>
+                    </div>
+                    <div class="bims-item" data-question="serial7c">
+                        <span class="bims-item-label">3rd</span>
+                        <div class="bims-btn-group" role="group" aria-label="Serial 7s, 3rd subtraction">
+                            <button class="bims-btn" data-value="0">Incorrect</button>
+                            <button class="bims-btn" data-value="1">Correct: 79 (or 7 less than prev answer)</button>
+                        </div>
+                        <span class="bims-item-score"></span>
+                    </div>
+                    <div class="bims-item" data-question="serial7d">
+                        <span class="bims-item-label">4th</span>
+                        <div class="bims-btn-group" role="group" aria-label="Serial 7s, 4th subtraction">
+                            <button class="bims-btn" data-value="0">Incorrect</button>
+                            <button class="bims-btn" data-value="1">Correct: 72 (or 7 less than prev answer)</button>
+                        </div>
+                        <span class="bims-item-score"></span>
+                    </div>
+                    <div class="bims-item" data-question="serial7e">
+                        <span class="bims-item-label">5th</span>
+                        <div class="bims-btn-group" role="group" aria-label="Serial 7s, 5th subtraction">
+                            <button class="bims-btn" data-value="0">Incorrect</button>
+                            <button class="bims-btn" data-value="1">Correct: 65 (or 7 less than prev answer)</button>
+                        </div>
+                        <span class="bims-item-score"></span>
+                    </div>
+                    <div class="bims-item bims-all-three-row" id="moca-serial7-all-row">
+                        <span class="bims-item-label bims-label-normal">All 5</span>
+                        <div class="bims-btn-group" role="group" aria-label="All five serial 7 subtractions">
+                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(3)</span></button>
+                        </div>
+                        <span class="bims-item-score"></span>
                     </div>
                 </div>
                 <div class="bims-subtotal">

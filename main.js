@@ -471,17 +471,32 @@ function initMOCA() {
         return keys.reduce((total, k) => total + obj[k], 0)
     }
 
+    // Serial 7s: 4–5 correct = 3 pts, 2–3 = 2 pts, 1 = 1 pt, 0 = 0 pts
+    const serialKeys = ['serial7a', 'serial7b', 'serial7c', 'serial7d', 'serial7e']
+    const serialPoints = correct => correct >= 4 ? 3 : correct >= 2 ? 2 : correct
+
+    function points(keys) {
+        const serial = keys.filter(k => serialKeys.includes(k))
+        const other = keys.filter(k => !serialKeys.includes(k))
+        return sum(scores, other) + (serial.length ? serialPoints(sum(scores, serial)) : 0)
+    }
+
     function updateDisplay() {
         items.forEach(item => {
             const k = item.dataset.question
+            // Serial 7 rows count correct answers, not points, so their score is shown on the "All 5" row
+            if (serialKeys.includes(k)) return
             item.querySelector('.bims-item-score').textContent = scores[k] !== undefined ? scores[k] : '—'
         })
+
+        document.querySelector('#moca-serial7-all-row .bims-item-score').textContent =
+            serialKeys.every(k => scores[k] !== undefined) ? points(serialKeys) : ''
 
         parts.forEach(part => {
             const subtotalEl = part.querySelector('.bims-subtotal strong')
             if (!subtotalEl) return
             const keys = [...part.querySelectorAll('.bims-item[data-question]')].map(i => i.dataset.question)
-            subtotalEl.textContent = keys.every(k => scores[k] !== undefined) ? sum(scores, keys) : '—'
+            subtotalEl.textContent = keys.every(k => scores[k] !== undefined) ? points(keys) : '—'
         })
 
         document.getElementById('moca-mis').textContent =
@@ -498,7 +513,7 @@ function initMOCA() {
             return
         }
 
-        const raw = sum(scores, allKeys)
+        const raw = points(allKeys)
         const total = Math.min(30, raw + educationPoint)
         totalEl.textContent = total
 
@@ -524,6 +539,7 @@ function initMOCA() {
     // "All" shortcut rows set every item in their group at once
     const shortcuts = [
         { row: document.getElementById('moca-naming-all-row'), keys: ['lion', 'rhino', 'camel'] },
+        { row: document.getElementById('moca-serial7-all-row'), keys: serialKeys },
         { row: document.getElementById('moca-recall-all-row'), keys: recallKeys },
         { row: document.getElementById('moca-orientation-all-row'), keys: ['date', 'month', 'year', 'day', 'place', 'city'] }
     ]
