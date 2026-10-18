@@ -448,7 +448,149 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('slums-total')) {
         initSLUMS()
     }
+
+    // Initialize MoCA scorer if on page
+    if (document.getElementById('moca-total')) {
+        initMOCA()
+    }
 })
+
+function initMOCA() {
+    const items = document.querySelectorAll('.bims-item[data-question]')
+    const parts = document.querySelectorAll('.bims-part')
+    const educationRow = document.getElementById('moca-education')
+    const recallKeys = ['face', 'velvet', 'church', 'daisy', 'red']
+    const scores = {}
+    const mis = {}
+    let educationPoint = 0
+
+    // Recall buttons share a point value, so identify them by their MIS weight
+    const choiceId = btn => btn.dataset.mis ?? btn.dataset.value
+
+    function sum(obj, keys) {
+        return keys.reduce((total, k) => total + obj[k], 0)
+    }
+
+    function updateDisplay() {
+        items.forEach(item => {
+            const k = item.dataset.question
+            item.querySelector('.bims-item-score').textContent = scores[k] !== undefined ? scores[k] : '—'
+        })
+
+        parts.forEach(part => {
+            const subtotalEl = part.querySelector('.bims-subtotal strong')
+            if (!subtotalEl) return
+            const keys = [...part.querySelectorAll('.bims-item[data-question]')].map(i => i.dataset.question)
+            subtotalEl.textContent = keys.every(k => scores[k] !== undefined) ? sum(scores, keys) : '—'
+        })
+
+        document.getElementById('moca-mis').textContent =
+            recallKeys.every(k => mis[k] !== undefined) ? sum(mis, recallKeys) : '—'
+
+        const allKeys = [...items].map(i => i.dataset.question)
+        const totalEl = document.getElementById('moca-total')
+        const interpEl = document.getElementById('moca-interpretation')
+        interpEl.className = 'bims-interpretation'
+        interpEl.textContent = ''
+
+        if (!allKeys.every(k => scores[k] !== undefined)) {
+            totalEl.textContent = '—'
+            return
+        }
+
+        const raw = sum(scores, allKeys)
+        const total = Math.min(30, raw + educationPoint)
+        totalEl.textContent = total
+
+        const label = total >= 26 ? 'Normal (26–30)' : 'Below normal (under 26)'
+        const eduNote = educationPoint && raw < 30 ? ` · Includes +1 for ≤ 12 years education` : ''
+        interpEl.textContent = label + eduNote
+        interpEl.className = `bims-interpretation ${total >= 26 ? 'bims-intact' : 'bims-severe'}`
+    }
+
+    function select(item, btn) {
+        const k = item.dataset.question
+        item.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
+        if (btn) {
+            btn.classList.add('selected')
+            scores[k] = parseInt(btn.dataset.value, 10)
+            if (btn.dataset.mis !== undefined) mis[k] = parseInt(btn.dataset.mis, 10)
+        } else {
+            delete scores[k]
+            delete mis[k]
+        }
+    }
+
+    // "All" shortcut rows set every item in their group at once
+    const shortcuts = [
+        { row: document.getElementById('moca-naming-all-row'), keys: ['lion', 'rhino', 'camel'] },
+        { row: document.getElementById('moca-recall-all-row'), keys: recallKeys },
+        { row: document.getElementById('moca-orientation-all-row'), keys: ['date', 'month', 'year', 'day', 'place', 'city'] }
+    ]
+
+    const itemFor = k => document.querySelector(`[data-question="${k}"]`)
+    const selectedId = k => {
+        const btn = itemFor(k).querySelector('.bims-btn.selected')
+        return btn ? choiceId(btn) : undefined
+    }
+
+    function syncShortcut({ row, keys }) {
+        row.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
+        const ids = keys.map(selectedId)
+        if (ids[0] === undefined || !ids.every(id => id === ids[0])) return
+        const match = [...row.querySelectorAll('.bims-btn')].find(b => choiceId(b) === ids[0])
+        if (match) match.classList.add('selected')
+    }
+
+    items.forEach(item => {
+        item.querySelectorAll('.bims-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                select(item, btn.classList.contains('selected') ? null : btn)
+                shortcuts.forEach(s => { if (s.keys.includes(item.dataset.question)) syncShortcut(s) })
+                updateDisplay()
+            })
+        })
+    })
+
+    shortcuts.forEach(shortcut => {
+        shortcut.row.querySelectorAll('.bims-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const alreadySelected = btn.classList.contains('selected')
+                shortcut.keys.forEach(k => {
+                    const item = itemFor(k)
+                    const target = [...item.querySelectorAll('.bims-btn')].find(b => choiceId(b) === choiceId(btn))
+                    select(item, alreadySelected ? null : target)
+                })
+                syncShortcut(shortcut)
+                updateDisplay()
+            })
+        })
+    })
+
+    function setEducation(value) {
+        educationPoint = value
+        educationRow.querySelectorAll('.bims-btn').forEach(b => {
+            b.classList.toggle('selected', parseInt(b.dataset.value, 10) === value)
+        })
+    }
+
+    educationRow.querySelectorAll('.bims-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            setEducation(parseInt(btn.dataset.value, 10))
+            updateDisplay()
+        })
+    })
+
+    document.getElementById('moca-reset-btn').addEventListener('click', () => {
+        items.forEach(item => select(item, null))
+        shortcuts.forEach(syncShortcut)
+        setEducation(0)
+        updateDisplay()
+    })
+
+    setEducation(0)
+    updateDisplay()
+}
 
 function initSLUMS() {
     const items = document.querySelectorAll('.bims-item[data-question]')
@@ -563,23 +705,28 @@ function initSLUMS() {
         })
     })
 
+    function setEducation(value) {
+        education = value
+        educationRow.querySelectorAll('.bims-btn').forEach(b => {
+            b.classList.toggle('selected', b.dataset.value === value)
+        })
+    }
+
     educationRow.querySelectorAll('.bims-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            const alreadySelected = btn.classList.contains('selected')
-            educationRow.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
-            education = alreadySelected ? null : btn.dataset.value
-            if (!alreadySelected) btn.classList.add('selected')
+            setEducation(btn.dataset.value)
             updateDisplay()
         })
     })
 
     document.getElementById('slums-reset-btn').addEventListener('click', () => {
         Object.keys(scores).forEach(k => delete scores[k])
-        education = null
         document.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
+        setEducation('hs')
         updateDisplay()
     })
 
+    setEducation('hs')
     updateDisplay()
 }
 

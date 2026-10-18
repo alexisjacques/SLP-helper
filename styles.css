@@ -1174,6 +1174,28 @@ textarea#pccOutput {
     line-height: 1.5;
 }
 
+/* SLUMS Scorer Styles */
+.slums-words {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: 0.02em;
+}
+
+/* MoCA Scorer Styles */
+.moca-letters {
+    margin: 0 0 4px 0;
+    font-size: 1.05rem;
+    color: #0f172a;
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+}
+
+.moca-letters b {
+    color: var(--accent);
+}
+
 .bims-controls,
 .reset-row {
     display: flex;
