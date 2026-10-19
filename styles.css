@@ -2105,12 +2105,19 @@ textarea#pccOutput {
 
     body.printing-report .print-report {
         display: block;
+        /* Page margin lives here so @page can be margin-free (see below);
+           clone repeats the padding on every printed page */
+        padding: 12mm;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
 
+    /* No page margin leaves the browser no room for its header/footer
+       (page URL, date, title, page numbers) */
     @page {
-        margin: 12mm;
+        margin: 0;
     }
 }
 
