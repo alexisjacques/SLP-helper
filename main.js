@@ -619,7 +619,74 @@ function initMOCA() {
     // Orientation reference: today's date, time and (on request) the administrator's city
     initTodayCard(document.getElementById('moca-today'))
 
+    // PDF report. The five serial 7s are one scored item (4–5 correct = 3, 2–3 = 2, 1 = 1).
+    const reportSections = [
+        ['Visuospatial / executive', [['1', 'Alternating trail', 'trail'], ['2', 'Copy cube', 'cube'],
+            ['3', 'Clock: contour', 'clockContour'], ['3', 'Clock: numbers', 'clockNumbers'], ['3', 'Clock: hands', 'clockHands']]],
+        ['Naming', [['4', 'Lion', 'lion'], ['4', 'Rhinoceros', 'rhino'], ['4', 'Camel', 'camel']]],
+        ['Attention', [['6a', 'Digits forward (21854)', 'digitsFwd'], ['6b', 'Digits backward (247)', 'digitsBwd'],
+            ['7', 'Letter tapping', 'vigilance'], ['8', 'Serial 7s (93, 86, 79, 72, 65)', 'serial7']]],
+        ['Language', [['9a', 'Sentence repetition 1', 'sentence1'], ['9b', 'Sentence repetition 2', 'sentence2'],
+            ['10', 'Letter F fluency', 'fluency']]],
+        ['Abstraction', [['11a', 'Train – bicycle', 'trainBicycle'], ['11b', 'Ruler – watch', 'rulerWatch']]],
+        ['Delayed recall (no cue)', [['12', 'Face', 'face'], ['12', 'Velvet', 'velvet'], ['12', 'Church', 'church'],
+            ['12', 'Daisy', 'daisy'], ['12', 'Red', 'red']]],
+        ['Orientation', [['13', 'Date', 'date'], ['13', 'Month', 'month'], ['13', 'Year', 'year'], ['13', 'Day', 'day'],
+            ['13', 'Place', 'place'], ['13', 'City', 'city']]]
+    ]
+
+    const report = initReportForm('moca', ({ patient, admin, when }) => {
+        const serialDone = serialKeys.every(k => scores[k] !== undefined)
+        const serialCorrect = sum(scores, serialKeys.filter(k => scores[k] !== undefined))
+        const fluencyCount = parseInt(document.querySelector('#moca-fluency-tally .tally-count').textContent, 10)
+
+        const row = ([num, item, key]) => {
+            if (key === 'serial7') {
+                return {
+                    num, item, max: 3,
+                    points: serialDone ? serialPoints(serialCorrect) : undefined,
+                    response: serialDone ? `${serialCorrect} of 5 correct` : null
+                }
+            }
+            const label = selectedLabel(key)
+            return {
+                num, item, max: 1, points: scores[key],
+                response: key === 'fluency' && label && fluencyCount > 0 ? `${fluencyCount} words (${label})` : label
+            }
+        }
+        const sections = reportSections.map(([title, rows]) => ({ title, rows: rows.map(row) }))
+
+        const allKeys = [...items].map(i => i.dataset.question)
+        const done = allKeys.every(k => scores[k] !== undefined)
+        const raw = points(allKeys.filter(k => !serialKeys.includes(k) && scores[k] !== undefined)) +
+            (serialDone ? serialPoints(serialCorrect) : 0)
+        const total = Math.min(30, raw + educationPoint)
+        const misDone = recallKeys.every(k => mis[k] !== undefined)
+
+        return {
+            title: 'MoCA Report',
+            subtitle: 'Montreal Cognitive Assessment',
+            filename: 'MoCA',
+            patient, admin, when,
+            details: [
+                ['Education', educationPoint ? '12 years or fewer (+1 point)' : 'More than 12 years'],
+                ['Memory Index Score', misDone ? `${sum(mis, recallKeys)} / 15` : '—']
+            ],
+            dense: true,
+            total, max: 30,
+            interpretation: !done
+                ? `Incomplete: ${allKeys.filter(k => scores[k] !== undefined).length} of ${allKeys.length} items scored`
+                : total >= 26 ? 'Normal' : 'Below normal',
+            sections,
+            cutoffs: {
+                head: ['Score', 'Interpretation'],
+                rows: [['26–30', 'Normal'], ['0–25', 'Below normal']]
+            }
+        }
+    })
+
     document.getElementById('moca-reset-btn').addEventListener('click', () => {
+        report.reset()
         fluencyTally.reset()
         resetFluencyTimer()
         items.forEach(item => select(item, null))
@@ -794,9 +861,8 @@ function initSLUMS() {
 
     const report = initReportForm('slums', ({ patient, admin, when }) => {
         const responseFor = key => {
-            const btn = document.querySelector(`[data-question="${key}"] .bims-btn.selected`)
-            if (!btn) return null
-            const label = btn.firstChild.textContent.trim()
+            const label = selectedLabel(key)
+            if (!label) return null
             const count = parseInt(document.querySelector('#slums-animal-tally .tally-count').textContent, 10)
             return key === 'animals' && count > 0 ? `${count} animals (${label})` : label
         }
@@ -966,12 +1032,44 @@ function initBIMS() {
     // Orientation reference: today's year, month and day of the week
     initTodayCard(document.getElementById('bims-today'))
 
+    // PDF report
+    const reportSections = [
+        ['Repetition of three words · C0200', [['1', 'Sock', 'c0200a'], ['1', 'Blue', 'c0200b'], ['1', 'Bed', 'c0200c']]],
+        ['Temporal orientation · C0300', [['2', 'Year', 'c0300a'], ['3', 'Month', 'c0300b'], ['4', 'Day of the week', 'c0300c']]],
+        ['Word recall · C0400', [['5', 'Sock', 'c0400a'], ['5', 'Blue', 'c0400b'], ['5', 'Bed', 'c0400c']]]
+    ]
+
+    const report = initReportForm('bims', ({ patient, admin, when }) => {
+        const sections = reportSections.map(([title, rows]) => ({
+            title,
+            rows: rows.map(([num, item, key]) => ({ num, item, max: questions[key], points: scores[key], response: selectedLabel(key) }))
+        }))
+        const allKeys = Object.keys(questions)
+        const total = getSubtotal(allKeys.filter(k => scores[k] !== undefined))
+        const interpretation = !allAnswered(allKeys)
+            ? `Incomplete: ${allKeys.filter(k => scores[k] !== undefined).length} of ${allKeys.length} items scored`
+            : total >= 13 ? 'Cognitively Intact' : total >= 8 ? 'Moderately Impaired' : 'Severely Impaired'
+
+        return {
+            title: 'BIMS Report',
+            subtitle: 'Brief Interview for Mental Status',
+            filename: 'BIMS',
+            patient, admin, when,
+            total, max: 15, interpretation, sections,
+            cutoffs: {
+                head: ['Score', 'Interpretation'],
+                rows: [['13–15', 'Cognitively intact'], ['8–12', 'Moderately impaired'], ['0–7', 'Severely impaired']]
+            }
+        }
+    })
+
     // Reset button
     const resetBtn = document.getElementById('bims-reset-btn')
     if (resetBtn) {
         resetBtn.addEventListener('click', () => {
             Object.keys(scores).forEach(k => delete scores[k])
             document.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
+            report.reset()
             updateDisplay()
         })
     }
@@ -1054,11 +1152,57 @@ function initBCRS() {
     // Orientation reference: today's date and time, and (on request) the administrator's city
     initTodayCard(document.getElementById('bcrs-today'))
 
+    // PDF report: one row per rated area; higher ratings mean more impairment, so no ✓/✗ marks
+    const areaNames = {
+        past: 'Past memory', recent: 'Recent memory', orientation: 'Orientation',
+        concentration: 'Concentration', function: 'Functioning and self care'
+    }
+
+    const report = initReportForm('bcrs', ({ patient, admin, when }) => {
+        const rows = [...groups].map((group, i) => {
+            const axis = group.dataset.axis
+            const btn = group.querySelector('.bcrs-option.selected')
+            return {
+                num: String(i + 1),
+                item: areaNames[axis],
+                max: 7,
+                points: scores[axis],
+                response: btn ? btn.querySelector('span:last-child').textContent.replace(/\s+/g, ' ').trim() : null
+            }
+        })
+        const values = Object.values(scores)
+        const total = values.reduce((a, b) => a + b, 0)
+        const done = values.length === groups.length
+        const gds = total / groups.length
+        const stage = done ? stages[Math.round(gds)] : null
+
+        return {
+            title: 'BCRS Report',
+            subtitle: 'Brief Cognitive Rating Scale',
+            filename: 'BCRS',
+            patientLabel: 'Resident',
+            patient, admin, when,
+            details: [['GDS score', done ? (Number.isInteger(gds) ? gds : gds.toFixed(1)) : '—']],
+            marks: false,
+            total, max: 35,
+            interpretation: stage ? stage.title : `Incomplete: ${values.length} of ${groups.length} areas rated`,
+            sections: [{ title: 'Ratings (1 = no deficit, 7 = most severe)', rows }],
+            cutoffs: {
+                head: ['GDS stage', 'Total', 'Interpretation'],
+                rows: [['1', '5–7', 'No cognitive decline'], ['2', '8–12', 'Very mild cognitive decline'],
+                    ['3', '13–17', 'Mild cognitive decline'], ['4', '18–22', 'Moderate cognitive decline'],
+                    ['5', '23–27', 'Moderately severe cognitive decline'], ['6', '28–32', 'Severe cognitive decline'],
+                    ['7', '33–35', 'Very severe cognitive decline']]
+            }
+        }
+    })
+
     const resetBtn = document.getElementById('bcrs-reset-btn')
     if (resetBtn) {
         resetBtn.addEventListener('click', () => {
             Object.keys(scores).forEach(k => delete scores[k])
             document.querySelectorAll('.bcrs-option').forEach(b => b.classList.remove('selected'))
+            report.reset()
             updateDisplay()
         })
     }
@@ -1882,6 +2026,17 @@ function initReportForm(prefix, buildReport) {
     }
 }
 
+// Visible label of the selected button for a scored item, without its "(n)" points
+// and with line breaks flattened, e.g. "Missed by 2–4 years". Null when unanswered.
+function selectedLabel(key) {
+    const btn = document.querySelector(`[data-question="${key}"] .bims-btn.selected`)
+    if (!btn) return null
+    const copy = btn.cloneNode(true)
+    copy.querySelectorAll('.bims-pts').forEach(el => el.remove())
+    copy.querySelectorAll('br').forEach(el => el.replaceWith(' '))
+    return copy.textContent.replace(/\s+/g, ' ').trim()
+}
+
 // Renders a scorer report into #print-report and opens the print dialog (Save as PDF).
 function printScorerReport(r) {
     const esc = v => String(v).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]))
@@ -1891,7 +2046,8 @@ function printScorerReport(r) {
 
     const unscored = r.sections.flatMap(sec => sec.rows).filter(row => row.points === undefined)
 
-    const mark = row => row.points === undefined ? '<span class="pr-mark pr-none">–</span>'
+    const mark = row => r.marks === false ? ''
+        : row.points === undefined ? '<span class="pr-mark pr-none">–</span>'
         : row.points === row.max ? '<span class="pr-mark pr-ok">✓</span>'
             : row.points === 0 ? '<span class="pr-mark pr-miss">✗</span>'
                 : '<span class="pr-mark pr-part">◐</span>'
@@ -1916,13 +2072,14 @@ function printScorerReport(r) {
         </table>` : ''
 
     const details = [
-        ['Patient', r.patient || '—'],
+        [r.patientLabel || 'Patient', r.patient || '—'],
         ['Administered by', r.admin || '—'],
         ['Date', whenText],
         ...(r.details || [])
     ]
 
     const container = document.getElementById('print-report')
+    container.classList.toggle('pr-dense', !!r.dense)
     container.innerHTML = `
         <header class="pr-header">
             <h1>${esc(r.title)}</h1>

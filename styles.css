@@ -2011,6 +2011,22 @@ textarea#pccOutput {
     color: #9ca3af;
 }
 
+/* Long reports (MoCA): tighter rows so the whole report fits on one page */
+.pr-dense .pr-items {
+    font-size: 9pt;
+}
+
+.pr-dense .pr-items th,
+.pr-dense .pr-items td {
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.pr-dense .pr-section th,
+.pr-dense .pr-section td {
+    padding-top: 3px;
+}
+
 .pr-footer {
     margin-top: 10px;
     font-size: 8pt;
