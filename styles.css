@@ -1473,6 +1473,62 @@ textarea#pccOutput {
     font-size: 0.84rem;
 }
 
+/* MoCA Memory Index Score breakdown */
+.scorer-mis {
+    margin: 14px 0 0 62px;
+    padding: 12px 16px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.scorer-mis-table {
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.scorer-mis-table th,
+.scorer-mis-table td {
+    padding: 3px 16px 3px 0;
+    text-align: left;
+    font-variant-numeric: tabular-nums;
+}
+
+.scorer-mis-table th {
+    font-weight: 600;
+    color: #374151;
+}
+
+.scorer-mis-table td {
+    color: var(--muted);
+}
+
+.scorer-mis-table td:last-child {
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.scorer-mis-total {
+    margin: 10px 0 0 0;
+    padding-top: 8px;
+    border-top: 1px solid #e5e7eb;
+    font-weight: 700;
+    color: #374151;
+}
+
+/* Keep the first column snug so the interpretation sits next to its score */
+.scorer-cutoffs tr > :first-child {
+    width: 1%;
+    white-space: nowrap;
+    padding-right: 28px;
+}
+
+.scorer-cutoffs-note {
+    margin: 8px 0 0 0;
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
 .scorer-cutoffs th,
 .scorer-cutoffs td {
     padding: 6px 8px;
@@ -1521,7 +1577,8 @@ textarea#pccOutput {
     }
 
     .scorer-q-shortcut-compact,
-    .scorer-today-standalone {
+    .scorer-today-standalone,
+    .scorer-mis {
         margin-left: 0;
     }
 
@@ -1541,6 +1598,11 @@ textarea#pccOutput {
     .scorer-words,
     .scorer-digits {
         font-size: 1.3rem;
+    }
+
+    .scorer-cutoffs tr > :first-child {
+        white-space: normal;
+        padding-right: 12px;
     }
 }
 

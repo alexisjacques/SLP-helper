@@ -595,8 +595,38 @@
                     </div>
                 </div>
 
-                <div class="bims-subtotal">Delayed recall subtotal: <strong>—</strong> / 5 · MIS: <span
-                        id="moca-mis">—</span> / 15</div>
+                <div class="bims-subtotal">Delayed recall subtotal: <strong>—</strong> / 5</div>
+
+                <div class="scorer-mis" aria-live="polite">
+                    <p class="scorer-today-title">Memory Index Score (MIS)</p>
+                    <table class="scorer-mis-table">
+                        <tbody>
+                        <tr>
+                            <th>No cue</th>
+                            <td><span data-mis-count="3">0</span> × 3</td>
+                            <td>= <span data-mis-points="3">0</span></td>
+                        </tr>
+                        <tr>
+                            <th>Category cue</th>
+                            <td><span data-mis-count="2">0</span> × 2</td>
+                            <td>= <span data-mis-points="2">0</span></td>
+                        </tr>
+                        <tr>
+                            <th>Multiple choice cue</th>
+                            <td><span data-mis-count="1">0</span> × 1</td>
+                            <td>= <span data-mis-points="1">0</span></td>
+                        </tr>
+                        <tr>
+                            <th>Not recalled</th>
+                            <td><span data-mis-count="0">0</span> × 0</td>
+                            <td>= <span data-mis-points="0">0</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p class="scorer-mis-total">MIS: <span class="bims-total-value" id="moca-mis">—</span><span
+                            class="bims-total-denom"> / 15</span></p>
+                    <p class="scorer-cutoffs-note" id="moca-mis-progress"></p>
+                </div>
             </div>
 
             <!-- Orientation -->
@@ -728,6 +758,26 @@
                             id="moca-total">—</span><span class="bims-total-denom"> / 30</span></span>
                 </div>
                 <div class="bims-interpretation" id="moca-interpretation"></div>
+
+                <table class="scorer-cutoffs">
+                    <thead>
+                        <tr>
+                            <th>Score</th>
+                            <th>Interpretation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>26–30</th>
+                            <td>Normal</td>
+                        </tr>
+                        <tr>
+                            <th>0–25</th>
+                            <td>Below normal</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="scorer-cutoffs-note">Add 1 point for 12 years or fewer of formal education (maximum total 30).</p>
             </div>
 
             <div class="bims-controls">

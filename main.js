@@ -499,8 +499,17 @@ function initMOCA() {
             subtotalEl.textContent = keys.every(k => scores[k] !== undefined) ? points(keys) : '—'
         })
 
-        document.getElementById('moca-mis').textContent =
-            recallKeys.every(k => mis[k] !== undefined) ? sum(mis, recallKeys) : '—'
+        // Memory Index Score: no cue ×3, category cue ×2, multiple choice cue ×1
+        const misScored = recallKeys.filter(k => mis[k] !== undefined)
+        ;[3, 2, 1, 0].forEach(w => {
+            const count = misScored.filter(k => mis[k] === w).length
+            document.querySelector(`[data-mis-count="${w}"]`).textContent = count
+            document.querySelector(`[data-mis-points="${w}"]`).textContent = count * w
+        })
+        const misDone = misScored.length === recallKeys.length
+        document.getElementById('moca-mis').textContent = misDone ? sum(mis, recallKeys) : '—'
+        document.getElementById('moca-mis-progress').textContent =
+            misDone ? '' : `${misScored.length} of ${recallKeys.length} words scored`
 
         const allKeys = [...items].map(i => i.dataset.question)
         const totalEl = document.getElementById('moca-total')
