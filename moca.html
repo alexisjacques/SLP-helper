@@ -780,6 +780,17 @@
                 <p class="scorer-cutoffs-note">Add 1 point for 12 years or fewer of formal education (maximum total 30).</p>
             </div>
 
+            <!-- Copyable summary -->
+            <div class="scorer-report scorer-summary">
+                <h3 class="scorer-section-title">Summary</h3>
+                <textarea id="moca-summary" rows="3" aria-label="MoCA summary text"
+                    placeholder="Score every item to generate the summary."></textarea>
+                <div class="scorer-report-actions">
+                    <button type="button" id="moca-summary-copy">Copy to clipboard</button>
+                    <span id="moca-summary-status" role="status" aria-live="polite" class="copy-status"></span>
+                </div>
+            </div>
+
             <!-- PDF report -->
             <div class="scorer-report">
                 <h3 class="scorer-section-title">PDF Report</h3>

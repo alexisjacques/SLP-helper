@@ -519,6 +519,7 @@ function initMOCA() {
 
         if (!allKeys.every(k => scores[k] !== undefined)) {
             totalEl.textContent = '—'
+            summaryEl.value = ''
             return
         }
 
@@ -530,7 +531,30 @@ function initMOCA() {
         const eduNote = educationPoint && raw < 30 ? ` · Includes +1 for ≤ 12 years education` : ''
         interpEl.textContent = label + eduNote
         interpEl.className = `bims-interpretation ${total >= 26 ? 'bims-intact' : 'bims-severe'}`
+
+        summaryEl.value = scoreSummary({
+            test: 'MoCA', score: `${total}/30`, normal: total >= 26,
+            level: total >= 26 ? 'within normal limits' : 'below normal limits',
+            areas: summaryDomains.filter(([, keys]) => points(keys) < maxFor(keys)).map(([name]) => name)
+        })
     }
+
+    // Cognitive domains for the summary; a domain is a deficit when any of its points are lost
+    const summaryDomains = [
+        ['visuospatial/executive function', ['trail', 'cube', 'clockContour', 'clockNumbers', 'clockHands']],
+        ['naming', ['lion', 'rhino', 'camel']],
+        ['attention', ['digitsFwd', 'digitsBwd', 'vigilance', ...serialKeys]],
+        ['language', ['sentence1', 'sentence2', 'fluency']],
+        ['abstract reasoning', ['trainBicycle', 'rulerWatch']],
+        ['delayed recall', recallKeys],
+        ['orientation', ['date', 'month', 'year', 'day', 'place', 'city']]
+    ]
+    // Serial 7s are worth 3 points together; every other item is worth 1
+    const maxFor = keys => keys.filter(k => !serialKeys.includes(k)).length +
+        (keys.some(k => serialKeys.includes(k)) ? 3 : 0)
+    const summaryEl = document.getElementById('moca-summary')
+    initCopyButton(document.getElementById('moca-summary-copy'), summaryEl,
+        document.getElementById('moca-summary-status'))
 
     function select(item, btn) {
         const k = item.dataset.question
@@ -737,24 +761,10 @@ function initSLUMS() {
         const c = cutoffs[education]
         const level = total >= c.normal ? 'within normal limits'
             : total >= c.mncd ? 'consistent with mild neurocognitive disorder' : 'consistent with dementia'
-        const deficits = domains
-            .filter(([, keys]) => keys.some(k => scores[k] < maxPoints(k)))
-            .map(([name]) => name)
-        if (!deficits.length) {
-            summaryEl.value = `Patient scored ${total}/30 on the SLUMS examination, ${level}, with no deficits noted.`
-        } else if (total >= c.normal) {
-            // Points lost but still normal: errors, not deficits
-            summaryEl.value = `Patient scored ${total}/30 on the SLUMS examination, ${level}, ` +
-                `though points were lost in ${listJoin(deficits)}.`
-        } else {
-            summaryEl.value = `Patient scored ${total}/30 on the SLUMS examination, ${level}, ` +
-                `demonstrating deficits in ${listJoin(deficits)}.`
-        }
-    }
-
-    function maxPoints(key) {
-        const btns = document.querySelectorAll(`.bims-item[data-question="${key}"] .bims-btn`)
-        return Math.max(...[...btns].map(b => parseInt(b.dataset.value, 10)))
+        summaryEl.value = scoreSummary({
+            test: 'SLUMS examination', score: `${total}/30`, level, normal: total >= c.normal,
+            areas: domains.filter(([, keys]) => keys.some(k => scores[k] < maxPoints(k))).map(([name]) => name)
+        })
     }
 
     function updateDisplay() {
@@ -1007,12 +1017,26 @@ function initBIMS() {
             else { label = 'Severely Impaired (0–7)'; cls = 'bims-severe' }
             interpEl.textContent = label
             interpEl.className = `bims-interpretation ${cls}`
+
+            const areas = [['word repetition', repKeys], ['temporal orientation', oriKeys], ['short-term recall', recKeys]]
+            summaryEl.value = scoreSummary({
+                test: 'BIMS', score: `${total}/15`, normal: total >= 13,
+                level: total >= 13 ? 'indicating intact cognition'
+                    : total >= 8 ? 'consistent with moderate cognitive impairment'
+                        : 'consistent with severe cognitive impairment',
+                areas: areas.filter(([, keys]) => keys.some(k => scores[k] < questions[k])).map(([name]) => name)
+            })
         } else {
             totalEl.textContent = '—'
             interpEl.textContent = ''
             interpEl.className = 'bims-interpretation'
+            summaryEl.value = ''
         }
     }
+
+    const summaryEl = document.getElementById('bims-summary')
+    initCopyButton(document.getElementById('bims-summary-copy'), summaryEl,
+        document.getElementById('bims-summary-status'))
 
     const repWordKeys = ['c0200a', 'c0200b', 'c0200c']
     const recWordKeys = ['c0400a', 'c0400b', 'c0400c']
@@ -1171,11 +1195,27 @@ function initBCRS() {
             document.getElementById('bcrs-stage-title').textContent = stage.title
             document.getElementById('bcrs-stage-desc').textContent = stage.desc
             stageEl.hidden = false
+
+            // "Stage 4: Moderate Cognitive Decline (Mild Dementia)" → "GDS stage 4, moderate cognitive decline"
+            const [stageNum, stageName] = stage.title.split(': ')
+            const total = values.reduce((a, b) => a + b, 0)
+            summaryEl.value = scoreSummary({
+                test: 'BCRS', score: `${total}/35`,
+                level: `consistent with GDS ${stageNum.toLowerCase()}, ${stageName.replace(/\s*\(.*\)/, '').toLowerCase()}`,
+                normal: Math.round(gds) === 1, minor: 'though mild changes were noted in',
+                // A rating of 1 means no deficit in that area
+                areas: [...groups].filter(g => scores[g.dataset.axis] > 1).map(g => areaNames[g.dataset.axis].toLowerCase())
+            })
         } else {
             gdsEl.textContent = '—'
             stageEl.hidden = true
+            summaryEl.value = ''
         }
     }
+
+    const summaryEl = document.getElementById('bcrs-summary')
+    initCopyButton(document.getElementById('bcrs-summary-copy'), summaryEl,
+        document.getElementById('bcrs-summary-status'))
 
     groups.forEach(group => {
         const axis = group.dataset.axis
@@ -2082,6 +2122,16 @@ function selectedLabel(key) {
     return copy.textContent.replace(/\s+/g, ' ').trim()
 }
 
+// Copyable one-sentence result: score, interpretation, and the areas where points were lost.
+// Within normal limits, lost points are noted without calling them deficits.
+function scoreSummary({ subject = 'Patient', test, score, level, normal, areas,
+    minor = 'though points were lost in' }) {
+    const start = `${subject} scored ${score} on the ${test}, ${level}`
+    if (!areas.length) return `${start}, with no deficits noted.`
+    if (normal) return `${start}, ${minor} ${listJoin(areas)}.`
+    return `${start}, demonstrating deficits in ${listJoin(areas)}.`
+}
+
 // "a", "a and b", "a, b, and c"
 function listJoin(words) {
     if (words.length < 3) return words.join(' and ')
@@ -2089,6 +2139,12 @@ function listJoin(words) {
 }
 
 // Copies a textarea's text to the clipboard and reports the result in statusEl.
+// Highest point value among a scored item's buttons
+function maxPoints(key) {
+    const btns = document.querySelectorAll(`.bims-item[data-question="${key}"] .bims-btn`)
+    return Math.max(...[...btns].map(b => parseInt(b.dataset.value, 10)))
+}
+
 function initCopyButton(btn, textEl, statusEl) {
     const flash = msg => {
         statusEl.textContent = msg

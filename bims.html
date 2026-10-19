@@ -288,6 +288,17 @@
                 </table>
             </div>
 
+            <!-- Copyable summary -->
+            <div class="scorer-report scorer-summary">
+                <h3 class="scorer-section-title">Summary</h3>
+                <textarea id="bims-summary" rows="3" aria-label="BIMS summary text"
+                    placeholder="Score every item to generate the summary."></textarea>
+                <div class="scorer-report-actions">
+                    <button type="button" id="bims-summary-copy">Copy to clipboard</button>
+                    <span id="bims-summary-status" role="status" aria-live="polite" class="copy-status"></span>
+                </div>
+            </div>
+
             <!-- PDF report -->
             <div class="scorer-report">
                 <h3 class="scorer-section-title">PDF Report</h3>
