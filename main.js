@@ -597,7 +597,19 @@ function initMOCA() {
         })
     })
 
+    // Letter F fluency tap counter: auto-selects 11+ words (1) or under 11 (0)
+    const fluencyItem = itemFor('fluency')
+    const fluencyTally = initTally(document.getElementById('moca-fluency-tally'), count => {
+        select(fluencyItem, count === 0 ? null : fluencyItem.querySelector(`.bims-btn[data-value="${count >= 11 ? 1 : 0}"]`))
+        updateDisplay()
+    })
+
+    // Letter F fluency 1-minute countdown timer
+    const resetFluencyTimer = initCountdown(document.getElementById('moca-fluency-timer'), 60)
+
     document.getElementById('moca-reset-btn').addEventListener('click', () => {
+        fluencyTally.reset()
+        resetFluencyTimer()
         items.forEach(item => select(item, null))
         shortcuts.forEach(syncShortcut)
         setEducation(0)
@@ -722,98 +734,20 @@ function initSLUMS() {
     })
 
     // Animal naming tap counter: each tap = one animal, auto-selects the score range
-    const tally = document.getElementById('slums-animal-tally')
-    const tallyCountEl = tally.querySelector('.tally-count')
     const animalItem = document.querySelector('[data-question="animals"]')
-    let animalCount = 0
-
-    function setAnimalCount(n) {
-        animalCount = Math.max(0, n)
-        tallyCountEl.textContent = animalCount
+    const animalTally = initTally(document.getElementById('slums-animal-tally'), count => {
         animalItem.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
-        if (animalCount === 0) {
+        if (count === 0) {
             delete scores.animals
         } else {
-            scores.animals = Math.min(3, Math.floor(animalCount / 5))
+            scores.animals = Math.min(3, Math.floor(count / 5))
             animalItem.querySelector(`.bims-btn[data-value="${scores.animals}"]`).classList.add('selected')
         }
         updateDisplay()
-    }
-
-    tally.querySelector('.tally-tap').addEventListener('click', () => setAnimalCount(animalCount + 1))
-    tally.querySelector('.tally-undo').addEventListener('click', () => setAnimalCount(animalCount - 1))
-    tally.querySelector('.tally-clear').addEventListener('click', () => setAnimalCount(0))
+    })
 
     // Animal naming 1-minute countdown timer
-    const timer = document.getElementById('slums-animal-timer')
-    const timerDisplay = timer.querySelector('.timer-display')
-    const timerStartBtn = timer.querySelector('.timer-start')
-    const TIMER_SECONDS = 60
-    let timerRemaining = TIMER_SECONDS * 1000
-    let timerEndAt = null
-    let timerInterval = null
-
-    function renderTimer() {
-        const secs = Math.ceil(timerRemaining / 1000)
-        timerDisplay.textContent = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`
-    }
-
-    function beep() {
-        try {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)()
-            const osc = ctx.createOscillator()
-            const gain = ctx.createGain()
-            osc.frequency.value = 880
-            gain.gain.setValueAtTime(0.2, ctx.currentTime)
-            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8)
-            osc.connect(gain).connect(ctx.destination)
-            osc.start()
-            osc.stop(ctx.currentTime + 0.8)
-        } catch (e) { /* audio unavailable */ }
-    }
-
-    function pauseTimer() {
-        clearInterval(timerInterval)
-        timerInterval = null
-        timerEndAt = null
-    }
-
-    function tickTimer() {
-        timerRemaining = Math.max(0, timerEndAt - Date.now())
-        renderTimer()
-        if (timerRemaining === 0) {
-            pauseTimer()
-            timer.classList.add('timer-done')
-            timerDisplay.textContent = "Time's up"
-            timerStartBtn.textContent = 'Start'
-            timerStartBtn.disabled = true
-            beep()
-        }
-    }
-
-    function resetTimer() {
-        pauseTimer()
-        timerRemaining = TIMER_SECONDS * 1000
-        timer.classList.remove('timer-done', 'timer-running')
-        timerStartBtn.textContent = 'Start'
-        timerStartBtn.disabled = false
-        renderTimer()
-    }
-
-    timerStartBtn.addEventListener('click', () => {
-        if (timerInterval) {
-            timerRemaining = Math.max(0, timerEndAt - Date.now())
-            pauseTimer()
-            timer.classList.remove('timer-running')
-            timerStartBtn.textContent = 'Resume'
-        } else {
-            timerEndAt = Date.now() + timerRemaining
-            timerInterval = setInterval(tickTimer, 200)
-            timer.classList.add('timer-running')
-            timerStartBtn.textContent = 'Pause'
-        }
-    })
-    timer.querySelector('.timer-reset').addEventListener('click', resetTimer)
+    const resetTimer = initCountdown(document.getElementById('slums-animal-timer'), 60)
 
     function setEducation(value) {
         education = value
@@ -832,8 +766,7 @@ function initSLUMS() {
     document.getElementById('slums-reset-btn').addEventListener('click', () => {
         Object.keys(scores).forEach(k => delete scores[k])
         document.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
-        animalCount = 0
-        tallyCountEl.textContent = 0
+        animalTally.reset()
         resetTimer()
         setEducation('hs')
         updateDisplay()
@@ -1655,3 +1588,99 @@ function calculateClockOut() {
     calculatedClockOutEl.textContent = clockOutString
 }
 
+// Tap counter: +1 / −1 / Clear buttons around a count. Calls onChange(count) after
+// each tap; returns { reset } which zeroes the count without calling onChange.
+function initTally(tally, onChange) {
+    const countEl = tally.querySelector('.tally-count')
+    let count = 0
+
+    function set(n) {
+        count = Math.max(0, n)
+        countEl.textContent = count
+        onChange(count)
+    }
+
+    tally.querySelector('.tally-tap').addEventListener('click', () => set(count + 1))
+    tally.querySelector('.tally-undo').addEventListener('click', () => set(count - 1))
+    tally.querySelector('.tally-clear').addEventListener('click', () => set(0))
+
+    return {
+        reset() {
+            count = 0
+            countEl.textContent = 0
+        }
+    }
+}
+
+// Start/Pause/Resume countdown that beeps at zero. Returns a function that resets it.
+function initCountdown(timer, seconds) {
+    const display = timer.querySelector('.timer-display')
+    const startBtn = timer.querySelector('.timer-start')
+    let remaining = seconds * 1000
+    let endAt = null
+    let interval = null
+
+    function render() {
+        const secs = Math.ceil(remaining / 1000)
+        display.textContent = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`
+    }
+
+    function beep() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)()
+            const osc = ctx.createOscillator()
+            const gain = ctx.createGain()
+            osc.frequency.value = 880
+            gain.gain.setValueAtTime(0.2, ctx.currentTime)
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8)
+            osc.connect(gain).connect(ctx.destination)
+            osc.start()
+            osc.stop(ctx.currentTime + 0.8)
+        } catch (e) { /* audio unavailable */ }
+    }
+
+    function pause() {
+        clearInterval(interval)
+        interval = null
+        endAt = null
+    }
+
+    function tick() {
+        remaining = Math.max(0, endAt - Date.now())
+        render()
+        if (remaining === 0) {
+            pause()
+            timer.classList.add('timer-done')
+            display.textContent = "Time's up"
+            startBtn.textContent = 'Start'
+            startBtn.disabled = true
+            beep()
+        }
+    }
+
+    function reset() {
+        pause()
+        remaining = seconds * 1000
+        timer.classList.remove('timer-done', 'timer-running')
+        startBtn.textContent = 'Start'
+        startBtn.disabled = false
+        render()
+    }
+
+    startBtn.addEventListener('click', () => {
+        if (interval) {
+            remaining = Math.max(0, endAt - Date.now())
+            pause()
+            timer.classList.remove('timer-running')
+            startBtn.textContent = 'Resume'
+        } else {
+            endAt = Date.now() + remaining
+            interval = setInterval(tick, 200)
+            timer.classList.add('timer-running')
+            startBtn.textContent = 'Pause'
+        }
+    })
+    timer.querySelector('.timer-reset').addEventListener('click', reset)
+
+    return reset
+}

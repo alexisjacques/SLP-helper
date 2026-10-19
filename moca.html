@@ -353,6 +353,23 @@
                     <span class="scorer-num">10</span>
                     <div class="scorer-q-body">
                         <p class="scorer-say"><span class="scorer-cue">Say</span>“Now, I want you to tell me as many words as you can think of that begin with the letter F. I will tell you to stop after one minute. Proper nouns, numbers, and different forms of a verb are not permitted.”</p>
+                        <div class="scorer-note">Start the timer as soon as you finish the instruction. Tap
+                            <strong>+1 Word</strong> for each valid F word; the score selects itself.</div>
+
+                        <div class="scorer-tools">
+                            <div class="timer" id="moca-fluency-timer">
+                                <span class="timer-display" aria-live="polite">1:00</span>
+                                <button type="button" class="timer-start">Start</button>
+                                <button type="button" class="timer-reset">Reset timer</button>
+                            </div>
+                            <div class="tally" id="moca-fluency-tally">
+                                <button type="button" class="tally-tap" aria-label="Count one word">+1 Word</button>
+                                <span class="tally-count" aria-live="polite">0</span>
+                                <button type="button" class="tally-undo" aria-label="Remove one word">−1</button>
+                                <button type="button" class="tally-clear">Clear</button>
+                            </div>
+                        </div>
+
                         <div class="bims-item" data-question="fluency">
                             <span class="bims-item-label"></span>
                             <div class="bims-btn-group" role="group" aria-label="Letter F fluency">
