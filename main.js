@@ -111,6 +111,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Oral gratification detection
         const hasOralGrat = selected.some(s => /oralgrat/i.test(s))
 
+        // Improve PO intake detection
+        const hasImprovePO = selected.some(s => /improvepo/i.test(s))
+
         const includesClause = includes.length ? ' which may include ' + includes.join(', ') : ''
 
         // CPT codes
@@ -162,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Build LTG clause with diet tolerance first, then improvement goals
-        const dietText = (hasOralGrat ? 'an oral gratification diet of ' : '') + ltgPairs.join(' and ')
+        const dietText = (hasOralGrat ? 'an oral gratification diet of ' : '') + ltgPairs.join(' and ') + (hasImprovePO ? ' to improve PO intake' : '')
         if (ltgPairs.length && deduped.length) {
             // Both diet and speech/cognition goals
             const domainText = joinWithAnd(deduped)
