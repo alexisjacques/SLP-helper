@@ -1380,8 +1380,13 @@ textarea#pccOutput {
     color: #0f172a;
 }
 
-.scorer-today-grid div:last-child {
+.scorer-today-grid div:has(.scorer-today-locate) {
     grid-column: 1 / -1;
+}
+
+/* Card covering a whole section, lined up with the question text */
+.scorer-today-standalone {
+    margin: 0 0 22px 62px;
 }
 
 .scorer-today-locate {
@@ -1490,7 +1495,8 @@ textarea#pccOutput {
         padding-top: 5px;
     }
 
-    .scorer-q-shortcut {
+    .scorer-q-shortcut,
+    .scorer-today-standalone {
         margin-left: 0;
     }
 

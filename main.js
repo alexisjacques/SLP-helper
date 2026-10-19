@@ -749,6 +749,9 @@ function initSLUMS() {
         updateDisplay()
     })
 
+    // Orientation reference: today's day and year, and (on request) the administrator's state
+    initTodayCard(document.getElementById('slums-today'))
+
     // Animal naming 1-minute countdown timer
     const resetTimer = initCountdown(document.getElementById('slums-animal-timer'), 60)
 
@@ -897,6 +900,9 @@ function initBIMS() {
     wireAllThreeRow('c0200-all-row', repWordKeys)
     wireAllThreeRow('c0400-all-row', recWordKeys)
 
+    // Orientation reference: today's year, month and day of the week
+    initTodayCard(document.getElementById('bims-today'))
+
     // Reset button
     const resetBtn = document.getElementById('bims-reset-btn')
     if (resetBtn) {
@@ -981,6 +987,9 @@ function initBCRS() {
             })
         })
     })
+
+    // Orientation reference: today's date and time, and (on request) the administrator's city
+    initTodayCard(document.getElementById('bcrs-today'))
 
     const resetBtn = document.getElementById('bcrs-reset-btn')
     if (resetBtn) {
@@ -1688,37 +1697,47 @@ function initCountdown(timer, seconds) {
     return reset
 }
 
-// Live "right now" card for orientation questions. The city is looked up only when the
-// button is tapped (browser geolocation + BigDataCloud reverse geocoding) and is
-// remembered in this browser so it shows immediately next time.
+// Live "right now" card for orientation questions. Fills whichever data-today fields
+// the card contains. Location fields (city, state) are looked up only when the button
+// is tapped (browser geolocation + BigDataCloud reverse geocoding) and are remembered
+// in this browser so they show immediately next time.
 function initTodayCard(card) {
-    const field = name => card.querySelector(`[data-today="${name}"]`)
-    const cityEl = field('city')
+    const set = (name, value) => {
+        const el = card.querySelector(`[data-today="${name}"]`)
+        if (el) el.textContent = value
+    }
+    const locationFields = ['city', 'state'].filter(name => card.querySelector(`[data-today="${name}"]`))
+    const showLocationMessage = msg => set(locationFields[0], msg)
     const locateBtn = card.querySelector('.scorer-today-locate')
-    const CITY_KEY = 'slp-helper-city'
+    const LOCATION_KEY = 'slp-helper-location'
 
     function renderNow() {
         const now = new Date()
-        field('date').textContent = now.getDate()
-        field('month').textContent = now.toLocaleDateString('en-US', { month: 'long' })
-        field('year').textContent = now.getFullYear()
-        field('weekday').textContent = now.toLocaleDateString('en-US', { weekday: 'long' })
-        field('time').textContent = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+        set('date', now.getDate())
+        set('month', now.toLocaleDateString('en-US', { month: 'long' }))
+        set('year', now.getFullYear())
+        set('weekday', now.toLocaleDateString('en-US', { weekday: 'long' }))
+        set('time', now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }))
     }
     renderNow()
     setInterval(renderNow, 10000)
 
+    if (!locateBtn) return
+
+    function showLocation(loc) {
+        set('city', loc.city)
+        set('state', loc.state)
+        locateBtn.textContent = 'Update'
+    }
+
     try {
-        const saved = localStorage.getItem(CITY_KEY)
-        if (saved) {
-            cityEl.textContent = saved
-            locateBtn.textContent = 'Update'
-        }
-    } catch (e) { /* storage unavailable */ }
+        const saved = JSON.parse(localStorage.getItem(LOCATION_KEY))
+        if (saved) showLocation(saved)
+    } catch (e) { /* storage unavailable or unreadable */ }
 
     locateBtn.addEventListener('click', () => {
         if (!navigator.geolocation) {
-            cityEl.textContent = 'Location not supported'
+            showLocationMessage('Location not supported')
             return
         }
         locateBtn.disabled = true
@@ -1731,20 +1750,22 @@ function initTodayCard(card) {
                 if (!res.ok) throw new Error(res.status)
                 const data = await res.json()
                 const city = data.city || data.locality
-                if (!city) throw new Error('no city')
-                const label = data.principalSubdivisionCode
-                    ? `${city}, ${data.principalSubdivisionCode.replace(/^US-/, '')}`
-                    : city
-                cityEl.textContent = label
-                try { localStorage.setItem(CITY_KEY, label) } catch (e) { /* storage unavailable */ }
-                locateBtn.textContent = 'Update'
+                const state = data.principalSubdivision
+                if (!city && !state) throw new Error('no location')
+                const stateCode = (data.principalSubdivisionCode || '').replace(/^US-/, '')
+                const loc = {
+                    city: city ? (stateCode ? `${city}, ${stateCode}` : city) : '—',
+                    state: state || '—'
+                }
+                showLocation(loc)
+                try { localStorage.setItem(LOCATION_KEY, JSON.stringify(loc)) } catch (e) { /* storage unavailable */ }
             } catch (e) {
-                cityEl.textContent = 'City lookup failed'
+                showLocationMessage('Location lookup failed')
                 locateBtn.textContent = 'Try again'
             }
             locateBtn.disabled = false
         }, err => {
-            cityEl.textContent = err.code === err.PERMISSION_DENIED ? 'Location permission denied' : 'Location unavailable'
+            showLocationMessage(err.code === err.PERMISSION_DENIED ? 'Location permission denied' : 'Location unavailable')
             locateBtn.textContent = 'Try again'
             locateBtn.disabled = false
         }, { timeout: 15000, maximumAge: 600000 })
