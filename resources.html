@@ -20,254 +20,278 @@
                                 <a href="diet-info.html" class="nav-link">Diet Info</a>
                                 <a href="resources.html" class="nav-link active">Resources</a>
                         </nav>
-                        <p class="lead">Therapy workbooks and resources.</p>
+                        <p class="lead">Assessments, therapy workbooks, and handouts, grouped by area.</p>
                 </header>
 
-                <section aria-labelledby="resources-title" class="generator">
+                <section aria-label="Resources" class="generator">
 
-                        <h2>Free AI tools for SLPs</h2>
-
-                        <div class="resources-columns">
-                                <div class="resources-section">
-
-                                        <ul class="workbook-links">
-                                                <li><a href="https://chatgpt.com/plans/clinicians/" target="_blank"
-                                                                rel="noopener noreferrer">ChatGPT for Clinicians</a>
-                                                </li>
-                                                <li><a href="https://www.openevidence.com/" target="_blank"
-                                                                rel="noopener noreferrer">OpenEvidence</a>
-                                                </li>
-                                                <li>To qualify, obtain your NPI number for no cost<a
-                                                                href="https://nppes.cms.hhs.gov/login" target="_blank"
-                                                                rel="noopener noreferrer"> here.</a>
-                                                </li>
-
-                                        </ul>
-                                </div>
+                        <div class="resources-toolbar">
+                                <input type="search" id="resourceFilter" class="resources-search"
+                                        placeholder="Search resources (e.g. MoCA, aphasia, WALC)"
+                                        aria-label="Search resources" />
+                                <nav class="subnav resources-jump" aria-label="Jump to section">
+                                        <a href="#cognition" class="subnav-link">Cognition</a>
+                                        <a href="#language" class="subnav-link">Language</a>
+                                        <a href="#speech-voice" class="subnav-link">Speech &amp; Voice</a>
+                                        <a href="#dysphagia" class="subnav-link">Dysphagia</a>
+                                        <a href="#aac" class="subnav-link">AAC</a>
+                                        <a href="#workbooks" class="subnav-link">Workbooks</a>
+                                        <a href="#spanish" class="subnav-link">Spanish</a>
+                                        <a href="#ai-tools" class="subnav-link">AI Tools</a>
+                                </nav>
                         </div>
 
+                        <p id="resourceNoResults" class="resources-empty" hidden>No resources match your search.</p>
 
-                        <h2 id="resources-title">Assessments</h2>
-
-                        <div class="assessments-columns">
-                                <div class="resources-section">
-                                        <h3>Cognition</h3>
-                                        <ul class="workbook-links">
-                                                <li><a href="Attachments/SLUMS.pdf" target="_blank"
-                                                                rel="noopener noreferrer">SLUMS</a></li>
-                                                <li><a href="Attachments/mocaLion.pdf" target="_blank"
-                                                                rel="noopener noreferrer">MOCA 8.1 (Lion)</a></li>
-                                                <li><a href="Attachments/mocaSnake.pdf" target="_blank"
-                                                                rel="noopener noreferrer">MOCA 8.2 (Snake)</a></li>
-                                                <li><a href="Attachments/mocaHorse.pdf" target="_blank"
-                                                                rel="noopener noreferrer">MOCA 8.3 (Horse)</a>
-                                                </li>
-                                                <li><a href="Attachments/mocaGiraffe.pdf" target="_blank"
-                                                                rel="noopener noreferrer">MOCA 7.2 (Giraffe)</a>
-                                                <li><a href="Attachments/mocablind.pdf" target="_blank"
-                                                                rel="noopener noreferrer">MOCA Blind</a>
-                                                </li>
-                                                <li><a href="Attachments/BIMS.pdf" target="_blank"
-                                                                rel="noopener noreferrer">BIMS: Brief Interview for
-                                                                Mental Status</a></li>
-                                                <li><a href="https://alexisjacques.github.io/SLP-helper/bims.html"
-                                                                target="_blank" rel="noopener noreferrer">BIMS scorer
-                                                                tool</a></li>
-                                                <li><a href="Attachments/BCRS-FAST.pdf" target="_blank"
-                                                                rel="noopener noreferrer">BCRS: Brief Cognitive Rating
-                                                                Scale</a></li>
-                                                <li><a href="Attachments/GDS.pdf" target="_blank"
-                                                                rel="noopener noreferrer">GDS: Global Deterioration
-                                                                Scale</a></li>
-                                                <li><a href="Attachments/MMSE.pdf" target="_blank"
-                                                                rel="noopener noreferrer">MMSE: Mini Mental State
-                                                                Exam</a></li>
-                                                <li><a href="Attachments/GOAT.pdf" target="_blank"
-                                                                rel="noopener noreferrer">GOAT: Galveston Orientation
-                                                                Amnesia Test</a></li>
-                                        </ul>
+                        <!-- Cognition -->
+                        <section id="cognition" class="resource-group" aria-labelledby="cognition-title">
+                                <h2 id="cognition-title">Cognition</h2>
+                                <div class="resources-columns">
+                                        <div class="resources-section">
+                                                <h3>Assessments</h3>
+                                                <ul class="workbook-links">
+                                                        <li><a href="Attachments/SLUMS.pdf" target="_blank"
+                                                                        rel="noopener noreferrer">SLUMS</a>
+                                                                <a href="slums.html" class="resource-tag">Scorer</a>
+                                                        </li>
+                                                        <li><span class="resource-label">MoCA</span>
+                                                                <a href="Attachments/mocaLion.pdf" target="_blank"
+                                                                        rel="noopener noreferrer">8.1 Lion</a> ·
+                                                                <a href="Attachments/mocaSnake.pdf" target="_blank"
+                                                                        rel="noopener noreferrer">8.2 Snake</a> ·
+                                                                <a href="Attachments/mocaHorse.pdf" target="_blank"
+                                                                        rel="noopener noreferrer">8.3 Horse</a> ·
+                                                                <a href="Attachments/mocaGiraffe.pdf" target="_blank"
+                                                                        rel="noopener noreferrer">7.2 Giraffe</a> ·
+                                                                <a href="Attachments/mocablind.pdf" target="_blank"
+                                                                        rel="noopener noreferrer">Blind</a>
+                                                                <a href="moca.html" class="resource-tag">Scorer</a>
+                                                        </li>
+                                                        <li><a href="Attachments/BIMS.pdf" target="_blank"
+                                                                        rel="noopener noreferrer">BIMS: Brief Interview
+                                                                        for Mental Status</a>
+                                                                <a href="bims.html" class="resource-tag">Scorer</a>
+                                                        </li>
+                                                        <li><a href="Attachments/BCRS-FAST.pdf" target="_blank"
+                                                                        rel="noopener noreferrer">BCRS: Brief Cognitive
+                                                                        Rating Scale</a>
+                                                                <a href="bcrs.html" class="resource-tag">Scorer</a>
+                                                        </li>
+                                                        <li><a href="Attachments/GDS.pdf" target="_blank"
+                                                                        rel="noopener noreferrer">GDS: Global
+                                                                        Deterioration Scale</a></li>
+                                                        <li><a href="Attachments/MMSE.pdf" target="_blank"
+                                                                        rel="noopener noreferrer">MMSE: Mini Mental
+                                                                        State Exam</a></li>
+                                                        <li><a href="Attachments/GOAT.pdf" target="_blank"
+                                                                        rel="noopener noreferrer">GOAT: Galveston
+                                                                        Orientation Amnesia Test</a></li>
+                                                </ul>
+                                        </div>
+                                        <div class="resources-section">
+                                                <h3>Treatment</h3>
+                                                <ul class="workbook-links">
+                                                        <li><a href="Attachments/Memory-Strategies1.pdf" target="_blank"
+                                                                        rel="noopener noreferrer">Memory
+                                                                        Strategies: Internal &amp; External</a></li>
+                                                        <li><a href="Attachments/HEP-Cognition.pdf" target="_blank"
+                                                                        rel="noopener noreferrer">HEP Cognition
+                                                                        Checklists</a></li>
+                                                        <li><a href="Attachments/SourceforExecFunction.pdf"
+                                                                        target="_blank" rel="noopener noreferrer">Source
+                                                                        For Executive Functioning</a></li>
+                                                        <li><a href="Attachments/SourceforSafety.pdf" target="_blank"
+                                                                        rel="noopener noreferrer">Source For
+                                                                        Safety</a></li>
+                                                </ul>
+                                        </div>
                                 </div>
+                        </section>
 
-                                <div class="resources-section">
-                                        <h3>Language</h3>
-                                        <ul class="workbook-links">
-                                                <li><a href="https://www.tbims.org/mast/mast.pdf" target="_blank"
-                                                                rel="noopener noreferrer">MAST</a></li>
-                                                <li><a href="https://talkbank.org/aphasia/access/English//NonProtocol/QAB/QAB-scoresheets.pdf"
-                                                                target="_blank" rel="noopener noreferrer">QAB</a></li>
-                                                <li><a href="Attachments/W-ABstimulus.pdf" target="_blank"
-                                                                rel="noopener noreferrer">W AB 1</a></li>
-                                                <li><a href="Attachments/W-ABtestbooklet2.pdf" target="_blank"
-                                                                rel="noopener noreferrer">W AB 2</a></li>
-                                        </ul>
+                        <!-- Language -->
+                        <section id="language" class="resource-group" aria-labelledby="language-title">
+                                <h2 id="language-title">Language &amp; Aphasia</h2>
+                                <div class="resources-columns">
+                                        <div class="resources-section">
+                                                <h3>Assessments</h3>
+                                                <ul class="workbook-links">
+                                                        <li><a href="https://www.tbims.org/mast/mast.pdf"
+                                                                        target="_blank" rel="noopener noreferrer">MAST:
+                                                                        Mississippi Aphasia Screening Test</a></li>
+                                                        <li><a href="https://talkbank.org/aphasia/access/English//NonProtocol/QAB/QAB-scoresheets.pdf"
+                                                                        target="_blank" rel="noopener noreferrer">QAB:
+                                                                        Quick Aphasia Battery</a></li>
+                                                        <li><span class="resource-label">W AB:</span>
+                                                                <a href="Attachments/W-ABstimulus.pdf" target="_blank"
+                                                                        rel="noopener noreferrer">Stimulus book</a> ·
+                                                                <a href="Attachments/W-ABtestbooklet2.pdf"
+                                                                        target="_blank" rel="noopener noreferrer">Test
+                                                                        booklet</a>
+                                                        </li>
+                                                </ul>
+                                        </div>
+                                        <div class="resources-section">
+                                                <h3>Treatment</h3>
+                                                <ul class="workbook-links">
+                                                        <li><a href="Attachments/Naming_Workbook.pdf" target="_blank"
+                                                                        rel="noopener noreferrer">Naming Cards</a></li>
+                                                        <li><a href="Attachments/AphasiaHandoutShort.pdf"
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer">Aphasia
+                                                                        HEP Handout</a></li>
+                                                        <li><a href="Attachments/SourceforAphasia.pdf" target="_blank"
+                                                                        rel="noopener noreferrer">Source For
+                                                                        Aphasia</a></li>
+                                                </ul>
+                                        </div>
                                 </div>
+                        </section>
 
-                                <div class="resources-section">
-                                        <h3>Speech</h3>
-                                        <ul class="workbook-links">
-                                                <li><a href="https://nswspeechpathologyebp.com/wp-content/uploads/2015/10/newcastle-ebp-dysarthria-assessment-tool-n-dat-dec-2015.pdf"
-                                                                target="_blank" rel="noopener noreferrer">Newcastle
-                                                                Dysarthria screen</a>
-                                                </li>
-                                        </ul>
+                        <!-- Speech & Voice -->
+                        <section id="speech-voice" class="resource-group" aria-labelledby="speech-title">
+                                <h2 id="speech-title">Motor Speech &amp; Voice</h2>
+                                <div class="resources-columns">
+                                        <div class="resources-section">
+                                                <h3>Assessments</h3>
+                                                <ul class="workbook-links">
+                                                        <li><a href="https://nswspeechpathologyebp.com/wp-content/uploads/2015/10/newcastle-ebp-dysarthria-assessment-tool-n-dat-dec-2015.pdf"
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer">Newcastle Dysarthria
+                                                                        Screen</a></li>
+                                                </ul>
+                                        </div>
+                                        <div class="resources-section">
+                                                <h3>Treatment</h3>
+                                                <ul class="workbook-links">
+                                                        <li><a href="Attachments/SourceforApraxia.pdf" target="_blank"
+                                                                        rel="noopener noreferrer">Source For
+                                                                        Apraxia</a></li>
+                                                        <li><a href="Attachments/SourceforVoice.pdf" target="_blank"
+                                                                        rel="noopener noreferrer">Source For
+                                                                        Voice</a></li>
+                                                </ul>
+                                        </div>
                                 </div>
+                        </section>
 
-                                <div class="resources-section">
-                                        <h3>Dysphagia</h3>
-                                        <ul class="workbook-links">
-                                                <li><a href="https://www.carolinatherapy.net/wp-content/uploads/FOIS-scale.pdf"
-                                                                target="_blank" rel="noopener noreferrer">FOIS</a></li>
-                                                <li><a href="https://theadultspeechtherapyworkbook.com/wp-content/uploads/2022/06/mann-assessment-of-swallowing-ability.pdf"
-                                                                target="_blank" rel="noopener noreferrer">MASA</a></li>
-                                                <li><a href="https://www.carolinatherapy.net/wp-content/uploads/Yale-Swallow-Protocol.pdf"
-                                                                target="_blank" rel="noopener noreferrer">Yale
-                                                                Protocol</a></li>
-                                        </ul>
+                        <!-- Dysphagia -->
+                        <section id="dysphagia" class="resource-group" aria-labelledby="dysphagia-title">
+                                <h2 id="dysphagia-title">Dysphagia</h2>
+                                <div class="resources-columns">
+                                        <div class="resources-section">
+                                                <h3>Assessments</h3>
+                                                <ul class="workbook-links">
+                                                        <li><a href="https://www.carolinatherapy.net/wp-content/uploads/FOIS-scale.pdf"
+                                                                        target="_blank" rel="noopener noreferrer">FOIS:
+                                                                        Functional Oral Intake Scale</a></li>
+                                                        <li><a href="https://theadultspeechtherapyworkbook.com/wp-content/uploads/2022/06/mann-assessment-of-swallowing-ability.pdf"
+                                                                        target="_blank" rel="noopener noreferrer">MASA:
+                                                                        Mann Assessment of Swallowing Ability</a></li>
+                                                        <li><a href="https://www.carolinatherapy.net/wp-content/uploads/Yale-Swallow-Protocol.pdf"
+                                                                        target="_blank" rel="noopener noreferrer">Yale
+                                                                        Swallow Protocol</a></li>
+                                                </ul>
+                                        </div>
+                                        <div class="resources-section">
+                                                <h3>Treatment &amp; Handouts</h3>
+                                                <ul class="workbook-links">
+                                                        <li><a href="Attachments/SwallowHandout.pdf" target="_blank"
+                                                                        rel="noopener noreferrer">Swallow Handout</a>
+                                                        </li>
+                                                        <li><a href="https://docs.google.com/document/d/1iubvw-HnTKoADC7exB1u9MUR_GtrAY3xzL0fYXbiPAU/edit?usp=sharing"
+                                                                        target="_blank" rel="noopener noreferrer">MBSS
+                                                                        Handoff</a>
+                                                                <span class="resource-note">Google Doc, make a
+                                                                        copy</span>
+                                                        </li>
+                                                        <li><a href="diet-info.html" class="resource-internal">IDDSI
+                                                                        Diet Info</a></li>
+                                                </ul>
+                                        </div>
                                 </div>
-                        </div>
+                        </section>
 
-                        <h2>Treatment</h2>
+                        <!-- AAC -->
+                        <section id="aac" class="resource-group" aria-labelledby="aac-title">
+                                <h2 id="aac-title">Low-Tech AAC</h2>
+                                <ul class="workbook-links workbook-links-inline">
+                                        <li><a href="Attachments/simpleaac.pdf" target="_blank"
+                                                        rel="noopener noreferrer">Simple AAC 1</a></li>
+                                        <li><a href="Attachments/simpleaac2.pdf" target="_blank"
+                                                        rel="noopener noreferrer">Simple AAC 2</a></li>
+                                        <li><a href="Attachments/simpleaacselfadvocacy.pdf" target="_blank"
+                                                        rel="noopener noreferrer">Simple AAC 3: Self-Advocacy</a></li>
+                                </ul>
+                        </section>
 
-                        <div class="resources-columns">
-                                <div class="resources-section">
-                                        <h3>WALC</h3>
-                                        <ul class="workbook-links">
-                                                <li><a href="https://www.trinityrehab.net/wp-content/uploads/WALC-1-Aphasia-Rehab.pdf"
-                                                                target="_blank" rel="noopener noreferrer">WALC 1 -
-                                                                Aphasia Rehab</a></li>
-                                                <li><a href="https://www.trinityrehab.net/wp-content/uploads/WALC-2-Cognitive-Rehab.pdf"
-                                                                target="_blank" rel="noopener noreferrer">WALC 2 -
-                                                                Cognitive Rehab</a></li>
-                                                <li><a href="https://www.trinityrehab.net/wp-content/uploads/WALC-3-Every-Day-Problem-Solving.pdf"
-                                                                target="_blank" rel="noopener noreferrer">WALC 3 -
-                                                                Everyday Problem Solving</a></li>
-                                                <li><a href="Attachments/WALC_4.pdf" target="_blank"
-                                                                rel="noopener noreferrer">WALC 4 -
-                                                                Everyday Reading</a></li>
-                                                <li><a href="https://www.trinityrehab.net/wp-content/uploads/WALC-5-Neuro-Rehab.pdf"
-                                                                target="_blank" rel="noopener noreferrer">WALC 5 - Neuro
-                                                                Rehab</a></li>
-                                                <li><a href="https://atomictim.com/workbooks/WALC%206.pdf"
-                                                                target="_blank" rel="noopener noreferrer">WALC 6 -
-                                                                Functional Language</a></li>
-                                                <li><a href="https://www.trinityrehab.net/wp-content/uploads/WALC-7-Everyday-Mth.pdf"
-                                                                target="_blank" rel="noopener noreferrer">WALC 7 -
-                                                                Everyday Math</a></li>
-                                                <li><a href="https://www.trinityrehab.net/wp-content/uploads/WALC-8-Word-Finding.pdf"
-                                                                target="_blank" rel="noopener noreferrer">WALC 8 - Word
-                                                                Finding</a></li>
-                                                <li><a href="https://www.trinityrehab.net/wp-content/uploads/WALC-9-Verbal-Visual-Reasoning.pdf"
-                                                                target="_blank" rel="noopener noreferrer">WALC 9 -
-                                                                Visual and Verbal Reasoning</a></li>
-                                                <li><a href="https://www.trinityrehab.net/wp-content/uploads/WALC-10-Memory.pdf"
-                                                                target="_blank" rel="noopener noreferrer">WALC 10 -
-                                                                Memory</a></li>
-                                                <li><a href="https://www.trinityrehab.net/wp-content/uploads/WALC-11-Language-for-Home-Activities.pdf"
-                                                                target="_blank" rel="noopener noreferrer">WALC 11 -
-                                                                Language for Home Activities</a>
-                                                </li>
-                                                <li><a href="Attachments/WALC12executivefxning.pdf" target="_blank"
-                                                                rel="noopener noreferrer">WALC 12 -
-                                                                Executive Functioning</a></li>
-                                        </ul>
-                                </div>
+                        <!-- Workbooks -->
+                        <section id="workbooks" class="resource-group" aria-labelledby="workbooks-title">
+                                <h2 id="workbooks-title">WALC Workbooks</h2>
+                                <p class="resources-blurb">Workbook of Activities for Language and Cognition.</p>
+                                <ul class="workbook-links workbook-links-grid">
+                                        <li><a href="https://www.trinityrehab.net/wp-content/uploads/WALC-1-Aphasia-Rehab.pdf"
+                                                        target="_blank" rel="noopener noreferrer">WALC 1: Aphasia
+                                                        Rehab</a></li>
+                                        <li><a href="https://www.trinityrehab.net/wp-content/uploads/WALC-2-Cognitive-Rehab.pdf"
+                                                        target="_blank" rel="noopener noreferrer">WALC 2: Cognitive
+                                                        Rehab</a></li>
+                                        <li><a href="https://www.trinityrehab.net/wp-content/uploads/WALC-3-Every-Day-Problem-Solving.pdf"
+                                                        target="_blank" rel="noopener noreferrer">WALC 3: Everyday
+                                                        Problem Solving</a></li>
+                                        <li><a href="Attachments/WALC_4.pdf" target="_blank"
+                                                        rel="noopener noreferrer">WALC 4: Everyday Reading</a></li>
+                                        <li><a href="https://www.trinityrehab.net/wp-content/uploads/WALC-5-Neuro-Rehab.pdf"
+                                                        target="_blank" rel="noopener noreferrer">WALC 5: Neuro
+                                                        Rehab</a></li>
+                                        <li><a href="https://atomictim.com/workbooks/WALC%206.pdf" target="_blank"
+                                                        rel="noopener noreferrer">WALC 6: Functional Language</a></li>
+                                        <li><a href="https://www.trinityrehab.net/wp-content/uploads/WALC-7-Everyday-Mth.pdf"
+                                                        target="_blank" rel="noopener noreferrer">WALC 7: Everyday
+                                                        Math</a></li>
+                                        <li><a href="https://www.trinityrehab.net/wp-content/uploads/WALC-8-Word-Finding.pdf"
+                                                        target="_blank" rel="noopener noreferrer">WALC 8: Word
+                                                        Finding</a></li>
+                                        <li><a href="https://www.trinityrehab.net/wp-content/uploads/WALC-9-Verbal-Visual-Reasoning.pdf"
+                                                        target="_blank" rel="noopener noreferrer">WALC 9: Visual &amp;
+                                                        Verbal Reasoning</a></li>
+                                        <li><a href="https://www.trinityrehab.net/wp-content/uploads/WALC-10-Memory.pdf"
+                                                        target="_blank" rel="noopener noreferrer">WALC 10: Memory</a>
+                                        </li>
+                                        <li><a href="https://www.trinityrehab.net/wp-content/uploads/WALC-11-Language-for-Home-Activities.pdf"
+                                                        target="_blank" rel="noopener noreferrer">WALC 11: Language
+                                                        for Home Activities</a></li>
+                                        <li><a href="Attachments/WALC12executivefxning.pdf" target="_blank"
+                                                        rel="noopener noreferrer">WALC 12: Executive Functioning</a>
+                                        </li>
+                                </ul>
+                        </section>
 
-                                <div class="resources-section">
-                                        <h3>Source For</h3>
-                                        <ul class="workbook-links">
-                                                <li><a href="Attachments/SourceforSafety.pdf" target="_blank"
-                                                                rel="noopener noreferrer">Source For
-                                                                Safety</a></li>
-                                                <li><a href="Attachments/SourceforApraxia.pdf" target="_blank"
-                                                                rel="noopener noreferrer">Source For
-                                                                Apraxia</a></li>
-                                                <li><a href="Attachments/SourceforVoice.pdf" target="_blank"
-                                                                rel="noopener noreferrer">Source For
-                                                                Voice</a></li>
-                                                <li><a href="Attachments/SourceforAphasia.pdf" target="_blank"
-                                                                rel="noopener noreferrer">Source For
-                                                                Aphasia</a></li>
-                                                <li><a href="Attachments/SourceforExecFunction.pdf" target="_blank"
-                                                                rel="noopener noreferrer">Source For
-                                                                Executive Functioning</a></li>
+                        <!-- Spanish -->
+                        <section id="spanish" class="resource-group" aria-labelledby="spanish-title">
+                                <h2 id="spanish-title">Spanish / Español</h2>
+                                <ul class="workbook-links workbook-links-inline">
+                                        <li><a href="Attachments/slums-spanish.pdf" target="_blank"
+                                                        rel="noopener noreferrer">SLUMS (Spanish)</a></li>
+                                        <li><a href="Attachments/SpanishWALC1.pdf" target="_blank"
+                                                        rel="noopener noreferrer">WALC 1 (Spanish)</a></li>
+                                        <li><a href="Attachments/SpanishWALC2.pdf" target="_blank"
+                                                        rel="noopener noreferrer">WALC 2 (Spanish)</a></li>
+                                </ul>
+                        </section>
 
-
-                                        </ul>
-                                </div>
-
-                                <div class="resources-section">
-                                        <h3>Cognition</h3>
-                                        <ul class="workbook-links">
-                                                <li><a href="Attachments/Memory-Strategies1.pdf" target="_blank"
-                                                                rel="noopener noreferrer">Memory strategies: Internal &
-                                                                External</a></li>
-                                                <li><a href="Attachments/HEP-Cognition.pdf" target="_blank"
-                                                                rel="noopener noreferrer">HEP Cognition Checklists</a>
-                                                </li>
-                                        </ul>
-                                </div>
-                                <div class="resources-section">
-                                        <h3>Dysphagia</h3>
-                                        <ul class="workbook-links">
-                                                <li><a href="Attachments/SwallowHandout.pdf" target="_blank"
-                                                                rel="noopener noreferrer">Swallow Handout</a></li>
-                                                <li><a href="https://docs.google.com/document/d/1iubvw-HnTKoADC7exB1u9MUR_GtrAY3xzL0fYXbiPAU/edit?usp=sharing"
-                                                                target="_blank" rel="noopener noreferrer">MBSS Handoff -
-                                                                Make a copy!</a></li>
-                                        </ul>
-
-                                </div>
-                                <div class="resources-section">
-                                        <h3>Low-Tech AAC</h3>
-                                        <ul class="workbook-links">
-                                                <li><a href="Attachments/simpleaac.pdf" target="_blank"
-                                                                rel="noopener noreferrer">Simple AAC</a></li>
-                                                <li><a href="Attachments/simpleaac2.pdf" target="_blank"
-                                                                rel="noopener noreferrer">Simple AAC 2</a></li>
-                                                <li><a href="Attachments/simpleaacselfadvocacy.pdf" target="_blank"
-                                                                rel="noopener noreferrer">Simple AAC 3</a></li>
-                                        </ul>
-                                </div>
-
-                                <div class="resources-section">
-                                        <h3>Aphasia</h3>
-                                        <ul class="workbook-links">
-                                                <li><a href="Attachments/Naming_Workbook.pdf" target="_blank"
-                                                                rel="noopener noreferrer">Naming Cards</a></li>
-                                                <li><a href="Attachments/AphasiaHandoutShort.pdf" target="_blank"
-                                                                rel="noopener noreferrer">Aphasia HEP Handout</a></li>
-                                                <li><a href="Attachments/SourceforAphasia.pdf" target="_blank"
-                                                                rel="noopener noreferrer">Source For
-                                                                Aphasia</a></li>
-                                        </ul>
-                                </div>
-
-
-
-
-                        </div>
-
-                        <h2>Spanish</h2>
-
-                        <div class="resources-columns">
-                                <div class="resources-section">
-
-                                        <ul class="workbook-links">
-
-                                                <li><a href="Attachments/slums-spanish.pdf" target="_blank"
-                                                                rel="noopener noreferrer">SLUMS</a></li>
-                                                <li><a href="Attachments/SpanishWALC1.pdf" target="_blank"
-                                                                rel="noopener noreferrer">WALC 1</a>
-                                                </li>
-                                                <li><a href="Attachments/SpanishWALC2.pdf" target="_blank"
-                                                                rel="noopener noreferrer">WALC 2</a>
-                                                </li>
-
-                                        </ul>
-                                </div>
-                        </div>
-
-
+                        <!-- AI tools -->
+                        <section id="ai-tools" class="resource-group" aria-labelledby="ai-title">
+                                <h2 id="ai-title">Free AI Tools for Clinicians</h2>
+                                <ul class="workbook-links workbook-links-inline">
+                                        <li><a href="https://chatgpt.com/plans/clinicians/" target="_blank"
+                                                        rel="noopener noreferrer">ChatGPT for Clinicians</a></li>
+                                        <li><a href="https://www.openevidence.com/" target="_blank"
+                                                        rel="noopener noreferrer">OpenEvidence</a></li>
+                                </ul>
+                                <p class="resources-blurb">Both require an NPI number to qualify. You can get one
+                                        for free <a href="https://nppes.cms.hhs.gov/login" target="_blank"
+                                                rel="noopener noreferrer">here</a>.</p>
+                        </section>
 
                 </section>
 
@@ -277,6 +301,45 @@
         </main>
 
         <script src="main.js" defer></script>
+        <script>
+                (function () {
+                        const input = document.getElementById('resourceFilter');
+                        const empty = document.getElementById('resourceNoResults');
+                        const groups = document.querySelectorAll('.resource-group');
+
+                        input.addEventListener('input', function () {
+                                const q = input.value.trim().toLowerCase();
+                                let anyVisible = false;
+
+                                groups.forEach(function (group) {
+                                        const groupTitle = group.querySelector('h2').textContent.toLowerCase();
+                                        const groupMatches = q && groupTitle.includes(q);
+                                        let groupHasMatch = false;
+
+                                        group.querySelectorAll('.resources-section').forEach(function (col) {
+                                                let colHasMatch = false;
+                                                col.querySelectorAll('li').forEach(function (li) {
+                                                        const show = !q || groupMatches || li.textContent.toLowerCase().includes(q);
+                                                        li.hidden = !show;
+                                                        if (show) colHasMatch = true;
+                                                });
+                                                col.hidden = !colHasMatch;
+                                        });
+
+                                        group.querySelectorAll(':scope > ul > li').forEach(function (li) {
+                                                const show = !q || groupMatches || li.textContent.toLowerCase().includes(q);
+                                                li.hidden = !show;
+                                        });
+
+                                        groupHasMatch = !!group.querySelector('li:not([hidden])');
+                                        group.hidden = !groupHasMatch;
+                                        if (groupHasMatch) anyVisible = true;
+                                });
+
+                                empty.hidden = anyVisible;
+                        });
+                })();
+        </script>
 </body>
 
 </html>
