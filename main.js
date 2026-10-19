@@ -166,14 +166,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (ltgPairs.length && deduped.length) {
             // Both diet and speech/cognition goals
             const domainText = joinWithAnd(deduped)
-            ltgClause = ' LTG: patient to improve swallow function to safely tolerate ' + dietText + ', patient to improve ' + domainText + ' function to least impairment level.'
+            ltgClause = ' LTG: Patient to improve swallow function to safely tolerate ' + dietText + ', patient to improve ' + domainText + ' function to least impairment level.'
         } else if (ltgPairs.length) {
             // Only diet goals
-            ltgClause = ' LTG: patient to improve swallow function to safely tolerate ' + dietText + '.'
+            ltgClause = ' LTG: Patient to improve swallow function to safely tolerate ' + dietText + '.'
         } else if (deduped.length) {
             // Only speech/cognition goals
             const domainText = joinWithAnd(deduped)
-            ltgClause = ' LTG: patient to improve ' + domainText + ' function to least impairment level.'
+            ltgClause = ' LTG: Patient to improve ' + domainText + ' function to least impairment level.'
         }
 
         // Expand voice goal to include functional communication phrase
