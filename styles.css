@@ -1599,10 +1599,14 @@ textarea#pccOutput {
 }
 
 .scorer-today-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 10px 16px;
     margin: 0;
+}
+
+.scorer-today-grid > div {
+    min-width: 120px;
 }
 
 .scorer-today-grid dt {
@@ -1615,10 +1619,6 @@ textarea#pccOutput {
     font-size: 1.05rem;
     font-weight: 700;
     color: #0f172a;
-}
-
-.scorer-today-grid div:has(.scorer-today-locate) {
-    grid-column: 1 / -1;
 }
 
 /* Card covering a whole section, lined up with the question text */
