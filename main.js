@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Separate solids and liquids
         const solids = ['reg7', 'sb6', 'mm5', 'pu4']
-        const liquids = ['thins0', 'mt2', 'mo3', 'ex4']
+        const liquids = ['th0', 'mt2', 'mo3', 'ex4']
 
         const selectedSolids = ltgSelected.filter(item => solids.some(s => item.includes(s)))
         const selectedLiquids = ltgSelected.filter(item => liquids.some(l => item.includes(l)))
@@ -263,9 +263,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (result.length > 500) {
             result = result.replace(/improve swallow function to/g, 'safely')
         }
-        if (result.length > 500) {
-            result = result.replace(/thins0/g, 'th0')
-        }
 
 
         return result
@@ -299,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 else if (freqChecked.length > 1) messages.push('Message: More than one frequency of tx is selected.')
 
                 const solidCodes = ['reg7', 'sb6', 'mm5', 'pu4']
-                const liquidCodes = ['thins0', 'mt2', 'mo3', 'ex4']
+                const liquidCodes = ['th0', 'mt2', 'mo3', 'ex4']
                 const solidChecked = ltgInputs.filter(i => i.checked && solidCodes.includes(i.dataset.label))
                 const liquidChecked = ltgInputs.filter(i => i.checked && liquidCodes.includes(i.dataset.label))
                 if (solidChecked.length > 1) messages.push('Message: More than one solid consistency is selected in LTG diet.')
