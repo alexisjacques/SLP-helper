@@ -607,6 +607,9 @@ function initMOCA() {
     // Letter F fluency 1-minute countdown timer
     const resetFluencyTimer = initCountdown(document.getElementById('moca-fluency-timer'), 60)
 
+    // Orientation reference: today's date, time and (on request) the administrator's city
+    initTodayCard(document.getElementById('moca-today'))
+
     document.getElementById('moca-reset-btn').addEventListener('click', () => {
         fluencyTally.reset()
         resetFluencyTimer()
@@ -1683,4 +1686,67 @@ function initCountdown(timer, seconds) {
     timer.querySelector('.timer-reset').addEventListener('click', reset)
 
     return reset
+}
+
+// Live "right now" card for orientation questions. The city is looked up only when the
+// button is tapped (browser geolocation + BigDataCloud reverse geocoding) and is
+// remembered in this browser so it shows immediately next time.
+function initTodayCard(card) {
+    const field = name => card.querySelector(`[data-today="${name}"]`)
+    const cityEl = field('city')
+    const locateBtn = card.querySelector('.scorer-today-locate')
+    const CITY_KEY = 'slp-helper-city'
+
+    function renderNow() {
+        const now = new Date()
+        field('date').textContent = now.getDate()
+        field('month').textContent = now.toLocaleDateString('en-US', { month: 'long' })
+        field('year').textContent = now.getFullYear()
+        field('weekday').textContent = now.toLocaleDateString('en-US', { weekday: 'long' })
+        field('time').textContent = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+    }
+    renderNow()
+    setInterval(renderNow, 10000)
+
+    try {
+        const saved = localStorage.getItem(CITY_KEY)
+        if (saved) {
+            cityEl.textContent = saved
+            locateBtn.textContent = 'Update'
+        }
+    } catch (e) { /* storage unavailable */ }
+
+    locateBtn.addEventListener('click', () => {
+        if (!navigator.geolocation) {
+            cityEl.textContent = 'Location not supported'
+            return
+        }
+        locateBtn.disabled = true
+        locateBtn.textContent = 'Locating…'
+        navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+            try {
+                const url = 'https://api.bigdatacloud.net/data/reverse-geocode-client' +
+                    `?latitude=${coords.latitude}&longitude=${coords.longitude}&localityLanguage=en`
+                const res = await fetch(url)
+                if (!res.ok) throw new Error(res.status)
+                const data = await res.json()
+                const city = data.city || data.locality
+                if (!city) throw new Error('no city')
+                const label = data.principalSubdivisionCode
+                    ? `${city}, ${data.principalSubdivisionCode.replace(/^US-/, '')}`
+                    : city
+                cityEl.textContent = label
+                try { localStorage.setItem(CITY_KEY, label) } catch (e) { /* storage unavailable */ }
+                locateBtn.textContent = 'Update'
+            } catch (e) {
+                cityEl.textContent = 'City lookup failed'
+                locateBtn.textContent = 'Try again'
+            }
+            locateBtn.disabled = false
+        }, err => {
+            cityEl.textContent = err.code === err.PERMISSION_DENIED ? 'Location permission denied' : 'Location unavailable'
+            locateBtn.textContent = 'Try again'
+            locateBtn.disabled = false
+        }, { timeout: 15000, maximumAge: 600000 })
+    })
 }

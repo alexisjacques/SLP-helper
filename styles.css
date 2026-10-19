@@ -1344,6 +1344,65 @@ textarea#pccOutput {
     border-radius: 6px;
 }
 
+/* Live "right now" reference card for orientation questions */
+.scorer-today {
+    padding: 12px 16px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.scorer-today-title {
+    margin: 0 0 8px 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.scorer-today-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px 16px;
+    margin: 0;
+}
+
+.scorer-today-grid dt {
+    font-size: 0.72rem;
+    color: var(--muted);
+}
+
+.scorer-today-grid dd {
+    margin: 2px 0 0 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.scorer-today-grid div:last-child {
+    grid-column: 1 / -1;
+}
+
+.scorer-today-locate {
+    width: auto;
+    margin-left: 8px;
+    padding: 3px 10px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(14, 165, 160, 0.12);
+    border: 1.5px solid rgba(14, 165, 160, 0.25);
+    border-radius: 6px;
+    cursor: pointer;
+    vertical-align: 0.1em;
+}
+
+.scorer-today-locate:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
 /* Note that applies to a whole section rather than one question */
 .scorer-part-note {
     margin-bottom: 18px;
