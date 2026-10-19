@@ -1354,6 +1354,15 @@ textarea#pccOutput {
     margin: 0;
 }
 
+/* Rows whose label was dropped: buttons start flush under the question text */
+.slums-section .bims-item:has(> .bims-item-label:empty) {
+    grid-template-columns: 1fr 28px;
+}
+
+.slums-section .bims-item-label:empty {
+    display: none;
+}
+
 .slums-q-shortcut {
     margin: 14px 0 0 62px;
     padding-top: 12px;
