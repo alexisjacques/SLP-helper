@@ -1411,6 +1411,16 @@ textarea#pccOutput {
     margin-right: 0;
 }
 
+.scorer-legend .scorer-source {
+    display: block;
+    margin-top: 6px;
+    font-style: italic;
+}
+
+.scorer-legend .scorer-source em {
+    font-style: normal;
+}
+
 .scorer-section-title {
     margin: 0 0 14px 0;
     font-size: 0.8rem;
