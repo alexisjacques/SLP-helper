@@ -1199,7 +1199,9 @@ textarea#pccOutput {
     background: var(--accent);
     color: white;
     border-color: var(--accent);
-    font-weight: 600;
+    /* Faux-bold via text-shadow so the button width doesn't change on select
+       (a real font-weight change widens the text and causes rows to re-wrap) */
+    text-shadow: 0.3px 0 0 currentColor, -0.3px 0 0 currentColor;
 }
 
 .bims-pts {
