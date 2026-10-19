@@ -501,11 +501,11 @@ function initMOCA() {
 
         // Memory Index Score: no cue ×3, category cue ×2, multiple choice cue ×1
         const misScored = recallKeys.filter(k => mis[k] !== undefined)
-        ;[3, 2, 1, 0].forEach(w => {
-            const count = misScored.filter(k => mis[k] === w).length
-            document.querySelector(`[data-mis-count="${w}"]`).textContent = count
-            document.querySelector(`[data-mis-points="${w}"]`).textContent = count * w
-        })
+            ;[3, 2, 1, 0].forEach(w => {
+                const count = misScored.filter(k => mis[k] === w).length
+                document.querySelector(`[data-mis-count="${w}"]`).textContent = count
+                document.querySelector(`[data-mis-points="${w}"]`).textContent = count * w
+            })
         const misDone = misScored.length === recallKeys.length
         document.getElementById('moca-mis').textContent = misDone ? sum(mis, recallKeys) : '—'
         document.getElementById('moca-mis-progress').textContent =
@@ -622,17 +622,17 @@ function initMOCA() {
     // PDF report. The five serial 7s are one scored item (4–5 correct = 3, 2–3 = 2, 1 = 1).
     const reportSections = [
         ['Visuospatial / executive', [['1', 'Alternating trail', 'trail'], ['2', 'Copy cube', 'cube'],
-            ['3', 'Clock: contour', 'clockContour'], ['3', 'Clock: numbers', 'clockNumbers'], ['3', 'Clock: hands', 'clockHands']]],
+        ['3', 'Clock: contour', 'clockContour'], ['3', 'Clock: numbers', 'clockNumbers'], ['3', 'Clock: hands', 'clockHands']]],
         ['Naming', [['4', 'Lion', 'lion'], ['4', 'Rhinoceros', 'rhino'], ['4', 'Camel', 'camel']]],
         ['Attention', [['6a', 'Digits forward (21854)', 'digitsFwd'], ['6b', 'Digits backward (247)', 'digitsBwd'],
-            ['7', 'Letter tapping', 'vigilance'], ['8', 'Serial 7s (93, 86, 79, 72, 65)', 'serial7']]],
+        ['7', 'Letter tapping', 'vigilance'], ['8', 'Serial 7s (93, 86, 79, 72, 65)', 'serial7']]],
         ['Language', [['9a', 'Sentence repetition 1', 'sentence1'], ['9b', 'Sentence repetition 2', 'sentence2'],
-            ['10', 'Letter F fluency', 'fluency']]],
+        ['10', 'Letter F fluency', 'fluency']]],
         ['Abstraction', [['11a', 'Train – bicycle', 'trainBicycle'], ['11b', 'Ruler – watch', 'rulerWatch']]],
         ['Delayed recall (no cue)', [['12', 'Face', 'face'], ['12', 'Velvet', 'velvet'], ['12', 'Church', 'church'],
-            ['12', 'Daisy', 'daisy'], ['12', 'Red', 'red']]],
+        ['12', 'Daisy', 'daisy'], ['12', 'Red', 'red']]],
         ['Orientation', [['13', 'Date', 'date'], ['13', 'Month', 'month'], ['13', 'Year', 'year'], ['13', 'Day', 'day'],
-            ['13', 'Place', 'place'], ['13', 'City', 'city']]]
+        ['13', 'Place', 'place'], ['13', 'City', 'city']]]
     ]
 
     const report = initReportForm('moca', ({ patient, admin, when }) => {
@@ -716,7 +716,49 @@ function initSLUMS() {
         return keys.reduce((total, k) => total + scores[k], 0)
     }
 
+    // Cognitive domains for the summary; a domain is a deficit when any of its points are lost
+    const domains = [
+        ['orientation', ['day', 'year', 'state']],
+        ['problem solving', ['spent', 'left']],
+        ['verbal fluency', ['animals']],
+        ['sequencing', ['digits648', 'digits8537']],
+        ['visual reasoning', ['clockMarkers', 'clockTime', 'triangle', 'largest']],
+        ['short-term recall', ['apple', 'pen', 'tie', 'house', 'car', 'storyName', 'storyWork', 'storyWhen', 'storyState']]
+    ]
+    const summaryEl = document.getElementById('slums-summary')
+
+    function updateSummary() {
+        const allKeys = [...items].map(i => i.dataset.question)
+        if (!allKeys.every(k => scores[k] !== undefined) || !education) {
+            summaryEl.value = ''
+            return
+        }
+        const total = sum(allKeys)
+        const c = cutoffs[education]
+        const level = total >= c.normal ? 'within normal limits'
+            : total >= c.mncd ? 'consistent with mild neurocognitive disorder' : 'consistent with dementia'
+        const deficits = domains
+            .filter(([, keys]) => keys.some(k => scores[k] < maxPoints(k)))
+            .map(([name]) => name)
+        if (!deficits.length) {
+            summaryEl.value = `Patient scored ${total}/30 on the SLUMS examination, ${level}, with no deficits noted.`
+        } else if (total >= c.normal) {
+            // Points lost but still normal: errors, not deficits
+            summaryEl.value = `Patient scored ${total}/30 on the SLUMS examination, ${level}, ` +
+                `though points were lost in ${listJoin(deficits)}.`
+        } else {
+            summaryEl.value = `Patient scored ${total}/30 on the SLUMS examination, ${level}, ` +
+                `demonstrating deficits in ${listJoin(deficits)}.`
+        }
+    }
+
+    function maxPoints(key) {
+        const btns = document.querySelectorAll(`.bims-item[data-question="${key}"] .bims-btn`)
+        return Math.max(...[...btns].map(b => parseInt(b.dataset.value, 10)))
+    }
+
     function updateDisplay() {
+        updateSummary()
         items.forEach(item => {
             const k = item.dataset.question
             item.querySelector('.bims-item-score').textContent = scores[k] !== undefined ? scores[k] : '—'
@@ -831,6 +873,9 @@ function initSLUMS() {
     // Animal naming 1-minute countdown timer
     const resetTimer = initCountdown(document.getElementById('slums-animal-timer'), 60)
 
+    initCopyButton(document.getElementById('slums-summary-copy'), summaryEl,
+        document.getElementById('slums-summary-status'))
+
     function setEducation(value) {
         education = value
         educationRow.querySelectorAll('.bims-btn').forEach(b => {
@@ -851,12 +896,12 @@ function initSLUMS() {
         ['Calculation', [['5a', 'Amount spent ($23)', 'spent', 1], ['5b', 'Amount left ($77)', 'left', 2]]],
         ['Animal naming', [['6', 'Animals named in one minute', 'animals', 3]]],
         ['Object recall', [['7', 'Apple', 'apple', 1], ['7', 'Pen', 'pen', 1], ['7', 'Tie', 'tie', 1],
-            ['7', 'House', 'house', 1], ['7', 'Car', 'car', 1]]],
+        ['7', 'House', 'house', 1], ['7', 'Car', 'car', 1]]],
         ['Digits backward', [['8b', '649 (946)', 'digits648', 1], ['8c', '8537 (7358)', 'digits8537', 1]]],
         ['Clock drawing', [['9', 'Hour markers', 'clockMarkers', 2], ['9', 'Time: ten minutes to eleven', 'clockTime', 2]]],
         ['Figures', [['10a', 'X in the triangle', 'triangle', 1], ['10b', 'Largest figure', 'largest', 1]]],
         ['Story recall', [['11a', 'Woman\'s name (Jill)', 'storyName', 2], ['11b', 'Work (stockbroker)', 'storyWork', 2],
-            ['11c', 'When she went back to work (teenagers)', 'storyWhen', 2], ['11d', 'State (Illinois)', 'storyState', 2]]]
+        ['11c', 'When she went back to work (teenagers)', 'storyWhen', 2], ['11d', 'State (Illinois)', 'storyState', 2]]]
     ]
 
     const report = initReportForm('slums', ({ patient, admin, when }) => {
@@ -892,7 +937,7 @@ function initSLUMS() {
             cutoffs: {
                 head: ['', 'High school or higher', 'Less than high school'],
                 rows: [['Normal', '27–30', '25–30'], ['Mild neurocognitive disorder', '21–26', '20–24'],
-                    ['Dementia', '1–20', '1–19']]
+                ['Dementia', '1–20', '1–19']]
             }
         }
     })
@@ -1190,9 +1235,9 @@ function initBCRS() {
             cutoffs: {
                 head: ['GDS stage', 'Total', 'Interpretation'],
                 rows: [['1', '5–7', 'No cognitive decline'], ['2', '8–12', 'Very mild cognitive decline'],
-                    ['3', '13–17', 'Mild cognitive decline'], ['4', '18–22', 'Moderate cognitive decline'],
-                    ['5', '23–27', 'Moderately severe cognitive decline'], ['6', '28–32', 'Severe cognitive decline'],
-                    ['7', '33–35', 'Very severe cognitive decline']]
+                ['3', '13–17', 'Mild cognitive decline'], ['4', '18–22', 'Moderate cognitive decline'],
+                ['5', '23–27', 'Moderately severe cognitive decline'], ['6', '28–32', 'Severe cognitive decline'],
+                ['7', '33–35', 'Very severe cognitive decline']]
             }
         }
     })
@@ -2037,6 +2082,33 @@ function selectedLabel(key) {
     return copy.textContent.replace(/\s+/g, ' ').trim()
 }
 
+// "a", "a and b", "a, b, and c"
+function listJoin(words) {
+    if (words.length < 3) return words.join(' and ')
+    return `${words.slice(0, -1).join(', ')}, and ${words[words.length - 1]}`
+}
+
+// Copies a textarea's text to the clipboard and reports the result in statusEl.
+function initCopyButton(btn, textEl, statusEl) {
+    const flash = msg => {
+        statusEl.textContent = msg
+        setTimeout(() => (statusEl.textContent = ''), 2500)
+    }
+    btn.addEventListener('click', async () => {
+        if (!textEl.value) {
+            flash('Nothing to copy yet.')
+            return
+        }
+        try {
+            await navigator.clipboard.writeText(textEl.value)
+            flash('Copied to clipboard.')
+        } catch (err) {
+            textEl.select()
+            flash(document.execCommand('copy') ? 'Copied to clipboard.' : 'Copy failed. Please select and copy manually.')
+        }
+    })
+}
+
 // Renders a scorer report into #print-report and opens the print dialog (Save as PDF).
 function printScorerReport(r) {
     const esc = v => String(v).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]))
@@ -2048,9 +2120,9 @@ function printScorerReport(r) {
 
     const mark = row => r.marks === false ? ''
         : row.points === undefined ? '<span class="pr-mark pr-none">–</span>'
-        : row.points === row.max ? '<span class="pr-mark pr-ok">✓</span>'
-            : row.points === 0 ? '<span class="pr-mark pr-miss">✗</span>'
-                : '<span class="pr-mark pr-part">◐</span>'
+            : row.points === row.max ? '<span class="pr-mark pr-ok">✓</span>'
+                : row.points === 0 ? '<span class="pr-mark pr-miss">✗</span>'
+                    : '<span class="pr-mark pr-part">◐</span>'
 
     const sectionRows = r.sections.map(sec => {
         const done = sec.rows.every(row => row.points !== undefined)

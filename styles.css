@@ -1779,6 +1779,30 @@ textarea#pccOutput {
     border-radius: 10px;
 }
 
+.scorer-summary textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    font: inherit;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #0f172a;
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    resize: vertical;
+}
+
+.scorer-summary textarea:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: -1px;
+    border-color: var(--accent);
+}
+
+.scorer-summary .scorer-report-actions {
+    margin-top: 10px;
+}
+
 .scorer-report-fields {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
