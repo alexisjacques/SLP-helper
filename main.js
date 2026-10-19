@@ -535,9 +535,11 @@ function initMOCA() {
         summaryEl.value = scoreSummary({
             test: 'MoCA', score: `${total}/30`, normal: total >= 26,
             level: total >= 26 ? 'within normal limits' : 'below normal limits',
-            areas: summaryDomains.filter(([, keys]) => points(keys) < maxFor(keys)).map(([name]) => name)
+            areas: deficitDomains()
         })
     }
+
+    const deficitDomains = () => summaryDomains.filter(([, keys]) => points(keys) < maxFor(keys)).map(([name]) => name)
 
     // Cognitive domains for the summary; a domain is a deficit when any of its points are lost
     const summaryDomains = [
@@ -701,6 +703,7 @@ function initMOCA() {
             interpretation: !done
                 ? `Incomplete: ${allKeys.filter(k => scores[k] !== undefined).length} of ${allKeys.length} items scored`
                 : total >= 26 ? 'Normal' : 'Below normal',
+            areasNote: done ? areasNote(total >= 26, deficitDomains()) : '',
             sections,
             cutoffs: {
                 head: ['Score', 'Interpretation'],
@@ -763,9 +766,11 @@ function initSLUMS() {
             : total >= c.mncd ? 'consistent with mild neurocognitive disorder' : 'consistent with dementia'
         summaryEl.value = scoreSummary({
             test: 'SLUMS examination', score: `${total}/30`, level, normal: total >= c.normal,
-            areas: domains.filter(([, keys]) => keys.some(k => scores[k] < maxPoints(k))).map(([name]) => name)
+            areas: deficitDomains()
         })
     }
+
+    const deficitDomains = () => domains.filter(([, keys]) => keys.some(k => scores[k] < maxPoints(k))).map(([name]) => name)
 
     function updateDisplay() {
         updateSummary()
@@ -932,9 +937,11 @@ function initSLUMS() {
         const total = sum(allKeys.filter(k => scores[k] !== undefined))
         const c = cutoffs[education]
         let interpretation = `Incomplete: ${scored} of ${allKeys.length} items scored`
+        let note = ''
         if (scored === allKeys.length) {
             interpretation = total >= c.normal ? 'Normal'
                 : total >= c.mncd ? 'Mild Neurocognitive Disorder' : 'Dementia'
+            note = areasNote(total >= c.normal, deficitDomains())
         }
 
         return {
@@ -943,7 +950,7 @@ function initSLUMS() {
             filename: 'SLUMS',
             patient, admin, when,
             details: [['Education', c.label]],
-            total, max: 30, interpretation, sections,
+            total, max: 30, interpretation, sections, areasNote: note,
             cutoffs: {
                 head: ['', 'High school or higher', 'Less than high school'],
                 rows: [['Normal', '27–30', '25–30'], ['Mild neurocognitive disorder', '21–26', '20–24'],
@@ -982,6 +989,13 @@ function initBIMS() {
         return keys.every(k => scores[k] !== undefined)
     }
 
+    // Areas where any points were lost, for the summary and the PDF report
+    function deficitAreas() {
+        const areas = [['word repetition', ['c0200a', 'c0200b', 'c0200c']],
+        ['temporal orientation', ['c0300a', 'c0300b', 'c0300c']], ['short-term recall', ['c0400a', 'c0400b', 'c0400c']]]
+        return areas.filter(([, keys]) => keys.some(k => scores[k] < questions[k])).map(([name]) => name)
+    }
+
     function updateDisplay() {
         const repKeys = ['c0200a', 'c0200b', 'c0200c']
         const oriKeys = ['c0300a', 'c0300b', 'c0300c']
@@ -1018,13 +1032,12 @@ function initBIMS() {
             interpEl.textContent = label
             interpEl.className = `bims-interpretation ${cls}`
 
-            const areas = [['word repetition', repKeys], ['temporal orientation', oriKeys], ['short-term recall', recKeys]]
             summaryEl.value = scoreSummary({
                 test: 'BIMS', score: `${total}/15`, normal: total >= 13,
                 level: total >= 13 ? 'indicating intact cognition'
                     : total >= 8 ? 'consistent with moderate cognitive impairment'
                         : 'consistent with severe cognitive impairment',
-                areas: areas.filter(([, keys]) => keys.some(k => scores[k] < questions[k])).map(([name]) => name)
+                areas: deficitAreas()
             })
         } else {
             totalEl.textContent = '—'
@@ -1125,6 +1138,7 @@ function initBIMS() {
             filename: 'BIMS',
             patient, admin, when,
             total, max: 15, interpretation, sections,
+            areasNote: allAnswered(allKeys) ? areasNote(total >= 13, deficitAreas()) : '',
             cutoffs: {
                 head: ['Score', 'Interpretation'],
                 rows: [['13–15', 'Cognitively intact'], ['8–12', 'Moderately impaired'], ['0–7', 'Severely impaired']]
@@ -1203,8 +1217,7 @@ function initBCRS() {
                 test: 'BCRS', score: `${total}/35`,
                 level: `consistent with GDS ${stageNum.toLowerCase()}, ${stageName.replace(/\s*\(.*\)/, '').toLowerCase()}`,
                 normal: Math.round(gds) === 1, minor: 'though mild changes were noted in',
-                // A rating of 1 means no deficit in that area
-                areas: [...groups].filter(g => scores[g.dataset.axis] > 1).map(g => areaNames[g.dataset.axis].toLowerCase())
+                areas: deficitAreas()
             })
         } else {
             gdsEl.textContent = '—'
@@ -1212,6 +1225,9 @@ function initBCRS() {
             summaryEl.value = ''
         }
     }
+
+    // A rating of 1 means no deficit in that area
+    const deficitAreas = () => [...groups].filter(g => scores[g.dataset.axis] > 1).map(g => areaNames[g.dataset.axis].toLowerCase())
 
     const summaryEl = document.getElementById('bcrs-summary')
     initCopyButton(document.getElementById('bcrs-summary-copy'), summaryEl,
@@ -1271,6 +1287,7 @@ function initBCRS() {
             marks: false,
             total, max: 35,
             interpretation: stage ? stage.title : `Incomplete: ${values.length} of ${groups.length} areas rated`,
+            areasNote: done ? areasNote(Math.round(gds) === 1, deficitAreas()) : '',
             sections: [{ title: 'Ratings (1 = no deficit, 7 = most severe)', rows }],
             cutoffs: {
                 head: ['GDS stage', 'Total', 'Interpretation'],
@@ -2132,6 +2149,13 @@ function scoreSummary({ subject = 'Patient', test, score, level, normal, areas,
     return `${start}, demonstrating deficits in ${listJoin(areas)}.`
 }
 
+// Short note for the PDF report's score box, e.g. "Deficits noted in naming and orientation."
+// Within normal limits, lost points are noted without calling them deficits.
+function areasNote(normal, areas) {
+    if (!areas.length) return ''
+    return `${normal ? 'Points lost in' : 'Deficits noted in'} ${listJoin(areas)}.`
+}
+
 // "a", "a and b", "a, b, and c"
 function listJoin(words) {
     if (words.length < 3) return words.join(' and ')
@@ -2218,6 +2242,7 @@ function printScorerReport(r) {
             <div class="pr-result">
                 <div class="pr-total">${unscored.length ? '—' : r.total}<span> / ${r.max}</span></div>
                 <div class="pr-interp">${esc(r.interpretation)}</div>
+                ${r.areasNote ? `<div class="pr-areas">${esc(r.areasNote)}</div>` : ''}
             </div>
             ${cutoffs}
         </div>
@@ -2226,7 +2251,6 @@ function printScorerReport(r) {
             <thead><tr><th>#</th><th></th><th>Item</th><th>Response</th><th>Points</th></tr></thead>
             ${sectionRows}
         </table>
-        <p class="pr-footer">Generated with SLP Helper</p>
     `
 
     // The PDF's default file name comes from the page title

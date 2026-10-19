@@ -2187,6 +2187,11 @@ textarea#pccOutput {
     font-weight: 700;
 }
 
+.pr-areas {
+    margin-top: 2px;
+    font-size: 10pt;
+}
+
 .pr-items,
 .pr-cutoffs {
     border-collapse: collapse;
@@ -2284,10 +2289,4 @@ textarea#pccOutput {
 .pr-dense .pr-section th,
 .pr-dense .pr-section td {
     padding-top: 3px;
-}
-
-.pr-footer {
-    margin-top: 10px;
-    font-size: 8pt;
-    color: #6b7280;
 }
