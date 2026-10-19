@@ -573,6 +573,7 @@ function initMOCA() {
 
     // "All" shortcut rows set every item in their group at once
     const shortcuts = [
+        { row: document.getElementById('moca-clock-all-row'), keys: ['clockContour', 'clockNumbers', 'clockHands'] },
         { row: document.getElementById('moca-naming-all-row'), keys: ['lion', 'rhino', 'camel'] },
         { row: document.getElementById('moca-serial7-all-row'), keys: serialKeys },
         { row: document.getElementById('moca-recall-all-row'), keys: recallKeys },
