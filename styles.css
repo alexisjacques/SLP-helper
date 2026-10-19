@@ -1446,6 +1446,26 @@ textarea#pccOutput {
     border-top: 1px dashed #e5e7eb;
 }
 
+/* Shortcut for unlabelled rows: "All N" sits in the number column so its
+   buttons line up with the buttons of the questions above */
+.scorer-q-shortcut-compact {
+    margin-left: 0;
+}
+
+.scorer-q-shortcut-compact .bims-item {
+    grid-template-columns: 48px 1fr 28px;
+    gap: 14px;
+}
+
+.scorer-q-shortcut-compact .bims-item-label {
+    text-align: center;
+}
+
+/* Questions split into a/b/c parts are indented by the sub-part rule (12px + 2px border) */
+.scorer-q-shortcut-sub .bims-item {
+    grid-template-columns: 62px 1fr 28px;
+}
+
 .scorer-cutoffs {
     width: 100%;
     margin-top: 16px;
@@ -1495,9 +1515,27 @@ textarea#pccOutput {
         padding-top: 5px;
     }
 
-    .scorer-q-shortcut,
+    /* Line shortcut rows up with the question text (36px badge + 10px gap) */
+    .scorer-q-shortcut {
+        margin-left: 46px;
+    }
+
+    .scorer-q-shortcut-compact,
     .scorer-today-standalone {
         margin-left: 0;
+    }
+
+    .scorer-q-shortcut-compact .bims-item {
+        grid-template-columns: 36px 1fr 24px;
+        gap: 10px;
+    }
+
+    .scorer-q-shortcut-sub .bims-item {
+        grid-template-columns: 50px 1fr 24px;
+    }
+
+    .scorer-q-shortcut-compact .bims-item-label {
+        font-size: 0.8rem;
     }
 
     .scorer-words,
