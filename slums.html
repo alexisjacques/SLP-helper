@@ -655,6 +655,30 @@
                 </table>
             </div>
 
+            <!-- PDF report -->
+            <div class="scorer-report">
+                <h3 class="scorer-section-title">PDF Report</h3>
+                <div class="scorer-report-fields">
+                    <label class="scorer-field">
+                        <span>Patient name <em>(optional)</em></span>
+                        <input type="text" id="slums-report-patient" autocomplete="off" />
+                    </label>
+                    <label class="scorer-field">
+                        <span>Administered by <em>(optional)</em></span>
+                        <input type="text" id="slums-report-admin" autocomplete="name" />
+                    </label>
+                    <label class="scorer-field">
+                        <span>Date</span>
+                        <input type="date" id="slums-report-when" />
+                    </label>
+                </div>
+                <div class="scorer-report-actions">
+                    <button type="button" id="slums-report-btn">Create PDF report</button>
+                    <span class="scorer-hint">Opens the print window. Choose <strong>Save as PDF</strong> as the
+                        destination.</span>
+                </div>
+            </div>
+
             <div class="bims-controls">
                 <button id="slums-reset-btn" class="secondary">Reset</button>
             </div>
@@ -664,6 +688,9 @@
             <small>Made with love by Alexis, SLP</small>
         </footer>
     </main>
+
+    <!-- Filled in and shown only while printing the PDF report -->
+    <div class="print-report" id="print-report"></div>
 
     <script src="main.js" defer></script>
 </body>

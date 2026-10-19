@@ -641,7 +641,7 @@ function initSLUMS() {
 
     // Cutoffs from the SLUMS form: [normal min, MNCD min]
     const cutoffs = {
-        hs: { normal: 27, mncd: 21, label: 'High school education' },
+        hs: { normal: 27, mncd: 21, label: 'High school education or higher' },
         lths: { normal: 25, mncd: 20, label: 'Less than high school education' }
     }
 
@@ -778,11 +778,65 @@ function initSLUMS() {
         })
     })
 
+    // PDF report: every scored item, grouped by section, in test order
+    const reportSections = [
+        ['Orientation', [['1', 'Day of the week', 'day', 1], ['2', 'Year', 'year', 1], ['3', 'State', 'state', 1]]],
+        ['Calculation', [['5a', 'Amount spent ($23)', 'spent', 1], ['5b', 'Amount left ($77)', 'left', 2]]],
+        ['Animal naming', [['6', 'Animals named in one minute', 'animals', 3]]],
+        ['Object recall', [['7', 'Apple', 'apple', 1], ['7', 'Pen', 'pen', 1], ['7', 'Tie', 'tie', 1],
+            ['7', 'House', 'house', 1], ['7', 'Car', 'car', 1]]],
+        ['Digits backward', [['8b', '649 (946)', 'digits648', 1], ['8c', '8537 (7358)', 'digits8537', 1]]],
+        ['Clock drawing', [['9', 'Hour markers', 'clockMarkers', 2], ['9', 'Time: ten minutes to eleven', 'clockTime', 2]]],
+        ['Figures', [['10a', 'X in the triangle', 'triangle', 1], ['10b', 'Largest figure', 'largest', 1]]],
+        ['Story recall', [['11a', 'Woman\'s name (Jill)', 'storyName', 2], ['11b', 'Work (stockbroker)', 'storyWork', 2],
+            ['11c', 'When she went back to work (teenagers)', 'storyWhen', 2], ['11d', 'State (Illinois)', 'storyState', 2]]]
+    ]
+
+    const report = initReportForm('slums', ({ patient, admin, when }) => {
+        const responseFor = key => {
+            const btn = document.querySelector(`[data-question="${key}"] .bims-btn.selected`)
+            if (!btn) return null
+            const label = btn.firstChild.textContent.trim()
+            const count = parseInt(document.querySelector('#slums-animal-tally .tally-count').textContent, 10)
+            return key === 'animals' && count > 0 ? `${count} animals (${label})` : label
+        }
+
+        const sections = reportSections.map(([title, rows]) => ({
+            title,
+            rows: rows.map(([num, item, key, max]) => ({ num, item, max, points: scores[key], response: responseFor(key) }))
+        }))
+
+        const allKeys = [...items].map(i => i.dataset.question)
+        const scored = allKeys.filter(k => scores[k] !== undefined).length
+        const total = sum(allKeys.filter(k => scores[k] !== undefined))
+        const c = cutoffs[education]
+        let interpretation = `Incomplete: ${scored} of ${allKeys.length} items scored`
+        if (scored === allKeys.length) {
+            interpretation = total >= c.normal ? 'Normal'
+                : total >= c.mncd ? 'Mild Neurocognitive Disorder' : 'Dementia'
+        }
+
+        return {
+            title: 'SLUMS Report',
+            subtitle: 'Saint Louis University Mental Status Examination',
+            filename: 'SLUMS',
+            patient, admin, when,
+            details: [['Education', c.label]],
+            total, max: 30, interpretation, sections,
+            cutoffs: {
+                head: ['', 'High school or higher', 'Less than high school'],
+                rows: [['Normal', '27–30', '25–30'], ['Mild neurocognitive disorder', '21–26', '20–24'],
+                    ['Dementia', '1–20', '1–19']]
+            }
+        }
+    })
+
     document.getElementById('slums-reset-btn').addEventListener('click', () => {
         Object.keys(scores).forEach(k => delete scores[k])
         document.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
         animalTally.reset()
         resetTimer()
+        report.reset()
         setEducation('hs')
         updateDisplay()
     })
@@ -1779,4 +1833,127 @@ function initTodayCard(card) {
             locateBtn.disabled = false
         }, { timeout: 15000, maximumAge: 600000 })
     })
+}
+
+// PDF report form: optional patient and administrator names plus an editable date that
+// stays on today until the user changes it. The administrator name is remembered in this
+// browser. buildReport(fields) returns the data printScorerReport needs.
+function initReportForm(prefix, buildReport) {
+    const patientInput = document.getElementById(`${prefix}-report-patient`)
+    const adminInput = document.getElementById(`${prefix}-report-admin`)
+    const whenInput = document.getElementById(`${prefix}-report-when`)
+    const ADMIN_KEY = 'slp-helper-admin-name'
+    let whenEdited = false
+
+    const pad = n => String(n).padStart(2, '0')
+    function setWhenToNow() {
+        const d = new Date()
+        whenInput.value = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+    }
+
+    // Read "YYYY-MM-DD" as a local date (new Date(string) would treat it as UTC midnight)
+    function readDate() {
+        const [y, m, d] = whenInput.value.split('-').map(Number)
+        return y && m && d ? new Date(y, m - 1, d) : null
+    }
+    setWhenToNow()
+    whenInput.addEventListener('input', () => { whenEdited = true })
+
+    try { adminInput.value = localStorage.getItem(ADMIN_KEY) || '' } catch (e) { /* storage unavailable */ }
+    adminInput.addEventListener('change', () => {
+        try { localStorage.setItem(ADMIN_KEY, adminInput.value.trim()) } catch (e) { /* storage unavailable */ }
+    })
+
+    document.getElementById(`${prefix}-report-btn`).addEventListener('click', () => {
+        if (!whenEdited) setWhenToNow()
+        printScorerReport(buildReport({
+            patient: patientInput.value.trim(),
+            admin: adminInput.value.trim(),
+            when: readDate()
+        }))
+    })
+
+    return {
+        reset() {
+            patientInput.value = ''
+            whenEdited = false
+            setWhenToNow()
+        }
+    }
+}
+
+// Renders a scorer report into #print-report and opens the print dialog (Save as PDF).
+function printScorerReport(r) {
+    const esc = v => String(v).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]))
+    const whenText = r.when && !isNaN(r.when)
+        ? r.when.toLocaleDateString('en-US', { dateStyle: 'long' })
+        : 'Not recorded'
+
+    const unscored = r.sections.flatMap(sec => sec.rows).filter(row => row.points === undefined)
+
+    const mark = row => row.points === undefined ? '<span class="pr-mark pr-none">–</span>'
+        : row.points === row.max ? '<span class="pr-mark pr-ok">✓</span>'
+            : row.points === 0 ? '<span class="pr-mark pr-miss">✗</span>'
+                : '<span class="pr-mark pr-part">◐</span>'
+
+    const sectionRows = r.sections.map(sec => {
+        const done = sec.rows.every(row => row.points !== undefined)
+        const got = sec.rows.reduce((t, row) => t + (row.points ?? 0), 0)
+        const max = sec.rows.reduce((t, row) => t + row.max, 0)
+        return `<tbody class="pr-group"><tr class="pr-section"><th colspan="4">${esc(sec.title)}</th><td>${done ? got : '—'} / ${max}</td></tr>` +
+            sec.rows.map(row => `<tr>
+                <td class="pr-num">${esc(row.num)}</td>
+                <td>${mark(row)}</td>
+                <td>${esc(row.item)}</td>
+                <td class="pr-response">${row.response ? esc(row.response) : 'Not scored'}</td>
+                <td class="pr-pts">${row.points ?? '—'} / ${row.max}</td>
+            </tr>`).join('') + '</tbody>'
+    }).join('')
+
+    const cutoffs = r.cutoffs ? `<table class="pr-cutoffs">
+            <thead><tr>${r.cutoffs.head.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead>
+            <tbody>${r.cutoffs.rows.map(row => `<tr><th>${esc(row[0])}</th>${row.slice(1).map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody>
+        </table>` : ''
+
+    const details = [
+        ['Patient', r.patient || '—'],
+        ['Administered by', r.admin || '—'],
+        ['Date', whenText],
+        ...(r.details || [])
+    ]
+
+    const container = document.getElementById('print-report')
+    container.innerHTML = `
+        <header class="pr-header">
+            <h1>${esc(r.title)}</h1>
+            <p class="pr-subtitle">${esc(r.subtitle)}</p>
+        </header>
+        <dl class="pr-details">${details.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+        <div class="pr-score">
+            <div class="pr-result">
+                <div class="pr-total">${unscored.length ? '—' : r.total}<span> / ${r.max}</span></div>
+                <div class="pr-interp">${esc(r.interpretation)}</div>
+            </div>
+            ${cutoffs}
+        </div>
+        <h2>Item results</h2>
+        <table class="pr-items">
+            <thead><tr><th>#</th><th></th><th>Item</th><th>Response</th><th>Points</th></tr></thead>
+            ${sectionRows}
+        </table>
+        <p class="pr-footer">Generated with SLP Helper</p>
+    `
+
+    // The PDF's default file name comes from the page title
+    const datePart = r.when && !isNaN(r.when)
+        ? `${r.when.getFullYear()}-${String(r.when.getMonth() + 1).padStart(2, '0')}-${String(r.when.getDate()).padStart(2, '0')}`
+        : ''
+    const pageTitle = document.title
+    document.title = [r.filename, r.patient, datePart].filter(Boolean).join(' - ')
+    document.body.classList.add('printing-report')
+    window.addEventListener('afterprint', () => {
+        document.body.classList.remove('printing-report')
+        document.title = pageTitle
+    }, { once: true })
+    window.print()
 }
