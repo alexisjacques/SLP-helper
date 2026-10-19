@@ -30,37 +30,82 @@
                     rel="noopener noreferrer">Open the form (PDF)</a></p>
         </header>
 
-        <section aria-labelledby="bcrs-title" class="generator bims-section">
+        <section aria-label="BCRS scorer" class="generator bims-section scorer-section">
             <p class="bcrs-note"><strong>Tip:</strong> The numbered questions are optional. Use them as a conversational
                 guide to gather enough information to choose a rating for each section.</p>
 
+            <p class="scorer-legend">
+                <span class="scorer-cue">Say</span> / <span class="scorer-cue">Ask</span>
+                Large bold text is read aloud to the resident. Smaller boxed text is for the administrator only.
+            </p>
+
             <!-- Intro -->
             <div class="bims-part">
-                <div class="bims-part-header">
-                    <h3>Intro</h3>
+                <h3 class="scorer-section-title">Intro</h3>
+
+                <div class="scorer-note scorer-part-note">Social, introductory cues to start a conversation with the resident.</div>
+
+                <div class="scorer-q">
+                    <span class="scorer-num">1</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Say</span>“Hi ____, how are you today?” <span class="scorer-aside">(extend your hand and shake the resident’s hand)</span></p>
+                    </div>
                 </div>
-                <p class="bims-instruction">Intended to be social, introductory cues to initiate conversation with the
-                    resident.</p>
-                <ol class="bcrs-questions" start="1">
-                    <li>“Hi __________ how are you today?” (extend your hand and shake the resident’s hand).</li>
-                    <li>“My name is _________. I came by to visit with you.”</li>
-                    <li>“I just wanted to stop by to visit and see how you’re doing.”</li>
-                    <li>“How has your day been?”</li>
-                    <li>“Did you have a good (breakfast, lunch, dinner)?”</li>
-                </ol>
+                <div class="scorer-q">
+                    <span class="scorer-num">2</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Say</span>“My name is ____. I came by to visit with you.”</p>
+                    </div>
+                </div>
+                <div class="scorer-q">
+                    <span class="scorer-num">3</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Say</span>“I just wanted to stop by to visit and see how you’re doing.”</p>
+                    </div>
+                </div>
+                <div class="scorer-q">
+                    <span class="scorer-num">4</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Ask</span>“How has your day been?”</p>
+                    </div>
+                </div>
+                <div class="scorer-q">
+                    <span class="scorer-num">5</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Ask</span>“Did you have a good (breakfast, lunch, dinner)?”</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Past Memory -->
             <div class="bims-part">
-                <div class="bims-part-header">
-                    <h3>Past Memory</h3>
+                <h3 class="scorer-section-title">Past Memory</h3>
+
+                <div class="scorer-q">
+                    <span class="scorer-num">6</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Ask</span>“I was born in ____ <span class="scorer-aside">(city and state)</span>, where were you born?”</p>
+                    </div>
                 </div>
-                <ol class="bcrs-questions" start="6">
-                    <li>“I was born in __________ (city and state), where were you born?”</li>
-                    <li>“I work in health care, what kind of work did you do?”</li>
-                    <li>“I went to ___________ (school) and on to college, how about you?”</li>
-                    <li>“Do you remember the name of your teachers or classmates?”</li>
-                </ol>
+                <div class="scorer-q">
+                    <span class="scorer-num">7</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Ask</span>“I work in health care, what kind of work did you do?”</p>
+                    </div>
+                </div>
+                <div class="scorer-q">
+                    <span class="scorer-num">8</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Ask</span>“I went to ____ <span class="scorer-aside">(school)</span> and on to college, how about you?”</p>
+                    </div>
+                </div>
+                <div class="scorer-q">
+                    <span class="scorer-num">9</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Ask</span>“Do you remember the name of your teachers or classmates?”</p>
+                    </div>
+                </div>
+
                 <div class="bcrs-rating" data-axis="past" role="group" aria-label="Past Memory rating">
                     <p class="bcrs-rating-title">Rating</p>
                     <button class="bcrs-option" data-value="1"><span class="bcrs-option-num">1</span><span>No objective
@@ -85,18 +130,31 @@
 
             <!-- Recent Memory -->
             <div class="bims-part">
-                <div class="bims-part-header">
-                    <h3>Recent Memory</h3>
+                <h3 class="scorer-section-title">Recent Memory</h3>
+
+                <div class="scorer-note scorer-part-note">Pertains to past memory; use a picture of a school and teacher to see if any type of response emerges from visual cues.</div>
+
+                <div class="scorer-q">
+                    <span class="scorer-num">10</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Ask</span>“I was just watching the news, do you know the name of the President of the United States?”</p>
+                        <div class="scorer-note">If no response, give a choice of a few, such as Biden, Trump, Obama, or Bush.</div>
+                    </div>
                 </div>
-                <p class="bims-instruction">Impairment of Recent Memory. Pertain to past memory; use a picture of a
-                    school and teacher to see if any type of response emerges from visual cues.</p>
-                <ol class="bcrs-questions" start="10">
-                    <li>“I was just watching the news, do you know the name of the President of the United States?” (If
-                        no response, give a choice of a few such as Biden, Trump, Obama, or Bush).</li>
-                    <li>“I live in ___________ (city and state), where do you live?” (Note: Some residents will respond,
-                        “Right here”.)</li>
-                    <li>“What were you doing just before I came in to visit you?”</li>
-                </ol>
+                <div class="scorer-q">
+                    <span class="scorer-num">11</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Ask</span>“I live in ____ <span class="scorer-aside">(city and state)</span>, where do you live?”</p>
+                        <div class="scorer-note">Some residents will respond, “Right here.”</div>
+                    </div>
+                </div>
+                <div class="scorer-q">
+                    <span class="scorer-num">12</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Ask</span>“What were you doing just before I came in to visit you?”</p>
+                    </div>
+                </div>
+
                 <div class="bcrs-rating" data-axis="recent" role="group" aria-label="Recent Memory rating">
                     <p class="bcrs-rating-title">Rating</p>
                     <button class="bcrs-option" data-value="1"><span class="bcrs-option-num">1</span><span>No objective
@@ -121,20 +179,53 @@
 
             <!-- Orientation -->
             <div class="bims-part">
-                <div class="bims-part-header">
-                    <h3>Orientation</h3>
+                <h3 class="scorer-section-title">Orientation</h3>
+
+                <div class="scorer-note scorer-part-note">If the resident does not know who the president is or where they live, additional specific orientation questions may only frustrate the resident.</div>
+
+                <div class="scorer-q">
+                    <span class="scorer-num">13</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Ask</span>“What city are we in now?”</p>
+                    </div>
                 </div>
-                <p class="bims-instruction">*Note – If the resident does not know who the president is or where they
-                    live, additional specific orientation questions may only frustrate the resident.</p>
-                <ol class="bcrs-questions" start="13">
-                    <li>“What city are we in now?”</li>
-                    <li>“What was your name again?”</li>
-                    <li>“Do you know what month it is?”</li>
-                    <li>“Do you know what year it is?”</li>
-                    <li>“Do you know what day of the week it is?”</li>
-                    <li>“Do you know what time it is, approximately?”</li>
-                    <li>“Are you married? What is your spouse’s name?”</li>
-                </ol>
+                <div class="scorer-q">
+                    <span class="scorer-num">14</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Ask</span>“What was your name again?”</p>
+                    </div>
+                </div>
+                <div class="scorer-q">
+                    <span class="scorer-num">15</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Ask</span>“Do you know what month it is?”</p>
+                    </div>
+                </div>
+                <div class="scorer-q">
+                    <span class="scorer-num">16</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Ask</span>“Do you know what year it is?”</p>
+                    </div>
+                </div>
+                <div class="scorer-q">
+                    <span class="scorer-num">17</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Ask</span>“Do you know what day of the week it is?”</p>
+                    </div>
+                </div>
+                <div class="scorer-q">
+                    <span class="scorer-num">18</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Ask</span>“Do you know what time it is, approximately?”</p>
+                    </div>
+                </div>
+                <div class="scorer-q">
+                    <span class="scorer-num">19</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Ask</span>“Are you married? What is your spouse’s name?”</p>
+                    </div>
+                </div>
+
                 <div class="bcrs-rating" data-axis="orientation" role="group" aria-label="Orientation rating">
                     <p class="bcrs-rating-title">Rating</p>
                     <button class="bcrs-option" data-value="1"><span class="bcrs-option-num">1</span><span>No deficit in
@@ -156,20 +247,28 @@
 
             <!-- Concentration -->
             <div class="bims-part">
-                <div class="bims-part-header">
-                    <h3>Concentration</h3>
+                <h3 class="scorer-section-title">Concentration</h3>
+
+                <div class="scorer-note scorer-part-note">The object of this task is to judge the resident’s ability to concentrate (attention span), not just their ability to count.</div>
+
+                <div class="scorer-q">
+                    <span class="scorer-num">20</span>
+                    <div class="scorer-q-body">
+                        <div class="scorer-note">If the resident appears very impaired from previous responses:</div>
+                        <p class="scorer-say"><span class="scorer-cue">Say</span>“I want to play a counting game with you. Let’s count from 1 to 10.”</p>
+                        <div class="scorer-note">If the resident has difficulty, start them by saying “one” and holding up one finger. If they make it to 10:</div>
+                        <p class="scorer-say"><span class="scorer-cue">Say</span>“Now let’s count down from 10 to 1, like they do with a rocket ship.”</p>
+                    </div>
                 </div>
-                <p class="bims-instruction">Object of this task is to judge the resident’s ability to concentrate
-                    (attention span) and not just ability to count with numbers.</p>
-                <ol class="bcrs-questions" start="20">
-                    <li>Judging from previous responses, if the resident appears to be very impaired, say “I want to
-                        play a counting game with you. Let’s count from 1-10.” If the resident has difficulty, try
-                        starting them by saying “one” and holding up one finger. If the resident makes it to 10, say
-                        “Now let’s count down from 10 to 1, like they do with a rocket ship.”</li>
-                    <li>If the resident does well counting backwards from 10-1, say “You are really good at this, let’s
-                        try something else.” Proceed to counting from 30 backwards by 2’s or saying the months of the
-                        year backwards.</li>
-                </ol>
+                <div class="scorer-q">
+                    <span class="scorer-num">21</span>
+                    <div class="scorer-q-body">
+                        <div class="scorer-note">If the resident does well counting backwards from 10 to 1:</div>
+                        <p class="scorer-say"><span class="scorer-cue">Say</span>“You are really good at this, let’s try something else.”</p>
+                        <div class="scorer-note">Proceed to counting from 30 backwards by 2’s, or saying the months of the year backwards.</div>
+                    </div>
+                </div>
+
                 <div class="bcrs-rating" data-axis="concentration" role="group" aria-label="Concentration rating">
                     <p class="bcrs-rating-title">Rating</p>
                     <button class="bcrs-option" data-value="1"><span class="bcrs-option-num">1</span><span>No objective
@@ -191,10 +290,10 @@
 
             <!-- Functioning and Self Care -->
             <div class="bims-part">
-                <div class="bims-part-header">
-                    <h3>Functioning and Self Care</h3>
-                </div>
-                <p class="bims-instruction">Determined by observation or caregiver report.</p>
+                <h3 class="scorer-section-title">Functioning and Self Care</h3>
+
+                <div class="scorer-note scorer-part-note">Determined by observation or caregiver report.</div>
+
                 <div class="bcrs-rating" data-axis="function" role="group"
                     aria-label="Functioning and Self Care rating">
                     <p class="bcrs-rating-title">Rating</p>

@@ -32,120 +32,148 @@
                     guide (PDF).</a></p>
         </header>
 
-        <section aria-labelledby="moca-title" class="generator bims-section">
+        <section aria-label="MoCA scorer" class="generator bims-section scorer-section">
+
+            <p class="scorer-legend">
+                <span class="scorer-cue">Say</span> / <span class="scorer-cue">Ask</span>
+                Large bold text is read aloud to the patient. Smaller boxed text is for the administrator only.
+            </p>
 
             <!-- Education -->
             <div class="bims-part">
-                <div class="bims-part-header">
-                    <h3>Education</h3>
-                </div>
-                <p class="bims-instruction">Add 1 point for 12 years or fewer of formal education (maximum total 30).
-                </p>
-                <div class="bims-items">
-                    <div class="bims-item" id="moca-education">
-                        <span class="bims-item-label">Years</span>
-                        <div class="bims-btn-group" role="group" aria-label="Years of education">
-                            <button class="bims-btn" data-value="0">More than 12 <span
-                                    class="bims-pts">(+0)</span></button>
-                            <button class="bims-btn" data-value="1">12 or fewer <span
-                                    class="bims-pts">(+1)</span></button>
+                <h3 class="scorer-section-title">Before you begin</h3>
+
+                <div class="scorer-q">
+                    <span class="scorer-num scorer-num-muted" aria-hidden="true">—</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-q-title">Education level</p>
+                        <p class="scorer-hint">Add 1 point for 12 years or fewer of formal education (maximum total 30).</p>
+                        <div class="bims-items">
+                            <div class="bims-item" id="moca-education">
+                                <span class="bims-item-label"></span>
+                                <div class="bims-btn-group" role="group" aria-label="Years of education">
+                                    <button class="bims-btn" data-value="0">More than 12 <span
+                                            class="bims-pts">(+0)</span></button>
+                                    <button class="bims-btn" data-value="1">12 or fewer <span
+                                            class="bims-pts">(+1)</span></button>
+                                </div>
+                                <span class="bims-item-score"></span>
+                            </div>
                         </div>
-                        <span class="bims-item-score"></span>
                     </div>
                 </div>
             </div>
 
             <!-- Visuospatial / Executive -->
             <div class="bims-part">
-                <div class="bims-part-header">
-                    <h3>Visuospatial / Executive</h3>
-                </div>
-                <div class="bims-items">
-                    <p class="bims-instruction bims-inline-prompt">Say: <em>"Please draw a line going from a number to a
-                            letter in ascending order. Begin here and draw a line from 1 then to A then to 2 and so on.
-                            End here."</em> (1-A-2-B-3-C-4-D-5-E, no crossing lines)</p>
-                    <div class="bims-item" data-question="trail">
-                        <span class="bims-item-label">Trail</span>
-                        <div class="bims-btn-group" role="group" aria-label="Alternating trail making">
-                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                <h3 class="scorer-section-title">Visuospatial / Executive</h3>
+
+                <div class="scorer-q">
+                    <span class="scorer-num">1</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Say</span>“Please draw a line going from a number to a letter in ascending order. Begin here and draw a line from 1 then to A then to 2 and so on. End here.”</p>
+                        <div class="scorer-note">Correct pattern: 1-A-2-B-3-C-4-D-5-E, with no crossing lines.</div>
+                        <div class="bims-item" data-question="trail">
+                            <span class="bims-item-label"></span>
+                            <div class="bims-btn-group" role="group" aria-label="Alternating trail making">
+                                <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                                <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                            </div>
+                            <span class="bims-item-score">—</span>
                         </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
-                    <p class="bims-instruction bims-inline-prompt">Say: <em>"Copy this drawing as accurately as you
-                            can."</em></p>
-                    <div class="bims-item" data-question="cube">
-                        <span class="bims-item-label">Cube</span>
-                        <div class="bims-btn-group" role="group" aria-label="Copy cube">
-                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
-                        </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
-                    <p class="bims-instruction bims-inline-prompt">Say: <em>"Draw a clock. Put in all the numbers and
-                            set the time to 10 past 11."</em></p>
-                    <div class="bims-item" data-question="clockContour">
-                        <span class="bims-item-label">Contour</span>
-                        <div class="bims-btn-group" role="group" aria-label="Clock contour">
-                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
-                        </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
-                    <div class="bims-item" data-question="clockNumbers">
-                        <span class="bims-item-label">Numbers</span>
-                        <div class="bims-btn-group" role="group" aria-label="Clock numbers">
-                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
-                        </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
-                    <div class="bims-item" data-question="clockHands">
-                        <span class="bims-item-label">Hands</span>
-                        <div class="bims-btn-group" role="group" aria-label="Clock hands">
-                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
-                        </div>
-                        <span class="bims-item-score">—</span>
                     </div>
                 </div>
-                <div class="bims-subtotal">
-                    Visuospatial / executive subtotal: <strong>—</strong> / 5
+
+                <div class="scorer-q">
+                    <span class="scorer-num">2</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Say</span>“Copy this drawing as accurately as you can.”</p>
+                        <div class="bims-item" data-question="cube">
+                            <span class="bims-item-label"></span>
+                            <div class="bims-btn-group" role="group" aria-label="Copy cube">
+                                <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                                <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                            </div>
+                            <span class="bims-item-score">—</span>
+                        </div>
+                    </div>
                 </div>
+
+                <div class="scorer-q">
+                    <span class="scorer-num">3</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Say</span>“Draw a clock. Put in all the numbers and set the time to 10 past 11.”</p>
+                        <div class="bims-items">
+                            <div class="bims-item" data-question="clockContour">
+                                <span class="bims-item-label">Contour</span>
+                                <div class="bims-btn-group" role="group" aria-label="Clock contour">
+                                    <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
+                            <div class="bims-item" data-question="clockNumbers">
+                                <span class="bims-item-label">Numbers</span>
+                                <div class="bims-btn-group" role="group" aria-label="Clock numbers">
+                                    <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
+                            <div class="bims-item" data-question="clockHands">
+                                <span class="bims-item-label">Hands</span>
+                                <div class="bims-btn-group" role="group" aria-label="Clock hands">
+                                    <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bims-subtotal">Visuospatial / executive subtotal: <strong>—</strong> / 5</div>
             </div>
 
             <!-- Naming -->
             <div class="bims-part">
-                <div class="bims-part-header">
-                    <h3>Naming</h3>
+                <h3 class="scorer-section-title">Naming</h3>
+
+                <div class="scorer-q">
+                    <span class="scorer-num">4</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-hint">Point to each figure, beginning on the left.</p>
+                        <p class="scorer-say"><span class="scorer-cue">Say</span>“Tell me the name of this animal.”</p>
+                        <div class="bims-items">
+                            <div class="bims-item" data-question="lion">
+                                <span class="bims-item-label">Lion</span>
+                                <div class="bims-btn-group" role="group" aria-label="Lion">
+                                    <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
+                            <div class="bims-item" data-question="rhino">
+                                <span class="bims-item-label">Rhino</span>
+                                <div class="bims-btn-group" role="group" aria-label="Rhinoceros">
+                                    <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
+                            <div class="bims-item" data-question="camel">
+                                <span class="bims-item-label">Camel</span>
+                                <div class="bims-btn-group" role="group" aria-label="Camel (or dromedary)">
+                                    <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <p class="bims-instruction">Point to each figure, beginning on the left, and say: <em>"Tell me the name
-                        of this animal."</em></p>
-                <div class="bims-items">
-                    <div class="bims-item" data-question="lion">
-                        <span class="bims-item-label">Lion</span>
-                        <div class="bims-btn-group" role="group" aria-label="Lion">
-                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
-                        </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
-                    <div class="bims-item" data-question="rhino">
-                        <span class="bims-item-label">Rhino</span>
-                        <div class="bims-btn-group" role="group" aria-label="Rhinoceros">
-                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
-                        </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
-                    <div class="bims-item" data-question="camel">
-                        <span class="bims-item-label">Camel</span>
-                        <div class="bims-btn-group" role="group" aria-label="Camel (or dromedary)">
-                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
-                        </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
+
+                <div class="scorer-q-shortcut">
                     <div class="bims-item bims-all-three-row" id="moca-naming-all-row">
                         <span class="bims-item-label bims-label-normal">All 3</span>
                         <div class="bims-btn-group" role="group" aria-label="All three animals">
@@ -155,126 +183,127 @@
                         <span class="bims-item-score"></span>
                     </div>
                 </div>
-                <div class="bims-subtotal">
-                    Naming subtotal: <strong>—</strong> / 3
-                </div>
+
+                <div class="bims-subtotal">Naming subtotal: <strong>—</strong> / 3</div>
             </div>
 
             <!-- Memory registration -->
             <div class="bims-part">
-                <div class="bims-part-header">
-                    <h3>Memory</h3>
+                <h3 class="scorer-section-title">Memory</h3>
+
+                <div class="scorer-q">
+                    <span class="scorer-num">5</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Say</span>“This is a memory test. I am going to read a list of words that you will have to remember now and later on. Listen carefully. When I am through, tell me as many words as you can remember. It doesn’t matter in what order you say them.”</p>
+                        <p class="scorer-words">Face · Velvet · Church · Daisy · Red</p>
+                        <div class="scorer-note">Not scored now. Read the list twice (one word per second), even if the first trial is successful. Recall is tested after 5 minutes (question 12).</div>
+                    </div>
                 </div>
-                <p class="bims-instruction">Say: <em>"This is a memory test. I am going to read a list of words that you
-                        will have to
-                        remember now and later on. Listen carefully. When I am through, tell me as many words as you can
-                        remember. It doesn't matter in what order you say them."</em> Read the list twice (1 word/sec),
-                    even if
-                    the first trial is successful. Recall after 5 minutes. (Not scored now.)</p>
-                <p class="slums-words">Face, Velvet, Church, Daisy, Red</p>
             </div>
 
             <!-- Attention -->
             <div class="bims-part">
-                <div class="bims-part-header">
-                    <h3>Attention</h3>
+                <h3 class="scorer-section-title">Attention</h3>
+
+                <div class="scorer-q">
+                    <span class="scorer-num">6</span>
+                    <div class="scorer-q-body">
+                        <div class="scorer-sub">
+                            <p class="scorer-say"><span class="scorer-sub-letter">a</span><span class="scorer-cue">Say</span>“I am going to say some numbers and when I am through, repeat them to me exactly as I said them.”</p>
+                            <p class="scorer-say"><span class="scorer-cue">Say</span><span class="scorer-digits">2 1 8 5 4</span> <span class="scorer-answer">21854</span></p>
+                            <div class="bims-item" data-question="digitsFwd">
+                                <span class="bims-item-label"></span>
+                                <div class="bims-btn-group" role="group" aria-label="Forward digit span">
+                                    <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
+                        </div>
+                        <div class="scorer-sub">
+                            <p class="scorer-say"><span class="scorer-sub-letter">b</span><span class="scorer-cue">Say</span>“Now I am going to say some more numbers, but when I am through you must repeat them to me in the backward order.”</p>
+                            <p class="scorer-say"><span class="scorer-cue">Say</span><span class="scorer-digits">7 4 2</span> <span class="scorer-answer">247</span></p>
+                            <div class="bims-item" data-question="digitsBwd">
+                                <span class="bims-item-label"></span>
+                                <div class="bims-btn-group" role="group" aria-label="Backward digit span">
+                                    <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
+                        </div>
+                        <div class="scorer-note">Say the numbers at a rate of one digit per second. If the patient repeats the backward sequence in forward order, you may not ask them to repeat it in backward order at this point.</div>
+                    </div>
                 </div>
-                <div class="bims-items">
-                    <p class="bims-instruction bims-inline-prompt">Say: <em>"I am going to say some numbers and when I
-                            am through, repeat them to me exactly as I said them."</em> <b>(2 1 8 5 4)</b> <br> Note:
-                        Say the numbers at a rate of one digit per second.</p>
-                    <div class="bims-item" data-question="digitsFwd">
-                        <span class="bims-item-label">Forward</span>
-                        <div class="bims-btn-group" role="group" aria-label="Forward digit span">
-                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+
+                <div class="scorer-q">
+                    <span class="scorer-num">7</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Say</span>“I am going to read a sequence of letters. Every time I say the letter A, tap your hand once. If I say a different letter, do not tap your hand.”</p>
+                        <p class="moca-letters">F B <b>A</b> C M N <b>A</b> <b>A</b> J K L B <b>A</b> F <b>A</b> K D E <b>A</b> <b>A</b> <b>A</b> J <b>A</b> M O F <b>A</b> <b>A</b> B</p>
+                        <div class="bims-item" data-question="vigilance">
+                            <span class="bims-item-label"></span>
+                            <div class="bims-btn-group" role="group" aria-label="Letter tapping vigilance">
+                                <button class="bims-btn" data-value="0">2+ errors <span class="bims-pts">(0)</span></button>
+                                <button class="bims-btn" data-value="1">0–1 errors <span
+                                        class="bims-pts">(1)</span></button>
+                            </div>
+                            <span class="bims-item-score">—</span>
                         </div>
-                        <span class="bims-item-score">—</span>
                     </div>
-                    <p class="bims-instruction bims-inline-prompt">Say: <em>"Now I am going to say some more numbers,
-                            but when I am through you must repeat them to me in the backward order."</em> <b>(7 4 2 → 2
-                            4
-                            7)</b><br>Note: Say the numbers at a rate of one digit per second. If the patient repeats
-                        the sequence in the forward order, the
-                        examiner may not ask the patient to repeat the sequence in backward order at this point. </p>
-                    <div class="bims-item" data-question="digitsBwd">
-                        <span class="bims-item-label">Backward</span>
-                        <div class="bims-btn-group" role="group" aria-label="Backward digit span">
-                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                </div>
+
+                <div class="scorer-q">
+                    <span class="scorer-num">8</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Say</span>“Now, I will ask you to count by subtracting 7 from 100, and then, keep subtracting 7 from your answer until I tell you to stop.”</p>
+                        <div class="scorer-note">Each subtraction is scored independently: if the patient gives a wrong number but correctly subtracts 7 from it afterwards, count those later answers as correct.<br>The patient must do this in their head, without fingers or paper and pencil. Do not repeat the patient’s answers. If they ask for their last answer or what number to subtract, repeat the instructions if you have not already.<br><strong>Scoring:</strong> 4–5 correct = 3 pts, 2–3 correct = 2 pts, 1 correct = 1 pt, 0 correct = 0 pts.</div>
+                        <div class="bims-items">
+                            <div class="bims-item" data-question="serial7a">
+                                <span class="bims-item-label">1st</span>
+                                <div class="bims-btn-group" role="group" aria-label="Serial 7s, 1st subtraction">
+                                    <button class="bims-btn" data-value="0">Incorrect</button>
+                                    <button class="bims-btn" data-value="1">Correct: 93</button>
+                                </div>
+                                <span class="bims-item-score"></span>
+                            </div>
+                            <div class="bims-item" data-question="serial7b">
+                                <span class="bims-item-label">2nd</span>
+                                <div class="bims-btn-group" role="group" aria-label="Serial 7s, 2nd subtraction">
+                                    <button class="bims-btn" data-value="0">Incorrect</button>
+                                    <button class="bims-btn" data-value="1">Correct: 86 (or 7 less than prev answer)</button>
+                                </div>
+                                <span class="bims-item-score"></span>
+                            </div>
+                            <div class="bims-item" data-question="serial7c">
+                                <span class="bims-item-label">3rd</span>
+                                <div class="bims-btn-group" role="group" aria-label="Serial 7s, 3rd subtraction">
+                                    <button class="bims-btn" data-value="0">Incorrect</button>
+                                    <button class="bims-btn" data-value="1">Correct: 79 (or 7 less than prev answer)</button>
+                                </div>
+                                <span class="bims-item-score"></span>
+                            </div>
+                            <div class="bims-item" data-question="serial7d">
+                                <span class="bims-item-label">4th</span>
+                                <div class="bims-btn-group" role="group" aria-label="Serial 7s, 4th subtraction">
+                                    <button class="bims-btn" data-value="0">Incorrect</button>
+                                    <button class="bims-btn" data-value="1">Correct: 72 (or 7 less than prev answer)</button>
+                                </div>
+                                <span class="bims-item-score"></span>
+                            </div>
+                            <div class="bims-item" data-question="serial7e">
+                                <span class="bims-item-label">5th</span>
+                                <div class="bims-btn-group" role="group" aria-label="Serial 7s, 5th subtraction">
+                                    <button class="bims-btn" data-value="0">Incorrect</button>
+                                    <button class="bims-btn" data-value="1">Correct: 65 (or 7 less than prev answer)</button>
+                                </div>
+                                <span class="bims-item-score"></span>
+                            </div>
                         </div>
-                        <span class="bims-item-score">—</span>
                     </div>
-                    <p class="bims-instruction bims-inline-prompt">Say: <em>"I am going to read a sequence of letters.
-                            Every time I say the letter A, tap your hand once. If I say a different letter, do not tap
-                            your hand."</em></p>
-                    <p class="moca-letters">F B <b>A</b> C M N <b>A</b> <b>A</b> J K L B <b>A</b> F <b>A</b> K D E
-                        <b>A</b> <b>A</b> <b>A</b> J <b>A</b> M O F <b>A</b> <b>A</b> B
-                    </p>
-                    <div class="bims-item" data-question="vigilance">
-                        <span class="bims-item-label">Letters</span>
-                        <div class="bims-btn-group" role="group" aria-label="Letter tapping vigilance">
-                            <button class="bims-btn" data-value="0">2+ errors <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">0–1 errors <span
-                                    class="bims-pts">(1)</span></button>
-                        </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
-                    <p class="bims-instruction bims-inline-prompt">Say: <em>"Now, I will ask you to count by subtracting
-                            7 from 100, and then, keep subtracting 7 from your answer until I tell you to stop."</em>
-                        <br><br>
-                        Note 1: Each subtraction is evaluated independently; that is, if the subject responds
-                        with an incorrect number but continues to correctly subtract 7 from it, each correct
-                        subtraction is counted. <br><br>
-                        Note 2: The patient must
-                        perform
-                        a mental calculation, therefore,
-                        they may not use their fingers nor a pencil and paper to execute the task. The examiner
-                        may not repeat the patient's answers. If the patient asks what their last given answer
-                        was or what number they must subtract from their answer, the examiner responds by
-                        repeating the instructions if not already done so. <br><br>
-                        Scoring: 4–5 correct = 3 pts, 2–3 correct = 2 pts, 1 correct = 1 pt, 0 correct = 0 pts.
-                    </p>
-                    <div class="bims-item" data-question="serial7a">
-                        <span class="bims-item-label">1st</span>
-                        <div class="bims-btn-group" role="group" aria-label="Serial 7s, 1st subtraction">
-                            <button class="bims-btn" data-value="0">Incorrect</button>
-                            <button class="bims-btn" data-value="1">Correct: 93</button>
-                        </div>
-                        <span class="bims-item-score"></span>
-                    </div>
-                    <div class="bims-item" data-question="serial7b">
-                        <span class="bims-item-label">2nd</span>
-                        <div class="bims-btn-group" role="group" aria-label="Serial 7s, 2nd subtraction">
-                            <button class="bims-btn" data-value="0">Incorrect</button>
-                            <button class="bims-btn" data-value="1">Correct: 86 (or 7 less than prev answer)</button>
-                        </div>
-                        <span class="bims-item-score"></span>
-                    </div>
-                    <div class="bims-item" data-question="serial7c">
-                        <span class="bims-item-label">3rd</span>
-                        <div class="bims-btn-group" role="group" aria-label="Serial 7s, 3rd subtraction">
-                            <button class="bims-btn" data-value="0">Incorrect</button>
-                            <button class="bims-btn" data-value="1">Correct: 79 (or 7 less than prev answer)</button>
-                        </div>
-                        <span class="bims-item-score"></span>
-                    </div>
-                    <div class="bims-item" data-question="serial7d">
-                        <span class="bims-item-label">4th</span>
-                        <div class="bims-btn-group" role="group" aria-label="Serial 7s, 4th subtraction">
-                            <button class="bims-btn" data-value="0">Incorrect</button>
-                            <button class="bims-btn" data-value="1">Correct: 72 (or 7 less than prev answer)</button>
-                        </div>
-                        <span class="bims-item-score"></span>
-                    </div>
-                    <div class="bims-item" data-question="serial7e">
-                        <span class="bims-item-label">5th</span>
-                        <div class="bims-btn-group" role="group" aria-label="Serial 7s, 5th subtraction">
-                            <button class="bims-btn" data-value="0">Incorrect</button>
-                            <button class="bims-btn" data-value="1">Correct: 65 (or 7 less than prev answer)</button>
-                        </div>
-                        <span class="bims-item-score"></span>
-                    </div>
+                </div>
+
+                <div class="scorer-q-shortcut">
                     <div class="bims-item bims-all-three-row" id="moca-serial7-all-row">
                         <span class="bims-item-label bims-label-normal">All 5</span>
                         <div class="bims-btn-group" role="group" aria-label="All five serial 7 subtractions">
@@ -284,171 +313,183 @@
                         <span class="bims-item-score"></span>
                     </div>
                 </div>
-                <div class="bims-subtotal">
-                    Attention subtotal: <strong>—</strong> / 6
-                </div>
+
+                <div class="bims-subtotal">Attention subtotal: <strong>—</strong> / 6</div>
             </div>
 
             <!-- Language -->
             <div class="bims-part">
-                <div class="bims-part-header">
-                    <h3>Language</h3>
-                </div>
-                <div class="bims-items">
-                    <p class="bims-instruction bims-inline-prompt">Say: <em>"I am going to read you a sentence. Repeat
-                            it after me, exactly as I say it: I only know that John is the one to help today."</em></p>
-                    <div class="bims-item" data-question="sentence1">
-                        <span class="bims-item-label">Sentence 1</span>
-                        <div class="bims-btn-group" role="group" aria-label="First sentence repetition">
-                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                <h3 class="scorer-section-title">Language</h3>
+
+                <div class="scorer-q">
+                    <span class="scorer-num">9</span>
+                    <div class="scorer-q-body">
+                        <div class="scorer-sub">
+                            <p class="scorer-say"><span class="scorer-sub-letter">a</span><span class="scorer-cue">Say</span>“I am going to read you a sentence. Repeat it after me, exactly as I say it: I only know that John is the one to help today.”</p>
+                            <div class="bims-item" data-question="sentence1">
+                                <span class="bims-item-label"></span>
+                                <div class="bims-btn-group" role="group" aria-label="First sentence repetition">
+                                    <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
                         </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
-                    <p class="bims-instruction bims-inline-prompt">Say: <em>"Now I am going to read you another
-                            sentence. Repeat it after me, exactly as I say it: The cat always hid under the couch when
-                            dogs were in the room."</em></p>
-                    <div class="bims-item" data-question="sentence2">
-                        <span class="bims-item-label">Sentence 2</span>
-                        <div class="bims-btn-group" role="group" aria-label="Second sentence repetition">
-                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                        <div class="scorer-sub">
+                            <p class="scorer-say"><span class="scorer-sub-letter">b</span><span class="scorer-cue">Say</span>“Now I am going to read you another sentence. Repeat it after me, exactly as I say it: The cat always hid under the couch when dogs were in the room.”</p>
+                            <div class="bims-item" data-question="sentence2">
+                                <span class="bims-item-label"></span>
+                                <div class="bims-btn-group" role="group" aria-label="Second sentence repetition">
+                                    <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
                         </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
-                    <p class="bims-instruction bims-inline-prompt">Say: <em>"Now, I want you to tell me as many words as
-                            you can think of that begin with the letter F. I will tell you to stop after one minute.
-                            Proper nouns, numbers, and different forms of a verb are not permitted."</em></p>
-                    <div class="bims-item" data-question="fluency">
-                        <span class="bims-item-label">Fluency</span>
-                        <div class="bims-btn-group" role="group" aria-label="Letter F fluency">
-                            <button class="bims-btn" data-value="0">Under 11 words <span
-                                    class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">11+ words <span class="bims-pts">(1)</span></button>
-                        </div>
-                        <span class="bims-item-score">—</span>
                     </div>
                 </div>
-                <div class="bims-subtotal">
-                    Language subtotal: <strong>—</strong> / 3
+
+                <div class="scorer-q">
+                    <span class="scorer-num">10</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Say</span>“Now, I want you to tell me as many words as you can think of that begin with the letter F. I will tell you to stop after one minute. Proper nouns, numbers, and different forms of a verb are not permitted.”</p>
+                        <div class="bims-item" data-question="fluency">
+                            <span class="bims-item-label"></span>
+                            <div class="bims-btn-group" role="group" aria-label="Letter F fluency">
+                                <button class="bims-btn" data-value="0">Under 11 words <span
+                                        class="bims-pts">(0)</span></button>
+                                <button class="bims-btn" data-value="1">11+ words <span class="bims-pts">(1)</span></button>
+                            </div>
+                            <span class="bims-item-score">—</span>
+                        </div>
+                    </div>
                 </div>
+
+                <div class="bims-subtotal">Language subtotal: <strong>—</strong> / 3</div>
             </div>
 
             <!-- Abstraction -->
             <div class="bims-part">
-                <div class="bims-part-header">
-                    <h3>Abstraction</h3>
-                </div>
-                <p class="bims-instruction">Say: <em>"I will give you two words and I would like you to tell me to what
-                        category they belong to: an orange and a banana."</em> (Example, not scored: fruits)</p>
-                <div class="bims-items">
-                    <p class="bims-instruction bims-inline-prompt">Say: <em>"Now, a train and a bicycle."</em>
-                        (Transportation, travel. Not "wheels")</p>
-                    <div class="bims-item" data-question="trainBicycle">
-                        <span class="bims-item-label">Train–Bicycle</span>
-                        <div class="bims-btn-group" role="group" aria-label="Train and bicycle">
-                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                <h3 class="scorer-section-title">Abstraction</h3>
+
+                <div class="scorer-q">
+                    <span class="scorer-num">11</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Say</span>“I will give you two words and I would like you to tell me to what category they belong to: an orange and a banana.”</p>
+                        <div class="scorer-note">Practice example, not scored. Expected answer: fruits.</div>
+                        <div class="scorer-sub">
+                            <p class="scorer-say"><span class="scorer-sub-letter">a</span><span class="scorer-cue">Say</span>“Now, a train and a bicycle.” <span class="scorer-answer">Transportation, travel · not “wheels”</span></p>
+                            <div class="bims-item" data-question="trainBicycle">
+                                <span class="bims-item-label"></span>
+                                <div class="bims-btn-group" role="group" aria-label="Train and bicycle">
+                                    <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
                         </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
-                    <p class="bims-instruction bims-inline-prompt">Say: <em>"Now, a ruler and a watch."</em> (Measuring
-                        instruments. Not "numbers")</p>
-                    <div class="bims-item" data-question="rulerWatch">
-                        <span class="bims-item-label">Ruler–Watch</span>
-                        <div class="bims-btn-group" role="group" aria-label="Ruler and watch">
-                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                        <div class="scorer-sub">
+                            <p class="scorer-say"><span class="scorer-sub-letter">b</span><span class="scorer-cue">Say</span>“Now, a ruler and a watch.” <span class="scorer-answer">Measuring instruments · not “numbers”</span></p>
+                            <div class="bims-item" data-question="rulerWatch">
+                                <span class="bims-item-label"></span>
+                                <div class="bims-btn-group" role="group" aria-label="Ruler and watch">
+                                    <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
                         </div>
-                        <span class="bims-item-score">—</span>
                     </div>
                 </div>
-                <div class="bims-subtotal">
-                    Abstraction subtotal: <strong>—</strong> / 2
-                </div>
+
+                <div class="bims-subtotal">Abstraction subtotal: <strong>—</strong> / 2</div>
             </div>
 
             <!-- Delayed recall -->
             <div class="bims-part">
-                <div class="bims-part-header">
-                    <h3>Delayed Recall</h3>
+                <h3 class="scorer-section-title">Delayed Recall</h3>
+
+                <div class="scorer-q">
+                    <span class="scorer-num">12</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Say</span>“I read some words to you earlier, which I asked you to remember. Tell me as many of those words as you can remember.”</p>
+                        <div class="scorer-note">For missed words, give the category cue, then the multiple choice cue. Only uncued recall earns points; cues count toward the Memory Index Score (MIS).</div>
+                        <div class="bims-items">
+                            <div class="bims-item" data-question="face">
+                                <span class="bims-item-label">Face</span>
+                                <div class="bims-btn-group" role="group" aria-label="Face recall">
+                                    <button class="bims-btn" data-value="0" data-mis="0">Not recalled <span
+                                            class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="0" data-mis="1">Multiple choice <span
+                                            class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="0" data-mis="2">Category cue <span
+                                            class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1" data-mis="3">No cue <span
+                                            class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
+                            <div class="bims-item" data-question="velvet">
+                                <span class="bims-item-label">Velvet</span>
+                                <div class="bims-btn-group" role="group" aria-label="Velvet recall">
+                                    <button class="bims-btn" data-value="0" data-mis="0">Not recalled <span
+                                            class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="0" data-mis="1">Multiple choice <span
+                                            class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="0" data-mis="2">Category cue <span
+                                            class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1" data-mis="3">No cue <span
+                                            class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
+                            <div class="bims-item" data-question="church">
+                                <span class="bims-item-label">Church</span>
+                                <div class="bims-btn-group" role="group" aria-label="Church recall">
+                                    <button class="bims-btn" data-value="0" data-mis="0">Not recalled <span
+                                            class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="0" data-mis="1">Multiple choice <span
+                                            class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="0" data-mis="2">Category cue <span
+                                            class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1" data-mis="3">No cue <span
+                                            class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
+                            <div class="bims-item" data-question="daisy">
+                                <span class="bims-item-label">Daisy</span>
+                                <div class="bims-btn-group" role="group" aria-label="Daisy recall">
+                                    <button class="bims-btn" data-value="0" data-mis="0">Not recalled <span
+                                            class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="0" data-mis="1">Multiple choice <span
+                                            class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="0" data-mis="2">Category cue <span
+                                            class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1" data-mis="3">No cue <span
+                                            class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
+                            <div class="bims-item" data-question="red">
+                                <span class="bims-item-label">Red</span>
+                                <div class="bims-btn-group" role="group" aria-label="Red recall">
+                                    <button class="bims-btn" data-value="0" data-mis="0">Not recalled <span
+                                            class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="0" data-mis="1">Multiple choice <span
+                                            class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="0" data-mis="2">Category cue <span
+                                            class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1" data-mis="3">No cue <span
+                                            class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <p class="bims-instruction">Say: <em>"I read some words to you earlier, which I asked you to remember.
-                        Tell me as many of
-                        those words as you can remember."</em> For missed words, give the category cue, then the
-                    multiple
-                    choice cue. Only uncued recall earns points; cues count toward the Memory Index Score (MIS).</p>
-                <div class="bims-items">
-                    <div class="bims-item" data-question="face">
-                        <span class="bims-item-label">Face</span>
-                        <div class="bims-btn-group" role="group" aria-label="Face recall">
-                            <button class="bims-btn" data-value="0" data-mis="0">Not recalled <span
-                                    class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="0" data-mis="1">Multiple choice <span
-                                    class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="0" data-mis="2">Category cue <span
-                                    class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1" data-mis="3">No cue <span
-                                    class="bims-pts">(1)</span></button>
-                        </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
-                    <div class="bims-item" data-question="velvet">
-                        <span class="bims-item-label">Velvet</span>
-                        <div class="bims-btn-group" role="group" aria-label="Velvet recall">
-                            <button class="bims-btn" data-value="0" data-mis="0">Not recalled <span
-                                    class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="0" data-mis="1">Multiple choice <span
-                                    class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="0" data-mis="2">Category cue <span
-                                    class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1" data-mis="3">No cue <span
-                                    class="bims-pts">(1)</span></button>
-                        </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
-                    <div class="bims-item" data-question="church">
-                        <span class="bims-item-label">Church</span>
-                        <div class="bims-btn-group" role="group" aria-label="Church recall">
-                            <button class="bims-btn" data-value="0" data-mis="0">Not recalled <span
-                                    class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="0" data-mis="1">Multiple choice <span
-                                    class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="0" data-mis="2">Category cue <span
-                                    class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1" data-mis="3">No cue <span
-                                    class="bims-pts">(1)</span></button>
-                        </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
-                    <div class="bims-item" data-question="daisy">
-                        <span class="bims-item-label">Daisy</span>
-                        <div class="bims-btn-group" role="group" aria-label="Daisy recall">
-                            <button class="bims-btn" data-value="0" data-mis="0">Not recalled <span
-                                    class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="0" data-mis="1">Multiple choice <span
-                                    class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="0" data-mis="2">Category cue <span
-                                    class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1" data-mis="3">No cue <span
-                                    class="bims-pts">(1)</span></button>
-                        </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
-                    <div class="bims-item" data-question="red">
-                        <span class="bims-item-label">Red</span>
-                        <div class="bims-btn-group" role="group" aria-label="Red recall">
-                            <button class="bims-btn" data-value="0" data-mis="0">Not recalled <span
-                                    class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="0" data-mis="1">Multiple choice <span
-                                    class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="0" data-mis="2">Category cue <span
-                                    class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1" data-mis="3">No cue <span
-                                    class="bims-pts">(1)</span></button>
-                        </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
+
+                <div class="scorer-q-shortcut">
                     <div class="bims-item bims-all-three-row" id="moca-recall-all-row">
                         <span class="bims-item-label bims-label-normal">All 5</span>
                         <div class="bims-btn-group" role="group" aria-label="Recalled all five words with no cue">
@@ -460,69 +501,74 @@
                         <span class="bims-item-score"></span>
                     </div>
                 </div>
-                <div class="bims-subtotal">
-                    Delayed recall subtotal: <strong>—</strong> / 5 · MIS: <span id="moca-mis">—</span> / 15
-                </div>
+
+                <div class="bims-subtotal">Delayed recall subtotal: <strong>—</strong> / 5 · MIS: <span id="moca-mis">—</span> / 15</div>
             </div>
 
             <!-- Orientation -->
             <div class="bims-part">
-                <div class="bims-part-header">
-                    <h3>Orientation</h3>
+                <h3 class="scorer-section-title">Orientation</h3>
+
+                <div class="scorer-q">
+                    <span class="scorer-num">13</span>
+                    <div class="scorer-q-body">
+                        <p class="scorer-say"><span class="scorer-cue">Say</span>“Tell me today’s date.”</p>
+                        <div class="scorer-note">Prompt for any missing part: year, month, exact date, day of the week.</div>
+                        <p class="scorer-say"><span class="scorer-cue">Say</span>“Now, tell me the name of this place, and which city it is in.”</p>
+                        <div class="bims-items">
+                            <div class="bims-item" data-question="date">
+                                <span class="bims-item-label">Date</span>
+                                <div class="bims-btn-group" role="group" aria-label="Date response">
+                                    <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
+                            <div class="bims-item" data-question="month">
+                                <span class="bims-item-label">Month</span>
+                                <div class="bims-btn-group" role="group" aria-label="Month response">
+                                    <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
+                            <div class="bims-item" data-question="year">
+                                <span class="bims-item-label">Year</span>
+                                <div class="bims-btn-group" role="group" aria-label="Year response">
+                                    <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
+                            <div class="bims-item" data-question="day">
+                                <span class="bims-item-label">Day</span>
+                                <div class="bims-btn-group" role="group" aria-label="Day response">
+                                    <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
+                            <div class="bims-item" data-question="place">
+                                <span class="bims-item-label">Place</span>
+                                <div class="bims-btn-group" role="group" aria-label="Place response">
+                                    <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
+                            <div class="bims-item" data-question="city">
+                                <span class="bims-item-label">City</span>
+                                <div class="bims-btn-group" role="group" aria-label="City response">
+                                    <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
+                                    <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
+                                </div>
+                                <span class="bims-item-score">—</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <p class="bims-instruction">Say: <em>"Tell me today's date."</em> Prompt for any missing part (year,
-                    month, exact
-                    date, day of the week). Then: <em>"Now, tell me the name of this place, and which city it is
-                        in."</em></p>
-                <div class="bims-items">
-                    <div class="bims-item" data-question="date">
-                        <span class="bims-item-label">Date</span>
-                        <div class="bims-btn-group" role="group" aria-label="Date response">
-                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
-                        </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
-                    <div class="bims-item" data-question="month">
-                        <span class="bims-item-label">Month</span>
-                        <div class="bims-btn-group" role="group" aria-label="Month response">
-                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
-                        </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
-                    <div class="bims-item" data-question="year">
-                        <span class="bims-item-label">Year</span>
-                        <div class="bims-btn-group" role="group" aria-label="Year response">
-                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
-                        </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
-                    <div class="bims-item" data-question="day">
-                        <span class="bims-item-label">Day</span>
-                        <div class="bims-btn-group" role="group" aria-label="Day response">
-                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
-                        </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
-                    <div class="bims-item" data-question="place">
-                        <span class="bims-item-label">Place</span>
-                        <div class="bims-btn-group" role="group" aria-label="Place response">
-                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
-                        </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
-                    <div class="bims-item" data-question="city">
-                        <span class="bims-item-label">City</span>
-                        <div class="bims-btn-group" role="group" aria-label="City response">
-                            <button class="bims-btn" data-value="0">Incorrect <span class="bims-pts">(0)</span></button>
-                            <button class="bims-btn" data-value="1">Correct <span class="bims-pts">(1)</span></button>
-                        </div>
-                        <span class="bims-item-score">—</span>
-                    </div>
+
+                <div class="scorer-q-shortcut">
                     <div class="bims-item bims-all-three-row" id="moca-orientation-all-row">
                         <span class="bims-item-label bims-label-normal">All 6</span>
                         <div class="bims-btn-group" role="group" aria-label="All six orientation questions">
@@ -532,9 +578,8 @@
                         <span class="bims-item-score"></span>
                     </div>
                 </div>
-                <div class="bims-subtotal">
-                    Orientation subtotal: <strong>—</strong> / 6
-                </div>
+
+                <div class="bims-subtotal">Orientation subtotal: <strong>—</strong> / 6</div>
             </div>
 
             <!-- Score Summary -->

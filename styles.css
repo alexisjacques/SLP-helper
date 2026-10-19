@@ -1174,19 +1174,19 @@ textarea#pccOutput {
     line-height: 1.5;
 }
 
-/* SLUMS Scorer Styles */
-.slums-legend {
+/* Shared scorer question layout (SLUMS, BIMS, BCRS, MoCA) */
+.scorer-legend {
     margin: 0 0 24px 0;
     font-size: 0.85rem;
     color: var(--muted);
     line-height: 1.6;
 }
 
-.slums-legend .slums-cue {
+.scorer-legend .scorer-cue {
     margin-right: 0;
 }
 
-.slums-section-title {
+.scorer-section-title {
     margin: 0 0 14px 0;
     font-size: 0.8rem;
     font-weight: 700;
@@ -1196,18 +1196,18 @@ textarea#pccOutput {
 }
 
 /* One numbered question: big number badge on the left, content on the right */
-.slums-q {
+.scorer-q {
     display: grid;
     grid-template-columns: 48px 1fr;
     gap: 14px;
     margin-bottom: 22px;
 }
 
-.slums-q:last-of-type {
+.scorer-q:last-of-type {
     margin-bottom: 0;
 }
 
-.slums-num {
+.scorer-num {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1221,23 +1221,23 @@ textarea#pccOutput {
     line-height: 1;
 }
 
-.slums-num-muted {
+.scorer-num-muted {
     background: rgba(14, 165, 160, 0.12);
     color: var(--accent);
 }
 
-.slums-q-body {
+.scorer-q-body {
     min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.slums-q-body > * {
+.scorer-q-body > * {
     margin: 0;
 }
 
-.slums-q-title {
+.scorer-q-title {
     font-size: 1.15rem;
     font-weight: 700;
     color: #0f172a;
@@ -1245,18 +1245,18 @@ textarea#pccOutput {
 }
 
 /* Text read aloud to the patient */
-.slums-say {
+.scorer-say {
     font-size: 1.25rem;
     font-weight: 700;
     line-height: 1.45;
     color: #0f172a;
 }
 
-.slums-q-body > .slums-say:first-child {
+.scorer-q-body > .scorer-say:first-child {
     padding-top: 7px;
 }
 
-.slums-story {
+.scorer-story {
     font-size: 1.1rem;
     font-weight: 600;
     line-height: 1.65;
@@ -1266,7 +1266,7 @@ textarea#pccOutput {
     border-radius: 8px;
 }
 
-.slums-cue {
+.scorer-cue {
     display: inline-block;
     vertical-align: 0.2em;
     margin-right: 8px;
@@ -1280,14 +1280,14 @@ textarea#pccOutput {
     text-transform: uppercase;
 }
 
-.slums-sub-letter {
+.scorer-sub-letter {
     display: inline-block;
     min-width: 1.4em;
     color: var(--accent);
     font-weight: 800;
 }
 
-.slums-sub {
+.scorer-sub {
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -1295,12 +1295,20 @@ textarea#pccOutput {
     border-left: 2px solid #e6eef0;
 }
 
-.slums-sub > * {
+.scorer-sub > * {
     margin: 0;
 }
 
+/* Administrator direction inside a spoken line, e.g. "(extend your hand)" */
+.scorer-aside {
+    font-size: 0.85rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--muted);
+}
+
 /* Expected answer chip */
-.slums-answer {
+.scorer-answer {
     display: inline-block;
     vertical-align: 0.15em;
     margin-left: 6px;
@@ -1312,13 +1320,13 @@ textarea#pccOutput {
     font-weight: 600;
 }
 
-.slums-digits {
+.scorer-digits {
     font-size: 1.6rem;
     font-weight: 800;
     letter-spacing: 0.25em;
 }
 
-.slums-words {
+.scorer-words {
     font-size: 1.6rem;
     font-weight: 800;
     color: var(--accent);
@@ -1326,7 +1334,7 @@ textarea#pccOutput {
 }
 
 /* Administrator-only guidance */
-.slums-note {
+.scorer-note {
     padding: 10px 14px;
     font-size: 0.86rem;
     line-height: 1.55;
@@ -1336,105 +1344,111 @@ textarea#pccOutput {
     border-radius: 6px;
 }
 
-.slums-hint {
+/* Note that applies to a whole section rather than one question */
+.scorer-part-note {
+    margin-bottom: 18px;
+}
+
+.scorer-hint {
     font-size: 0.88rem;
     font-style: italic;
     color: var(--muted);
     line-height: 1.5;
 }
 
-.slums-tools {
+.scorer-tools {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.slums-tools .timer,
-.slums-tools .tally {
+.scorer-tools .timer,
+.scorer-tools .tally {
     margin: 0;
 }
 
 /* Rows whose label was dropped: buttons start flush under the question text */
-.slums-section .bims-item:has(> .bims-item-label:empty) {
+.scorer-section .bims-item:has(> .bims-item-label:empty) {
     grid-template-columns: 1fr 28px;
 }
 
-.slums-section .bims-item-label:empty {
+.scorer-section .bims-item-label:empty {
     display: none;
 }
 
-.slums-q-shortcut {
+.scorer-q-shortcut {
     margin: 14px 0 0 62px;
     padding-top: 12px;
     border-top: 1px dashed #e5e7eb;
 }
 
-.slums-cutoffs {
+.scorer-cutoffs {
     width: 100%;
     margin-top: 16px;
     border-collapse: collapse;
     font-size: 0.84rem;
 }
 
-.slums-cutoffs th,
-.slums-cutoffs td {
+.scorer-cutoffs th,
+.scorer-cutoffs td {
     padding: 6px 8px;
     text-align: left;
     border-bottom: 1px solid #e5e7eb;
 }
 
-.slums-cutoffs thead th {
+.scorer-cutoffs thead th {
     font-size: 0.75rem;
     color: var(--muted);
     font-weight: 600;
 }
 
-.slums-cutoffs tbody th {
+.scorer-cutoffs tbody th {
     font-weight: 600;
     color: #374151;
 }
 
 @media (max-width: 600px) {
-    .slums-q {
+    .scorer-q {
         grid-template-columns: 36px 1fr;
         gap: 10px;
     }
 
-    .slums-num {
+    .scorer-num {
         width: 34px;
         height: 34px;
         font-size: 1.05rem;
     }
 
-    .slums-say {
+    .scorer-say {
         font-size: 1.12rem;
     }
 
-    .slums-q-body > .slums-say:first-child {
+    .scorer-q-body > .scorer-say:first-child {
         padding-top: 4px;
     }
 
-    .slums-q-title {
+    .scorer-q-title {
         padding-top: 5px;
     }
 
-    .slums-q-shortcut {
+    .scorer-q-shortcut {
         margin-left: 0;
     }
 
-    .slums-words,
-    .slums-digits {
+    .scorer-words,
+    .scorer-digits {
         font-size: 1.3rem;
     }
 }
 
 /* MoCA Scorer Styles */
 .moca-letters {
-    margin: 0 0 4px 0;
-    font-size: 1.05rem;
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 700;
     color: #0f172a;
-    letter-spacing: 0.08em;
-    line-height: 1.6;
+    letter-spacing: 0.12em;
+    line-height: 1.7;
 }
 
 .moca-letters b {
