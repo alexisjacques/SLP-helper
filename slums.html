@@ -139,7 +139,7 @@
                         for $3 and a tricycle for $20." </em><br><br> Inflation Adjusted: <em>a bag of apples
                         for $3 and a bottle of vitamins for $20. </em></p>
                 <div class="bims-items">
-                    <p class="bims-instruction bims-inline-prompt">Ask: <em>"How much moneydid you spend?"</em> ($23)
+                    <p class="bims-instruction bims-inline-prompt">Ask: <em>"How much money did you spend?"</em> ($23)
                     </p>
                     <div class="bims-item" data-question="spent">
                         <span class="bims-item-label">Spent</span>
@@ -166,7 +166,10 @@
                 <p class="bims-instruction">Do not prompt or give hints, but do
                     give
                     ample time to the patient to answer the questions. <br> If the patient
-                    asks you to repeat the question, you may do so once. </p>
+                    asks you to repeat the question, you may do so once. <br>
+                    Allocate one point for exact amount spent and two points for amount left. Items are scored
+                    independently, i.e. the client can score points for amount left over even if they answer the
+                    amount spent incorrectly.</p>
             </div>
 
             <!-- Q6: Animal naming -->
@@ -176,6 +179,11 @@
                 </div>
                 <p class="bims-instruction">6. Say: <em>"Please name as many animals as you can in one minute."</em><br>
                     Be sure to time them.</p>
+                <div class="timer" id="slums-animal-timer">
+                    <span class="timer-display" aria-live="polite">1:00</span>
+                    <button type="button" class="timer-start">Start</button>
+                    <button type="button" class="timer-reset">Reset timer</button>
+                </div>
                 <div class="tally" id="slums-animal-tally">
                     <button type="button" class="tally-tap" aria-label="Count one animal">+1 Animal</button>
                     <span class="tally-count" aria-live="polite">0</span>
@@ -269,9 +277,10 @@
                 <p class="bims-instruction">8. Say: <em>"I am going to give you a series of numbers and I would like you
                         to give them to me backwards. For example, if I say 42, you would say 24."</em><br>
 
-                    <br><br> Note: state each number by its individual name. 87 is pronounced eight, seven; 649 is
-                    pronounced
-                    six, four, nine; 8537 is pronounced eight, five, three, seven.
+                    <br> State each number by its individual name. 87 is pronounced “eight seven”. <br>
+                    Repeat approximately one digit per second at an even rate.
+                    <br> Do not cue if the client
+                    repeats forward only.
                 </p>
 
                 <div class="bims-items">
@@ -308,7 +317,16 @@
                     <h3>Clock Drawing</h3>
                 </div>
                 <p class="bims-instruction">9. Show a clock face and say: <em>"Please put in the hour markers and the
-                        time at ten minutes to eleven o'clock."</em></p>
+                        time at ten minutes to eleven o'clock."</em><br>
+                    Either draw a large circle on the back of the examination form or provide the patient with a
+                    separate piece of paper with a larger circle printed on it.
+                    <br> When scoring, give full credit for either all 12 numbers or all 12 ticks.
+                    <br> If the patient puts only 4 ticks on the circle,
+                    prompt them once to put numbers next to those ticks (12, 3, 6, and 9) for full credit.
+                    <br> When scoring the correct time, make sure the hour hand is shorter than the minute hand and that
+                    the minute hand points at the 10 and
+                    the hour hand points at the 11.
+                </p>
                 <div class="bims-items">
                     <div class="bims-item" data-question="clockMarkers">
                         <span class="bims-item-label">Hour markers</span>
@@ -430,9 +448,16 @@
                         <span class="bims-item-score"></span>
                     </div>
                 </div>
+                <br>
+                <p class="bims-instruction">Do not repeat the story. Do not prompt or give hints.
+                    The answer
+                    of Chicago as the state she lives in gets no credit but you may prompt them once by repeating the
+                    question. </p>
                 <div class="bims-subtotal">
                     Story subtotal: <strong>—</strong> / 8
                 </div>
+
+
             </div>
 
             <!-- Score Summary -->

@@ -744,6 +744,77 @@ function initSLUMS() {
     tally.querySelector('.tally-undo').addEventListener('click', () => setAnimalCount(animalCount - 1))
     tally.querySelector('.tally-clear').addEventListener('click', () => setAnimalCount(0))
 
+    // Animal naming 1-minute countdown timer
+    const timer = document.getElementById('slums-animal-timer')
+    const timerDisplay = timer.querySelector('.timer-display')
+    const timerStartBtn = timer.querySelector('.timer-start')
+    const TIMER_SECONDS = 60
+    let timerRemaining = TIMER_SECONDS * 1000
+    let timerEndAt = null
+    let timerInterval = null
+
+    function renderTimer() {
+        const secs = Math.ceil(timerRemaining / 1000)
+        timerDisplay.textContent = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`
+    }
+
+    function beep() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)()
+            const osc = ctx.createOscillator()
+            const gain = ctx.createGain()
+            osc.frequency.value = 880
+            gain.gain.setValueAtTime(0.2, ctx.currentTime)
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8)
+            osc.connect(gain).connect(ctx.destination)
+            osc.start()
+            osc.stop(ctx.currentTime + 0.8)
+        } catch (e) { /* audio unavailable */ }
+    }
+
+    function pauseTimer() {
+        clearInterval(timerInterval)
+        timerInterval = null
+        timerEndAt = null
+    }
+
+    function tickTimer() {
+        timerRemaining = Math.max(0, timerEndAt - Date.now())
+        renderTimer()
+        if (timerRemaining === 0) {
+            pauseTimer()
+            timer.classList.add('timer-done')
+            timerDisplay.textContent = "Time's up"
+            timerStartBtn.textContent = 'Start'
+            timerStartBtn.disabled = true
+            beep()
+        }
+    }
+
+    function resetTimer() {
+        pauseTimer()
+        timerRemaining = TIMER_SECONDS * 1000
+        timer.classList.remove('timer-done', 'timer-running')
+        timerStartBtn.textContent = 'Start'
+        timerStartBtn.disabled = false
+        renderTimer()
+    }
+
+    timerStartBtn.addEventListener('click', () => {
+        if (timerInterval) {
+            timerRemaining = Math.max(0, timerEndAt - Date.now())
+            pauseTimer()
+            timer.classList.remove('timer-running')
+            timerStartBtn.textContent = 'Resume'
+        } else {
+            timerEndAt = Date.now() + timerRemaining
+            timerInterval = setInterval(tickTimer, 200)
+            timer.classList.add('timer-running')
+            timerStartBtn.textContent = 'Pause'
+        }
+    })
+    timer.querySelector('.timer-reset').addEventListener('click', resetTimer)
+
     function setEducation(value) {
         education = value
         educationRow.querySelectorAll('.bims-btn').forEach(b => {
@@ -763,6 +834,7 @@ function initSLUMS() {
         document.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
         animalCount = 0
         tallyCountEl.textContent = 0
+        resetTimer()
         setEducation('hs')
         updateDisplay()
     })
