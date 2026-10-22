@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cogCodes = ['R41.841', 'I69.311', 'R41.9', 'I69.319', 'I69.310', 'I69.312', 'I69.314', 'I69.315', 'I69.019', 'I69.119', 'I69.219', 'I69.919', 'I69.010', 'I69.110', 'I69.210', 'I69.810', 'I69.011', 'I69.111', 'I69.211', 'I69.811', 'I69.911', 'I69.819', ...COG_FINDER_CODES]
         const aphasiaCodes = ['R47.01', 'I69.320', 'I69.020', 'I69.120', 'I69.220', 'I69.820']
         const dysarthriaCodes = ['R47.1', 'I69.322', 'I69.122', 'I69.222', 'I69.822', ...DYSARTHRIA_FINDER_CODES]
-        const apraxiaCodes = ['I69.390', 'I69.090', 'I69.190', 'I69.290', 'I69.890', ...APRAXIA_FINDER_CODES]
+        const apraxiaCodes = ['R48.2', 'I69.390', 'I69.090', 'I69.190', 'I69.290', 'I69.890', ...APRAXIA_FINDER_CODES]
         const otherSpeechCodes = ['I69.328', ...OTHER_SPEECH_FINDER_CODES]
         const otherspeechdisturbancesCodes = ['R47.89']
 
