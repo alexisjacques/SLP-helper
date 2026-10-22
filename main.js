@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Category code groups
         const dysphagiaCodes = ['R13.12', 'R13.11', 'R13.10', 'I69.391', 'I69.091', 'I69.191', 'I69.291', 'I69.891', 'R13.13', 'R13.14']
-        const cogCodes = ['R41.841', 'I69.311', 'R41.9', 'I69.319', 'I69.310', 'I69.312', 'I69.314', 'I69.315', 'I69.019', 'I69.119', 'I69.219', 'I69.919', 'I69.010', 'I69.110', 'I69.210', 'I69.810', 'I69.011', 'I69.111', 'I69.211', 'I69.811', 'I69.911', 'I69.819']
+        const cogCodes = ['R41.841', 'I69.311', 'R41.9', 'I69.319', 'I69.310', 'I69.312', 'I69.314', 'I69.315', 'I69.019', 'I69.119', 'I69.219', 'I69.919', 'I69.010', 'I69.110', 'I69.210', 'I69.810', 'I69.011', 'I69.111', 'I69.211', 'I69.811', 'I69.911', 'I69.819', ...COG_FINDER_CODES]
         const aphasiaCodes = ['R47.01', 'I69.320', 'I69.020', 'I69.120', 'I69.220', 'I69.820']
         const dysarthriaCodes = ['R47.1', 'I69.322', 'I69.122', 'I69.222', 'I69.822']
         const apraxiaCodes = ['I69.390', 'I69.090', 'I69.190', 'I69.290', 'I69.890']
@@ -332,6 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (clearBtn) {
         clearBtn.addEventListener('click', () => {
             document.querySelectorAll('.categories input[type="checkbox"]').forEach(c => c.checked = false)
+            resetCogFinder()
             outputEl.value = ''
             copyStatus.textContent = ''
             // Clear warning messages
@@ -373,13 +374,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // keyboard support for checkboxes and auto-save
-    document.querySelectorAll('.categories input[type="checkbox"]').forEach(cb => {
+    const wirePCCCheckbox = cb => {
         cb.addEventListener('keydown', e => {
             if (e.key === 'Enter') generateBtn && generateBtn.click()
         })
         // Auto-save when checkbox changes
         cb.addEventListener('change', savePCCSelections)
-    })
+    }
+
+    // ICD-10 finder creates its saved checkboxes here, so they're wired and restored below
+    if (document.getElementById('cog-finder')) {
+        initCogFinder(wirePCCCheckbox)
+    }
+
+    document.querySelectorAll('.categories input[type="checkbox"]:not([data-finder])').forEach(wirePCCCheckbox)
 
     // Load saved PCC selections on page load (only on index.html)
     if (document.querySelector('.categories')) {
@@ -1316,6 +1324,122 @@ function initBCRS() {
 }
 
 // Local storage functions for PCC order generator
+// ICD-10 finder for acquired cognitive deficits (I69 sequelae of cerebrovascular disease).
+// Code is I69.<cause>1<deficit>, e.g. memory deficit (1) following cerebral infarction (3) = I69.311
+const COG_FINDER_DEFICITS = [
+    ['0', 'Attention and concentration deficit'],
+    ['1', 'Memory deficit'],
+    ['2', 'Visuospatial deficit and spatial neglect'],
+    ['3', 'Psychomotor deficit'],
+    ['4', 'Frontal lobe and executive function deficit'],
+    ['5', 'Cognitive social or emotional deficit'],
+    ['8', 'Other s/sx involving cognitive functions'],
+    ['9', 'Unspecified s/sx involving cognitive functions']
+]
+const COG_FINDER_CAUSES = [
+    ['3', 'cerebral infarction'],
+    ['0', 'nontraumatic subarachnoid hemorrhage'],
+    ['1', 'nontraumatic intracerebral hemorrhage'],
+    ['2', 'other nontraumatic intracranial hemorrhage'],
+    ['8', 'other cerebrovascular disease'],
+    ['9', 'unspecified cerebrovascular disease']
+]
+const COG_FINDER_CODES = COG_FINDER_CAUSES.flatMap(([c]) => COG_FINDER_DEFICITS.map(([d]) => `I69.${c}1${d}`))
+
+function cogFinderDescription(code) {
+    const deficit = COG_FINDER_DEFICITS.find(([d]) => d === code[6])[1]
+    const cause = COG_FINDER_CAUSES.find(([c]) => c === code[4])[1]
+    return `${deficit} following ${cause}`
+}
+
+function initCogFinder(wireCheckbox) {
+    const deficitSel = document.getElementById('cog-finder-deficit')
+    const causeSel = document.getElementById('cog-finder-cause')
+    const result = document.getElementById('cog-finder-result')
+    const addBtn = document.getElementById('cog-finder-add')
+    const added = document.getElementById('cog-finder-added')
+
+    const fill = (sel, items) => {
+        sel.add(new Option('Choose…', ''))
+        items.forEach(([value, text]) => sel.add(new Option(text[0].toUpperCase() + text.slice(1), value)))
+    }
+    fill(deficitSel, COG_FINDER_DEFICITS)
+    fill(causeSel, COG_FINDER_CAUSES)
+
+    const findCheckbox = code => document.querySelector(`.categories input[type="checkbox"][data-label="${code}"]`)
+
+    // codes not already listed in the category get their own checkbox under the finder
+    const addCheckbox = code => {
+        const label = document.createElement('label')
+        const cb = document.createElement('input')
+        cb.type = 'checkbox'
+        cb.dataset.label = code
+        cb.dataset.finder = ''
+        label.append(cb, ` ${code} ${cogFinderDescription(code)}`)
+        added.append(label)
+        wireCheckbox(cb)
+        return cb
+    }
+
+    // recreate checkboxes added in an earlier visit so their saved state can be restored
+    const saved = loadPCCSelections().checkboxes
+    COG_FINDER_CODES.forEach(code => {
+        if (saved[code] && !findCheckbox(code)) addCheckbox(code)
+    })
+
+    const currentCode = () =>
+        deficitSel.value && causeSel.value ? `I69.${causeSel.value}1${deficitSel.value}` : ''
+
+    const update = () => {
+        const code = currentCode()
+        addBtn.disabled = !code
+        if (!code) {
+            result.textContent = 'Choose a deficit and a cause.'
+            return
+        }
+        result.innerHTML = ''
+        const strong = document.createElement('strong')
+        strong.textContent = code
+        result.append(strong, ` ${cogFinderDescription(code)}`)
+        const cb = findCheckbox(code)
+        addBtn.textContent = cb && cb.checked ? 'Already selected' : 'Add to selections'
+        addBtn.disabled = Boolean(cb && cb.checked)
+    }
+
+    deficitSel.addEventListener('change', update)
+    causeSel.addEventListener('change', update)
+    // keep the button's "Already selected" state in sync when boxes are ticked by hand
+    document.querySelector('.categories').addEventListener('change', e => {
+        if (e.target.type === 'checkbox') update()
+    })
+
+    addBtn.addEventListener('click', () => {
+        const code = currentCode()
+        if (!code) return
+        const cb = findCheckbox(code) || addCheckbox(code)
+        cb.checked = true
+        cb.dispatchEvent(new Event('change'))
+        // open a collapsed "Show more" list so the checked box is visible
+        const more = cb.closest('.more-items')
+        if (more && !more.classList.contains('open')) {
+            document.querySelector(`.more-toggle[aria-controls="${more.id}"]`)?.click()
+        }
+        update()
+    })
+
+    update()
+}
+
+function resetCogFinder() {
+    const finder = document.getElementById('cog-finder')
+    if (!finder) return
+    document.getElementById('cog-finder-added').replaceChildren()
+    finder.querySelectorAll('select').forEach(sel => {
+        sel.value = ''
+        sel.dispatchEvent(new Event('change'))
+    })
+}
+
 function savePCCSelections() {
     const data = {
         checkboxes: {},

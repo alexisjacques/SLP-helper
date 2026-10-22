@@ -110,6 +110,22 @@
                             disease</label>
                     </div>
 
+                    <!-- ICD-10 finder: builds the I69 code from deficit + cause (options filled in by main.js) -->
+                    <div class="icd-finder" id="cog-finder">
+                        <p class="more-group-title">Acquired cognitive deficit finder</p>
+                        <label class="icd-finder-field">Deficit
+                            <select id="cog-finder-deficit"></select>
+                        </label>
+                        <label class="icd-finder-field">Following
+                            <select id="cog-finder-cause"></select>
+                        </label>
+                        <p class="icd-finder-result" id="cog-finder-result" aria-live="polite">Choose a deficit
+                            and a cause.</p>
+                        <button type="button" class="more-toggle" id="cog-finder-add" disabled>Add to
+                            selections</button>
+                        <div id="cog-finder-added"></div>
+                    </div>
+
                 </div>
 
                 <div class="category" id="language">

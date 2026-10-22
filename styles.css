@@ -685,6 +685,40 @@ textarea#pccOutput {
     margin-top: 0;
 }
 
+/* ICD-10 finder (cognition category) */
+.icd-finder {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid #e6eef0;
+}
+
+.category .icd-finder-field {
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.icd-finder-field select {
+    display: block;
+    width: 100%;
+    margin-top: 2px;
+    padding: 4px 6px;
+    font: inherit;
+    color: #0f172a;
+}
+
+.icd-finder-result {
+    margin: 8px 0 0 0;
+    font-size: 0.9rem;
+}
+
+.icd-finder-result strong {
+    color: var(--accent);
+}
+
+#cog-finder-added label {
+    margin-top: 6px;
+}
+
 .more-toggle {
     display: inline-block;
     margin-top: 8px;
