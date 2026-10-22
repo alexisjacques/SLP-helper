@@ -1,5 +1,14 @@
 
 // main.js — single clean implementation
+// Prevent mouse-wheel scrolling from changing the value of a focused number input;
+// blurring lets the page scroll normally instead.
+document.addEventListener('wheel', (e) => {
+    const el = e.target
+    if (el instanceof HTMLInputElement && el.type === 'number' && document.activeElement === el) {
+        el.blur()
+    }
+}, { passive: true })
+
 document.addEventListener('DOMContentLoaded', () => {
     const generateBtn = document.getElementById('generateBtn')
     const clearBtn = document.getElementById('clearBtn')
