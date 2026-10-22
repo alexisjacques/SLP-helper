@@ -674,6 +674,17 @@ textarea#pccOutput {
     margin-top: 8px;
 }
 
+.more-group-title {
+    margin: 12px 0 6px 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.more-group-title:first-child {
+    margin-top: 0;
+}
+
 .more-toggle {
     display: inline-block;
     margin-top: 8px;

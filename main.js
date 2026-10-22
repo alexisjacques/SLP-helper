@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Category code groups
         const dysphagiaCodes = ['R13.12', 'R13.11', 'R13.10', 'I69.391', 'I69.091', 'I69.191', 'I69.291', 'I69.891', 'R13.13', 'R13.14']
-        const cogCodes = ['R41.841', 'I69.311', 'R41.9', 'I69.319', 'I69.310', 'I69.312', 'I69.314', 'I69.315', 'I69.019', 'I69.119', 'I69.219', 'I69.919']
+        const cogCodes = ['R41.841', 'I69.311', 'R41.9', 'I69.319', 'I69.310', 'I69.312', 'I69.314', 'I69.315', 'I69.019', 'I69.119', 'I69.219', 'I69.919', 'I69.010', 'I69.110', 'I69.210', 'I69.810', 'I69.011', 'I69.111', 'I69.211', 'I69.811', 'I69.911', 'I69.819']
         const aphasiaCodes = ['R47.01', 'I69.320', 'I69.020', 'I69.120', 'I69.220', 'I69.820']
         const dysarthriaCodes = ['R47.1', 'I69.322', 'I69.122', 'I69.222', 'I69.822']
         const apraxiaCodes = ['I69.390', 'I69.090', 'I69.190', 'I69.290', 'I69.890']
@@ -425,6 +425,8 @@ document.addEventListener('DOMContentLoaded', () => {
             toggle.setAttribute('aria-expanded', String(next))
             toggle.textContent = next ? 'Show less' : 'Show more'
             container.classList.toggle('open', next)
+            // size to the content so long lists aren't clipped by the CSS max-height
+            container.style.maxHeight = next ? container.scrollHeight + 'px' : ''
             container.setAttribute('aria-hidden', String(!next))
         })
     })
