@@ -4,6 +4,8 @@
     --card: #ffffff;
     --muted: #6b7280;
     --accent: #0ea5a0;
+    /* darker teal for small text, readable on white */
+    --accent-text: #0f766e;
     --danger: #ef4444;
 }
 
@@ -166,6 +168,20 @@ header h1 {
 
 .category input[type="checkbox"] {
     margin-right: 8px;
+}
+
+/* ICD-10 codes in diagnosis labels */
+.icd-code {
+    font-weight: 700;
+    color: var(--accent-text);
+    font-variant-numeric: tabular-nums;
+}
+
+/* hanging indent: wrapped label text lines up under the text, not under the checkbox */
+.category label:has(> input[type="checkbox"]) {
+    padding-left: 22px;
+    text-indent: -22px;
+    line-height: 1.35;
 }
 
 .category.two-column {
@@ -678,7 +694,7 @@ textarea#pccOutput {
     margin: 12px 0 6px 0;
     font-size: 0.8rem;
     font-weight: 600;
-    color: var(--accent);
+    color: var(--accent-text);
 }
 
 .more-group-title:first-child,
@@ -712,8 +728,8 @@ textarea#pccOutput {
     font-size: 0.9rem;
 }
 
-.icd-finder-result strong {
-    color: var(--accent);
+.icd-finder-result:empty {
+    display: none;
 }
 
 #cog-finder-added label {

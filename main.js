@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const aphasiaCodes = ['R47.01', 'I69.320', 'I69.020', 'I69.120', 'I69.220', 'I69.820']
         const dysarthriaCodes = ['R47.1', 'I69.322', 'I69.122', 'I69.222', 'I69.822']
         const apraxiaCodes = ['I69.390', 'I69.090', 'I69.190', 'I69.290', 'I69.890']
-        const otherSpeechCodes = ['I68.328']
+        const otherSpeechCodes = ['I69.328']
         const otherspeechdisturbancesCodes = ['R47.89']
 
         // R49.8 grouping: if R49.1 (aphonia) is selected, R49.8 groups under aphonia
@@ -1354,7 +1354,6 @@ function initCogFinder(wireCheckbox) {
     const deficitSel = document.getElementById('cog-finder-deficit')
     const causeSel = document.getElementById('cog-finder-cause')
     const result = document.getElementById('cog-finder-result')
-    const addBtn = document.getElementById('cog-finder-add')
     const added = document.getElementById('cog-finder-added')
 
     const fill = (sel, items) => {
@@ -1373,9 +1372,19 @@ function initCogFinder(wireCheckbox) {
         cb.type = 'checkbox'
         cb.dataset.label = code
         cb.dataset.finder = ''
-        label.append(cb, ` ${code} ${cogFinderDescription(code)}`)
+        const strong = document.createElement('strong')
+        strong.className = 'icd-code'
+        strong.textContent = code
+        label.append(cb, ' ', strong, ` ${cogFinderDescription(code)}`)
         added.append(label)
         wireCheckbox(cb)
+        // unchecking a found code removes it from the list
+        cb.addEventListener('change', () => {
+            if (!cb.checked) {
+                label.remove()
+                savePCCSelections()
+            }
+        })
         return cb
     }
 
@@ -1388,54 +1397,39 @@ function initCogFinder(wireCheckbox) {
     const currentCode = () =>
         deficitSel.value && causeSel.value ? `I69.${causeSel.value}1${deficitSel.value}` : ''
 
-    const update = () => {
+    // as soon as both are chosen, select the code and clear the dropdowns for the next search
+    const find = () => {
         const code = currentCode()
-        addBtn.disabled = !code
         if (!code) {
-            result.textContent = 'Choose a deficit and a cause.'
+            result.textContent = ''
             return
         }
-        result.innerHTML = ''
-        const strong = document.createElement('strong')
-        strong.textContent = code
-        result.append(strong, ` ${cogFinderDescription(code)}`)
-        const cb = findCheckbox(code)
-        addBtn.textContent = cb && cb.checked ? 'Already selected' : 'Add to selections'
-        addBtn.disabled = Boolean(cb && cb.checked)
+        const listed = findCheckbox(code)
+        const cb = listed || addCheckbox(code)
+        if (!cb.checked) {
+            cb.checked = true
+            cb.dispatchEvent(new Event('change'))
+        }
+        result.textContent = listed && !listed.hasAttribute('data-finder')
+            ? `${code} is under Most commonly used dx and is now selected.`
+            : ''
+        deficitSel.value = ''
+        causeSel.value = ''
+        // grow the open "Show more" area if the note above made it taller
+        const more = result.closest('.more-items.open')
+        if (more) more.style.maxHeight = more.scrollHeight + 'px'
     }
 
-    deficitSel.addEventListener('change', update)
-    causeSel.addEventListener('change', update)
-    // keep the button's "Already selected" state in sync when boxes are ticked by hand
-    document.querySelector('.categories').addEventListener('change', e => {
-        if (e.target.type === 'checkbox') update()
-    })
-
-    addBtn.addEventListener('click', () => {
-        const code = currentCode()
-        if (!code) return
-        const cb = findCheckbox(code) || addCheckbox(code)
-        cb.checked = true
-        cb.dispatchEvent(new Event('change'))
-        // open a collapsed "Show more" list so the checked box is visible
-        const more = cb.closest('.more-items')
-        if (more && !more.classList.contains('open')) {
-            document.querySelector(`.more-toggle[aria-controls="${more.id}"]`)?.click()
-        }
-        update()
-    })
-
-    update()
+    deficitSel.addEventListener('change', find)
+    causeSel.addEventListener('change', find)
 }
 
 function resetCogFinder() {
     const finder = document.getElementById('cog-finder')
     if (!finder) return
     document.getElementById('cog-finder-added').replaceChildren()
-    finder.querySelectorAll('select').forEach(sel => {
-        sel.value = ''
-        sel.dispatchEvent(new Event('change'))
-    })
+    finder.querySelectorAll('select').forEach(sel => (sel.value = ''))
+    document.getElementById('cog-finder-result').textContent = ''
 }
 
 function savePCCSelections() {
