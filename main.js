@@ -1845,7 +1845,7 @@ function initProductivityCalculator() {
     const lunchBreakInput = document.getElementById('lunch-break-input')
 
     if (clockInInput && savedData.clockInTime !== undefined) {
-        clockInInput.value = savedData.clockInTime
+        setClockInParts(savedData.clockInTime)
     }
     if (lunchBreakInput && savedData.lunchBreak !== undefined) {
         lunchBreakInput.value = savedData.lunchBreak
@@ -1926,7 +1926,7 @@ function clearClockInputs() {
     const workMinutesInput = document.getElementById('work-minutes')
 
     // Reset to default values
-    if (clockInInput) clockInInput.value = '10:00'
+    if (clockInInput) setClockInParts('10:00')
     if (clockWorkHoursInput) clockWorkHoursInput.value = '8'
     if (clockWorkMinutesInput) clockWorkMinutesInput.value = '0'
     if (lunchBreakInput) lunchBreakInput.value = '30'
@@ -1942,6 +1942,25 @@ function clearClockInputs() {
 }
 
 // Time Clock functionality
+// Combine the hour and minute boxes into the hidden "H:MM" clock-in value
+function syncClockInValue() {
+    const clockInInput = document.getElementById('clock-in-input')
+    const h = document.getElementById('clock-in-hours')?.value || ''
+    const m = document.getElementById('clock-in-minutes')?.value || ''
+    if (!clockInInput) return
+    clockInInput.value = h ? `${h}:${m.padStart(2, '0')}` : ''
+}
+
+// Split an "H:MM" value into the hour and minute boxes
+function setClockInParts(value) {
+    const [h = '', m = ''] = String(value || '').split(':')
+    const hoursEl = document.getElementById('clock-in-hours')
+    const minutesEl = document.getElementById('clock-in-minutes')
+    if (hoursEl) hoursEl.value = h
+    if (minutesEl) minutesEl.value = m
+    syncClockInValue()
+}
+
 function initTimeClock() {
     // Update current time and date
     updateCurrentTime()
@@ -1951,10 +1970,43 @@ function initTimeClock() {
     const clockInInput = document.getElementById('clock-in-input')
     const lunchBreakInput = document.getElementById('lunch-break-input')
 
-    if (clockInInput) {
-        clockInInput.addEventListener('input', () => {
+    const clockInHours = document.getElementById('clock-in-hours')
+    const clockInMinutes = document.getElementById('clock-in-minutes')
+    if (clockInInput && clockInHours && clockInMinutes) {
+        const onPartInput = (e) => {
+            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 2)
+            // jump to minutes once the hour is complete (two digits, or a single digit 2-9)
+            if (e.target === clockInHours && (clockInHours.value.length === 2 || /^[2-9]$/.test(clockInHours.value))) {
+                clockInMinutes.focus()
+                clockInMinutes.select()
+            }
+            syncClockInValue()
             calculateClockOut()
             saveProductivityData()
+        }
+        clockInHours.addEventListener('input', onPartInput)
+        clockInMinutes.addEventListener('input', onPartInput)
+        // typing ":" in the hour box moves to minutes; backspace in an empty minutes box goes back to hour
+        clockInHours.addEventListener('keydown', (e) => {
+            if (e.key === ':') {
+                e.preventDefault()
+                clockInMinutes.focus()
+                clockInMinutes.select()
+            }
+        })
+        clockInMinutes.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && clockInMinutes.value === '') {
+                e.preventDefault()
+                clockInHours.focus()
+            }
+        })
+        // pad minutes to two digits when leaving the box
+        clockInMinutes.addEventListener('blur', () => {
+            if (clockInMinutes.value.length === 1) {
+                clockInMinutes.value = clockInMinutes.value.padStart(2, '0')
+                syncClockInValue()
+                saveProductivityData()
+            }
         })
     }
 

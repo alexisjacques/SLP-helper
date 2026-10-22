@@ -1074,6 +1074,37 @@ textarea#pccOutput {
     width: 80px;
 }
 
+.time-input-group {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #fff;
+    padding: 0 4px;
+}
+
+.time-input-group:focus-within {
+    border-color: #9ca3af;
+}
+
+.clock-input-item input.time-part {
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 6px 2px;
+    font-size: 1rem;
+    font-family: inherit;
+    width: 2ch;
+    text-align: center;
+    box-sizing: content-box;
+}
+
+.time-colon {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #374151;
+}
+
 .clock-input-item input.hours-input {
     padding: 8px 12px;
     border: 1px solid #d1d5db;

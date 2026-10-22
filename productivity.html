@@ -80,7 +80,14 @@
                     <div class="clock-input-item">
                         <label for="clock-in-input">Clock In Time:</label>
                         <div class="clock-in-inputs">
-                            <input type="text" id="clock-in-input" class="time-input" placeholder="10:00">
+                            <input type="hidden" id="clock-in-input" value="10:00">
+                            <div class="time-input-group">
+                                <input type="text" id="clock-in-hours" class="time-part" inputmode="numeric"
+                                    maxlength="2" placeholder="10" aria-label="Clock in hour">
+                                <span class="time-colon">:</span>
+                                <input type="text" id="clock-in-minutes" class="time-part" inputmode="numeric"
+                                    maxlength="2" placeholder="00" aria-label="Clock in minutes">
+                            </div>
                             <button type="button" id="ampm-toggle" class="ampm-btn">AM</button>
                         </div>
                     </div>
