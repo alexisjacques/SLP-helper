@@ -1330,9 +1330,7 @@ const COG_FINDER_DEFICITS = [
     ['0', 'Attention and concentration deficit'],
     ['1', 'Memory deficit'],
     ['2', 'Visuospatial deficit and spatial neglect'],
-    ['3', 'Psychomotor deficit'],
     ['4', 'Frontal lobe and executive function deficit'],
-    ['5', 'Cognitive social or emotional deficit'],
     ['8', 'Other s/sx involving cognitive functions'],
     ['9', 'Unspecified s/sx involving cognitive functions']
 ]
