@@ -1327,8 +1327,8 @@ function initBCRS() {
 // ICD-10 finder for acquired cognitive deficits (I69 sequelae of cerebrovascular disease).
 // Code is I69.<cause>1<deficit>, e.g. memory deficit (1) following cerebral infarction (3) = I69.311
 const COG_FINDER_DEFICITS = [
-    ['0', 'Attention and concentration deficit'],
     ['1', 'Memory deficit'],
+    ['0', 'Attention and concentration deficit'],
     ['2', 'Visuospatial deficit and spatial neglect'],
     ['4', 'Frontal lobe and executive function deficit'],
     ['8', 'Other s/sx involving cognitive functions'],
