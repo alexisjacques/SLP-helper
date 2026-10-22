@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hasAphasia) conds.push('aphasia (' + matchedLabels(aphasiaCodes).join(', ') + ')')
         if (hasDysarthria) conds.push('dysarthria (' + matchedLabels(dysarthriaCodes).join(', ') + ')')
         if (hasApraxia) conds.push('apraxia (' + matchedLabels(apraxiaCodes).join(', ') + ')')
-        if (hasOtherSpeech) conds.push('other speech & lang deficits following stroke (' + matchedLabels(otherSpeechCodes).join(', ') + ')')
+        if (hasOtherSpeech) conds.push('acquired speech & lang deficits (' + matchedLabels(otherSpeechCodes).join(', ') + ')')
         if (hasDysphonia) conds.push('dysphonia (' + matchedLabels(dysphoniaCodes).join(', ') + ')')
         if (hasAphonia) conds.push('aphonia (' + matchedLabels(aphoniaCodes).join(', ') + ')')
         if (hasOtherSpeechDisturbances) conds.push('other speech disturbances (' + matchedLabels(otherspeechdisturbancesCodes).join(', ') + ')')
@@ -243,10 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
             result = result.replace(/other speech disturbances/g, 'speech deficit')
         }
         if (result.length > 500) {
-            result = result.replace(/other speech & lang deficits following stroke/g, 'speech/lang deficits from cva')
-        }
-        if (result.length > 500) {
-            result = result.replace(/other speech & lang deficits following stroke/g, 'speech/lang deficits from cva')
+            result = result.replace(/acquired speech & lang deficits/g, 'speech/lang deficits')
         }
         if (result.length > 500) {
             result = result.replace(/language tx, motor speech tx, voice tx/g, 'communication tx')
