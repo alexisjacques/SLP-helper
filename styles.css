@@ -681,7 +681,8 @@ textarea#pccOutput {
     color: var(--accent);
 }
 
-.more-group-title:first-child {
+.more-group-title:first-child,
+.category h3 + .more-group-title {
     margin-top: 0;
 }
 
