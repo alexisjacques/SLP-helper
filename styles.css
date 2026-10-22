@@ -702,7 +702,7 @@ textarea#pccOutput {
     margin-top: 0;
 }
 
-/* ICD-10 finder (cognition category) */
+/* ICD-10 finders (cognition and motor speech categories) */
 .icd-finder {
     margin-top: 14px;
     padding-top: 10px;
@@ -732,7 +732,7 @@ textarea#pccOutput {
     display: none;
 }
 
-#cog-finder-added label {
+.icd-finder-added label {
     margin-top: 6px;
 }
 

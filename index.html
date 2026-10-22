@@ -69,7 +69,7 @@
                     <button type="button" class="more-toggle" aria-expanded="false" aria-controls="cognition-more">Show
                         more</button>
 
-                    <!-- ICD-10 finder: builds the I69 code from deficit + cause (options filled in by main.js) -->
+                    <!-- ICD-10 finder: builds the I69 code from deficit + cause (options filled in by main.js, see ICD_FINDERS) -->
                     <div id="cognition-more" class="more-items" aria-hidden="true">
                         <div class="icd-finder" id="cog-finder">
                             <p class="more-group-title">Acquired cognitive deficit finder</p>
@@ -84,7 +84,7 @@
                     </div>
 
                     <!-- codes found with the finder; outside the collapsible part so they stay visible -->
-                    <div id="cog-finder-added"></div>
+                    <div id="cog-finder-added" class="icd-finder-added"></div>
 
                 </div>
 
@@ -125,26 +125,20 @@
                         more</button>
 
                     <div id="motor-more" class="more-items" aria-hidden="true">
-                        <p class="more-group-title">Dysarthria following…</p>
-                        <label><input type="checkbox" data-label="I69.022" /> <strong class="icd-code">I69.022</strong> Nontraumatic subarachnoid
-                            hemorrhage</label>
-                        <label><input type="checkbox" data-label="I69.122" /> <strong class="icd-code">I69.122</strong> Nontraumatic intracerebral
-                            hemorrhage</label>
-                        <label><input type="checkbox" data-label="I69.222" /> <strong class="icd-code">I69.222</strong> Other nontraumatic intracranial
-                            hemorrhage</label>
-                        <label><input type="checkbox" data-label="I69.822" /> <strong class="icd-code">I69.822</strong> Other cerebrovascular
-                            disease</label>
-
-                        <p class="more-group-title">Apraxia following…</p>
-                        <label><input type="checkbox" data-label="I69.090" /> <strong class="icd-code">I69.090</strong> Nontraumatic subarachnoid
-                            hemorrhage</label>
-                        <label><input type="checkbox" data-label="I69.190" /> <strong class="icd-code">I69.190</strong> Nontraumatic intracerebral
-                            hemorrhage</label>
-                        <label><input type="checkbox" data-label="I69.290" /> <strong class="icd-code">I69.290</strong> Other nontraumatic intracranial
-                            hemorrhage</label>
-                        <label><input type="checkbox" data-label="I69.890" /> <strong class="icd-code">I69.890</strong> Other cerebrovascular
-                            disease</label>
+                        <div class="icd-finder" id="speech-finder">
+                            <p class="more-group-title">Acquired speech deficit finder</p>
+                            <label class="icd-finder-field">Deficit
+                                <select id="speech-finder-deficit"></select>
+                            </label>
+                            <label class="icd-finder-field">Following
+                                <select id="speech-finder-cause"></select>
+                            </label>
+                            <p class="icd-finder-result" id="speech-finder-result" aria-live="polite"></p>
+                        </div>
                     </div>
+
+                    <!-- codes found with the finder; outside the collapsible part so they stay visible -->
+                    <div id="speech-finder-added" class="icd-finder-added"></div>
                 </div>
 
                 <div class="category" id="voice">

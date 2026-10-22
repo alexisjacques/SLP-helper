@@ -44,9 +44,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const dysphagiaCodes = ['R13.12', 'R13.11', 'R13.10', 'I69.391', 'I69.091', 'I69.191', 'I69.291', 'I69.891', 'R13.13', 'R13.14']
         const cogCodes = ['R41.841', 'I69.311', 'R41.9', 'I69.319', 'I69.310', 'I69.312', 'I69.314', 'I69.315', 'I69.019', 'I69.119', 'I69.219', 'I69.919', 'I69.010', 'I69.110', 'I69.210', 'I69.810', 'I69.011', 'I69.111', 'I69.211', 'I69.811', 'I69.911', 'I69.819', ...COG_FINDER_CODES]
         const aphasiaCodes = ['R47.01', 'I69.320', 'I69.020', 'I69.120', 'I69.220', 'I69.820']
-        const dysarthriaCodes = ['R47.1', 'I69.322', 'I69.122', 'I69.222', 'I69.822']
-        const apraxiaCodes = ['I69.390', 'I69.090', 'I69.190', 'I69.290', 'I69.890']
-        const otherSpeechCodes = ['I69.328']
+        const dysarthriaCodes = ['R47.1', 'I69.322', 'I69.122', 'I69.222', 'I69.822', ...DYSARTHRIA_FINDER_CODES]
+        const apraxiaCodes = ['I69.390', 'I69.090', 'I69.190', 'I69.290', 'I69.890', ...APRAXIA_FINDER_CODES]
+        const otherSpeechCodes = ['I69.328', ...OTHER_SPEECH_FINDER_CODES]
         const otherspeechdisturbancesCodes = ['R47.89']
 
         // R49.8 grouping: if R49.1 (aphonia) is selected, R49.8 groups under aphonia
@@ -332,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (clearBtn) {
         clearBtn.addEventListener('click', () => {
             document.querySelectorAll('.categories input[type="checkbox"]').forEach(c => c.checked = false)
-            resetCogFinder()
+            resetIcdFinders()
             outputEl.value = ''
             copyStatus.textContent = ''
             // Clear warning messages
@@ -383,9 +383,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ICD-10 finder creates its saved checkboxes here, so they're wired and restored below
-    if (document.getElementById('cog-finder')) {
-        initCogFinder(wirePCCCheckbox)
-    }
+    Object.keys(ICD_FINDERS).forEach(prefix => {
+        if (document.getElementById(`${prefix}-finder`)) initIcdFinder(prefix, wirePCCCheckbox)
+    })
 
     document.querySelectorAll('.categories input[type="checkbox"]:not([data-finder])').forEach(wirePCCCheckbox)
 
@@ -1324,17 +1324,9 @@ function initBCRS() {
 }
 
 // Local storage functions for PCC order generator
-// ICD-10 finder for acquired cognitive deficits (I69 sequelae of cerebrovascular disease).
-// Code is I69.<cause>1<deficit>, e.g. memory deficit (1) following cerebral infarction (3) = I69.311
-const COG_FINDER_DEFICITS = [
-    ['1', 'Memory deficit'],
-    ['0', 'Attention and concentration deficit'],
-    ['2', 'Visuospatial deficit and spatial neglect'],
-    ['4', 'Frontal lobe and executive function deficit'],
-    ['8', 'Other s/sx involving cognitive functions'],
-    ['9', 'Unspecified s/sx involving cognitive functions']
-]
-const COG_FINDER_CAUSES = [
+// ICD-10 finders for acquired deficits (I69 sequelae of cerebrovascular disease).
+// Code is I69.<cause><deficit>, e.g. memory deficit (11) following cerebral infarction (3) = I69.311
+const FINDER_CAUSES = [
     ['3', 'cerebral infarction'],
     ['0', 'nontraumatic subarachnoid hemorrhage'],
     ['1', 'nontraumatic intracerebral hemorrhage'],
@@ -1342,26 +1334,47 @@ const COG_FINDER_CAUSES = [
     ['8', 'other cerebrovascular disease'],
     ['9', 'unspecified cerebrovascular disease']
 ]
-const COG_FINDER_CODES = COG_FINDER_CAUSES.flatMap(([c]) => COG_FINDER_DEFICITS.map(([d]) => `I69.${c}1${d}`))
-
-function cogFinderDescription(code) {
-    const deficit = COG_FINDER_DEFICITS.find(([d]) => d === code[6])[1]
-    const cause = COG_FINDER_CAUSES.find(([c]) => c === code[4])[1]
-    return `${deficit} following ${cause}`
+// keyed by the finder's id prefix in index.html (e.g. cog -> #cog-finder)
+const ICD_FINDERS = {
+    cog: [
+        ['11', 'Memory deficit'],
+        ['10', 'Attention and concentration deficit'],
+        ['12', 'Visuospatial deficit and spatial neglect'],
+        ['14', 'Frontal lobe and executive function deficit'],
+        ['18', 'Other s/sx involving cognitive functions'],
+        ['19', 'Unspecified s/sx involving cognitive functions']
+    ],
+    speech: [
+        ['22', 'Dysarthria'],
+        ['90', 'Apraxia'],
+        ['28', 'Other speech and language deficits']
+    ]
 }
 
-function initCogFinder(wireCheckbox) {
-    const deficitSel = document.getElementById('cog-finder-deficit')
-    const causeSel = document.getElementById('cog-finder-cause')
-    const result = document.getElementById('cog-finder-result')
-    const added = document.getElementById('cog-finder-added')
+// every code a finder can produce, mapped to its description
+function finderEntries(deficits) {
+    return new Map(FINDER_CAUSES.flatMap(([c, cause]) =>
+        deficits.map(([d, deficit]) => [`I69.${c}${d}`, `${deficit} following ${cause}`])))
+}
+const finderCodes = deficits => [...finderEntries(deficits).keys()]
+const COG_FINDER_CODES = finderCodes(ICD_FINDERS.cog)
+const DYSARTHRIA_FINDER_CODES = finderCodes(ICD_FINDERS.speech.filter(([d]) => d === '22'))
+const APRAXIA_FINDER_CODES = finderCodes(ICD_FINDERS.speech.filter(([d]) => d === '90'))
+const OTHER_SPEECH_FINDER_CODES = finderCodes(ICD_FINDERS.speech.filter(([d]) => d === '28'))
+
+function initIcdFinder(prefix, wireCheckbox) {
+    const deficitSel = document.getElementById(`${prefix}-finder-deficit`)
+    const causeSel = document.getElementById(`${prefix}-finder-cause`)
+    const result = document.getElementById(`${prefix}-finder-result`)
+    const added = document.getElementById(`${prefix}-finder-added`)
+    const entries = finderEntries(ICD_FINDERS[prefix])
 
     const fill = (sel, items) => {
         sel.add(new Option('Choose…', ''))
         items.forEach(([value, text]) => sel.add(new Option(text[0].toUpperCase() + text.slice(1), value)))
     }
-    fill(deficitSel, COG_FINDER_DEFICITS)
-    fill(causeSel, COG_FINDER_CAUSES)
+    fill(deficitSel, ICD_FINDERS[prefix])
+    fill(causeSel, FINDER_CAUSES)
 
     const findCheckbox = code => document.querySelector(`.categories input[type="checkbox"][data-label="${code}"]`)
 
@@ -1375,7 +1388,7 @@ function initCogFinder(wireCheckbox) {
         const strong = document.createElement('strong')
         strong.className = 'icd-code'
         strong.textContent = code
-        label.append(cb, ' ', strong, ` ${cogFinderDescription(code)}`)
+        label.append(cb, ' ', strong, ` ${entries.get(code)}`)
         added.append(label)
         wireCheckbox(cb)
         // unchecking a found code removes it from the list
@@ -1390,12 +1403,12 @@ function initCogFinder(wireCheckbox) {
 
     // recreate checkboxes added in an earlier visit so their saved state can be restored
     const saved = loadPCCSelections().checkboxes
-    COG_FINDER_CODES.forEach(code => {
+    entries.forEach((_, code) => {
         if (saved[code] && !findCheckbox(code)) addCheckbox(code)
     })
 
     const currentCode = () =>
-        deficitSel.value && causeSel.value ? `I69.${causeSel.value}1${deficitSel.value}` : ''
+        deficitSel.value && causeSel.value ? `I69.${causeSel.value}${deficitSel.value}` : ''
 
     // as soon as both are chosen, select the code and clear the dropdowns for the next search
     const find = () => {
@@ -1411,7 +1424,7 @@ function initCogFinder(wireCheckbox) {
             cb.dispatchEvent(new Event('change'))
         }
         result.textContent = listed && !listed.hasAttribute('data-finder')
-            ? `${code} is under Most commonly used dx and is now selected.`
+            ? `${code} is listed above and is now selected.`
             : ''
         deficitSel.value = ''
         causeSel.value = ''
@@ -1424,12 +1437,14 @@ function initCogFinder(wireCheckbox) {
     causeSel.addEventListener('change', find)
 }
 
-function resetCogFinder() {
-    const finder = document.getElementById('cog-finder')
-    if (!finder) return
-    document.getElementById('cog-finder-added').replaceChildren()
-    finder.querySelectorAll('select').forEach(sel => (sel.value = ''))
-    document.getElementById('cog-finder-result').textContent = ''
+function resetIcdFinders() {
+    Object.keys(ICD_FINDERS).forEach(prefix => {
+        const finder = document.getElementById(`${prefix}-finder`)
+        if (!finder) return
+        document.getElementById(`${prefix}-finder-added`).replaceChildren()
+        finder.querySelectorAll('select').forEach(sel => (sel.value = ''))
+        document.getElementById(`${prefix}-finder-result`).textContent = ''
+    })
 }
 
 function savePCCSelections() {
