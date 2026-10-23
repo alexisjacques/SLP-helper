@@ -1247,6 +1247,12 @@ textarea#pccOutput {
     gap: 12px;
 }
 
+/* Divide the rows so it's clear which buttons belong to which item */
+.bims-items > .bims-item + .bims-item {
+    border-top: 1px dashed #e5e7eb;
+    padding-top: 10px;
+}
+
 .bims-item-wide {
     grid-template-columns: 90px 1fr 28px;
 }
@@ -1965,6 +1971,15 @@ textarea#pccOutput {
     .bims-btn {
         padding: 5px 8px;
         font-size: 0.78rem;
+    }
+}
+
+@media (max-width: 520px) {
+    /* Opt out of the full-width button rule below: let options share a line
+       and stretch to fill it instead of each taking a whole row */
+    .bims-btn {
+        width: auto;
+        flex: 1 1 auto;
     }
 }
 
