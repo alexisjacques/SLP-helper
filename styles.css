@@ -72,6 +72,7 @@ header h1 {
 
 .subnav {
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
     margin-bottom: 12px;
 }
@@ -1939,6 +1940,134 @@ textarea#pccOutput {
     .scorer-cutoffs tr > :first-child {
         white-space: normal;
         padding-right: 12px;
+    }
+}
+
+/* WAB Scorer Styles */
+.wab-group-title {
+    margin: 28px 0 4px 0;
+    font-size: 1.15rem;
+    color: #0f172a;
+}
+
+.wab-group-title:first-of-type {
+    margin-top: 8px;
+}
+
+.wab-group-note {
+    margin: 0 0 12px 0;
+    font-size: 0.88rem;
+    color: var(--muted);
+}
+
+/* Item lists with long labels: label takes the free space, buttons sit to its right */
+.wab-list .bims-item {
+    grid-template-columns: minmax(110px, 1fr) auto 28px;
+}
+
+.wab-list .bims-btn-group {
+    justify-content: flex-end;
+}
+
+.wab-item-sub {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--muted);
+    line-height: 1.4;
+}
+
+.wab-list-title {
+    margin: 14px 0 8px 0;
+}
+
+.wab-read-sentence {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #0f172a;
+}
+
+.wab-num-group {
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.wab-num {
+    width: 76px;
+    padding: 6px 8px;
+    font-size: 0.9rem;
+    border: 1.5px solid rgba(14, 165, 160, 0.35);
+    border-radius: 6px;
+    background: white;
+    color: #0f172a;
+}
+
+.wab-num:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(14, 165, 160, 0.15);
+}
+
+.wab-num-max {
+    font-size: 0.85rem;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.wab-discontinue {
+    margin: 4px 0 18px 0;
+}
+
+.wab-status {
+    margin: 8px 0 0 0;
+    font-weight: 600;
+    color: var(--accent-text);
+}
+
+.wab-skipped {
+    opacity: 0.45;
+}
+
+.wab-type {
+    margin: 10px 0 0 0;
+    font-size: 0.95rem;
+    color: #374151;
+}
+
+.wab-cq-row {
+    margin-top: 14px;
+}
+
+.wab-cq-value {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--accent);
+}
+
+.wab-table-wrap {
+    overflow-x: auto;
+}
+
+.wab-sheet td,
+.wab-taxonomy td {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 600px) {
+    .wab-list .bims-item {
+        grid-template-columns: 1fr 24px;
+        row-gap: 6px;
+    }
+
+    .wab-list .bims-item-label {
+        grid-column: 1 / -1;
+    }
+
+    .wab-list .bims-btn-group {
+        justify-content: flex-start;
     }
 }
 

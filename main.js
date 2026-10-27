@@ -469,7 +469,343 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('moca-total')) {
         initMOCA()
     }
+
+    // Initialize WAB scorer if on page
+    if (document.getElementById('wab-total')) {
+        initWAB()
+    }
 })
+
+function initWAB() {
+    const items = [...document.querySelectorAll('[data-question]')]
+    const scores = {}
+    const itemFor = k => document.querySelector(`[data-question="${k}"]`)
+    const choices = item => item.querySelectorAll('button[data-value]')
+    const keysIn = s => [...document.querySelectorAll(`[data-subtest="${s}"] [data-question]`)].map(i => i.dataset.question)
+    const round1 = n => Math.round(n * 10) / 10
+    const fmt = n => n === undefined ? '—' : String(round1(n))
+
+    function itemMax(k) {
+        const input = itemFor(k).querySelector('.wab-num')
+        return input ? parseFloat(input.max) : Math.max(...[...choices(itemFor(k))].map(b => parseFloat(b.dataset.value)))
+    }
+
+    // Undefined until every item in the group is scored
+    function raw(s) {
+        const keys = keysIn(s)
+        return keys.every(k => scores[k] !== undefined) ? keys.reduce((t, k) => t + scores[k], 0) : undefined
+    }
+    const add = (...vals) => vals.some(v => v === undefined) ? undefined : vals.reduce((a, b) => a + b, 0)
+    const div = (v, d) => v === undefined ? undefined : v / d
+
+    // Discontinue rules: reading stops when A + B ≥ 50, writing when A + B + C ≥ 40
+    const readingStopped = () => raw('readAB') >= 50
+    const writingStopped = () => raw('writeABC') >= 40
+
+    function score(s) {
+        switch (s) {
+            case 'reading':
+                return readingStopped() ? 100 - 2 * (60 - raw('readAB')) : add(raw('readAB'), raw('readRest'))
+            case 'writing':
+                return writingStopped() ? 2 * raw('writeABC') : add(raw('writeABC'), raw('writeRest'))
+            case 'comp': return add(raw('yesno'), raw('awr'), raw('seq'))
+            case 'naming': return add(raw('objNaming'), raw('wordFluency'), raw('sentence'), raw('responsive'))
+            case 'readWrite': return add(score('reading'), score('writing'))
+            case 'construction': return add(raw('drawing'), raw('blocks'), raw('calc'), raw('raven'))
+            default: return raw(s)
+        }
+    }
+
+    // Each subtest's contribution to the AQ and CQ
+    const aqParts = { ss: 1, comp: 20, rep: 10, naming: 10 }
+    const cqParts = { ss: 1, comp: 10, rep: 10, naming: 10, readWrite: 10, praxis: 6, construction: 10 }
+    const scaled = (parts, s) => div(score(s), parts[s])
+    const aq = () => { const t = add(...Object.keys(aqParts).map(s => scaled(aqParts, s))); return t === undefined ? t : round1(t * 2) }
+    const cq = () => { const t = add(...Object.keys(cqParts).map(s => scaled(cqParts, s))); return t === undefined ? t : round1(t) }
+
+    function severity(total) {
+        if (total >= 93.8) return { label: 'Within normal limits', cls: 'bims-intact' }
+        if (total >= 76) return { label: 'Mild', cls: 'bims-moderate' }
+        if (total >= 51) return { label: 'Moderate', cls: 'bims-moderate' }
+        if (total >= 26) return { label: 'Severe', cls: 'bims-severe' }
+        return { label: 'Very severe', cls: 'bims-severe' }
+    }
+
+    // WAB taxonomy from fluency, comprehension, repetition, naming (each out of 10).
+    // Null when the naming score is above the type's range.
+    function aphasiaType() {
+        const flu = scores.ssFluency
+        const [comp, rep, nam] = ['comp', 'rep', 'naming'].map(s => round1(scaled(aqParts, s)))
+        let type, maxNaming
+        if (flu <= 4) {
+            if (comp < 4) [type, maxNaming] = rep < 5 ? ['Global', 6] : ['Isolation', 6]
+            else [type, maxNaming] = rep < 8 ? ['Broca’s', 8] : ['Transcortical motor', 8]
+        } else {
+            maxNaming = 9
+            if (comp < 7) type = rep < 8 ? 'Wernicke’s' : 'Transcortical sensory'
+            else type = rep < 7 ? 'Conduction' : 'Anomic'
+        }
+        return nam <= maxNaming ? type : null
+    }
+
+    function interpret() {
+        const total = aq()
+        if (total === undefined) return null
+        const sev = severity(total)
+        const wnl = total >= 93.8
+        const type = wnl ? null : aphasiaType()
+        const typeText = wnl ? '' : type ? `${type} aphasia` : 'does not fit a classic WAB aphasia type'
+        return { total, sev, wnl, type, typeText }
+    }
+
+    const summaryEl = document.getElementById('wab-summary')
+    initCopyButton(document.getElementById('wab-summary-copy'), summaryEl,
+        document.getElementById('wab-summary-status'))
+
+    function summaryText(r) {
+        const level = r.wnl ? 'within normal limits (AQ ≥ 93.8)' : `consistent with ${r.sev.label.toLowerCase()} aphasia`
+        const profile = r.wnl ? '' : r.type
+            ? `; the score profile is most consistent with ${r.typeText}`
+            : '; the score profile does not fit a classic WAB aphasia type'
+        const aqScore = s => fmt(scaled(aqParts, s))
+        let text = `Patient obtained an Aphasia Quotient (AQ) of ${r.total}/100 on the Western Aphasia Battery, ${level}${profile}. ` +
+            `Subtest scores: spontaneous speech ${score('ss')}/20 (information content ${scores.ssInfo}/10, ` +
+            `fluency ${scores.ssFluency}/10), auditory verbal comprehension ${aqScore('comp')}/10, ` +
+            `repetition ${aqScore('rep')}/10, naming and word finding ${aqScore('naming')}/10.`
+        const c = cq()
+        if (c !== undefined) text += ` Cortical Quotient (CQ): ${c}/100.`
+        return text
+    }
+
+    function updateDisplay() {
+        items.forEach(item => {
+            const scoreEl = item.querySelector('.bims-item-score')
+            if (scoreEl) scoreEl.textContent = fmt(scores[item.dataset.question])
+        })
+        document.querySelectorAll('[data-subtotal]').forEach(el => { el.textContent = fmt(score(el.dataset.subtotal)) })
+
+        // Discontinue status lines; the skipped subtests are dimmed
+        const stops = [
+            ['reading', readingStopped(), `A + B = ${fmt(raw('readAB'))}. Discontinue: prorated reading score ${fmt(score('reading'))} / 100. C–I are not needed.`],
+            ['writing', writingStopped(), `A + B + C = ${fmt(raw('writeABC'))}. Discontinue: prorated writing score ${fmt(score('writing'))} / 100. D–G are not needed.`]
+        ]
+        stops.forEach(([name, stopped, msg]) => {
+            const status = document.getElementById(`wab-${name}-status`)
+            status.hidden = !stopped
+            status.textContent = stopped ? msg : ''
+            document.getElementById(`wab-${name}-rest`).classList.toggle('wab-skipped', stopped)
+        })
+
+        document.querySelectorAll('[data-raw]').forEach(el => { el.textContent = fmt(score(el.dataset.raw)) })
+        document.querySelectorAll('[data-aq]').forEach(el => { el.textContent = fmt(scaled(aqParts, el.dataset.aq)) })
+        document.querySelectorAll('[data-cq]').forEach(el => { el.textContent = fmt(scaled(cqParts, el.dataset.cq)) })
+        document.getElementById('wab-cq').textContent = fmt(cq())
+
+        const totalEl = document.getElementById('wab-total')
+        const interpEl = document.getElementById('wab-interpretation')
+        const typeEl = document.getElementById('wab-type')
+        const r = interpret()
+        interpEl.className = 'bims-interpretation'
+        interpEl.textContent = ''
+        typeEl.hidden = true
+        if (!r) {
+            totalEl.textContent = '—'
+            summaryEl.value = ''
+            return
+        }
+        totalEl.textContent = r.total
+        interpEl.textContent = r.wnl ? 'Within normal limits (93.8–100)' : `${r.sev.label} aphasia`
+        interpEl.className = `bims-interpretation ${r.sev.cls}`
+        if (!r.wnl) {
+            typeEl.hidden = false
+            typeEl.innerHTML = r.type ? `Suggested aphasia type: <strong>${r.type}</strong>`
+                : 'Suggested aphasia type: <strong>does not fit a classic WAB type</strong>'
+        }
+        summaryEl.value = summaryText(r)
+    }
+
+    function select(item, btn) {
+        const k = item.dataset.question
+        choices(item).forEach(b => b.classList.remove('selected'))
+        if (btn) {
+            btn.classList.add('selected')
+            scores[k] = parseFloat(btn.dataset.value)
+        } else {
+            delete scores[k]
+        }
+    }
+
+    // "All" shortcut rows set every item in their group at once
+    const shortcuts = [...document.querySelectorAll('[data-all-for]')].map(row => ({
+        row, keys: items.filter(i => i.dataset.group === row.dataset.allFor).map(i => i.dataset.question)
+    }))
+
+    function syncShortcut({ row, keys }) {
+        row.querySelectorAll('.bims-btn').forEach(b => b.classList.remove('selected'))
+        const vals = keys.map(k => scores[k])
+        if (vals[0] === undefined || !vals.every(v => v === vals[0])) return
+        const match = row.querySelector(`.bims-btn[data-value="${vals[0]}"]`)
+        if (match) match.classList.add('selected')
+    }
+    const syncShortcutsFor = k => shortcuts.forEach(s => { if (s.keys.includes(k)) syncShortcut(s) })
+
+    // Typed point entries: blank = unscored, out-of-range values are clamped on blur
+    function setFromInput(input) {
+        const k = input.closest('[data-question]').dataset.question
+        const v = parseFloat(input.value)
+        if (isNaN(v)) delete scores[k]
+        else scores[k] = Math.min(parseFloat(input.max), Math.max(0, v))
+    }
+
+    items.forEach(item => {
+        choices(item).forEach(btn => {
+            btn.addEventListener('click', () => {
+                select(item, btn.classList.contains('selected') ? null : btn)
+                syncShortcutsFor(item.dataset.question)
+                updateDisplay()
+            })
+        })
+        const input = item.querySelector('.wab-num')
+        if (!input) return
+        input.addEventListener('input', () => { setFromInput(input); updateDisplay() })
+        input.addEventListener('change', () => {
+            const k = item.dataset.question
+            if (scores[k] !== undefined) input.value = scores[k]
+        })
+        item.querySelector('[data-fill]').addEventListener('click', e => {
+            input.value = e.currentTarget.dataset.fill
+            setFromInput(input)
+            updateDisplay()
+        })
+    })
+
+    shortcuts.forEach(shortcut => {
+        shortcut.row.querySelectorAll('.bims-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const alreadySelected = btn.classList.contains('selected')
+                shortcut.keys.forEach(k => {
+                    const item = itemFor(k)
+                    select(item, alreadySelected ? null : item.querySelector(`button[data-value="${btn.dataset.value}"]`))
+                })
+                syncShortcut(shortcut)
+                updateDisplay()
+            })
+        })
+    })
+
+    // Animal naming tap counter fills the word fluency score (1 point per animal, max 20)
+    const fluencyInput = itemFor('wordFluency').querySelector('.wab-num')
+    const animalTally = initTally(document.getElementById('wab-animal-tally'), count => {
+        fluencyInput.value = count ? Math.min(20, count) : ''
+        setFromInput(fluencyInput)
+        updateDisplay()
+    })
+    const resetTimer = initCountdown(document.getElementById('wab-animal-timer'), 60)
+
+    // PDF report: one row per subtest. CQ sections are included once they are complete.
+    const fullCount = s => keysIn(s).filter(k => scores[k] === itemMax(k)).length
+    const ratingText = k => {
+        const btn = itemFor(k).querySelector('.selected span:last-child')
+        return btn ? btn.textContent.replace(/\s+/g, ' ').trim().split(/(?<=\.)\s/)[0] : null
+    }
+    const of = (s, total, noun) => () => `${fullCount(s)} of ${total} ${noun}`
+    const reportRows = {
+        ss: [['I-A', 'Information content', 'ssInfo', 10, () => ratingText('ssInfo')],
+        ['I-B', 'Fluency, grammatical competence & paraphasias', 'ssFluency', 10, () => ratingText('ssFluency')]],
+        comp: [['II-A', 'Yes/no questions', 'yesno', 60, of('yesno', 20, 'correct')],
+        ['II-B', 'Auditory word recognition', 'awr', 60, () => `${raw('awr')} of 60 correct`],
+        ['II-C', 'Sequential commands', 'seq', 80, of('seq', 11, 'fully correct')]],
+        rep: [['III', 'Repetition', 'rep', 100, of('rep', 15, 'repeated fully')]],
+        naming: [['IV-A', 'Object naming', 'objNaming', 60, of('objNaming', 20, 'named without help')],
+        ['IV-B', 'Word fluency (animals)', 'wordFluency', 20, () => `${scores.wordFluency} animals`],
+        ['IV-C', 'Sentence completion', 'sentence', 10, of('sentence', 5, 'correct')],
+        ['IV-D', 'Responsive speech', 'responsive', 10, of('responsive', 5, 'correct')]],
+        praxis: [['VII', 'Upper limb', 'praxUpper', 15, of('praxUpper', 5, 'good on command')],
+        ['VII', 'Facial', 'praxFacial', 15, of('praxFacial', 5, 'good on command')],
+        ['VII', 'Instrumental', 'praxInstr', 15, of('praxInstr', 5, 'good on command')],
+        ['VII', 'Complex', 'praxComplex', 15, of('praxComplex', 5, 'good on command')]],
+        construction: [['VIII-A', 'Drawing', 'drawing', 30, () => `${raw('drawing')} / 30`],
+        ['VIII-B', 'Block design', 'blocks', 9, of('blocks', 3, 'correct within 60 s')],
+        ['VIII-C', 'Calculation', 'calc', 24, of('calc', 12, 'correct')],
+        ['VIII-D', 'Raven’s Coloured Progressive Matrices', 'raven', 37, () => `${scores.raven} / 37`]]
+    }
+    const readingRows = () => [
+        ['V-A', 'Comprehension of sentences', 'readA', 40], ['V-B', 'Reading commands', 'readB', 20],
+        ...(readingStopped()
+            ? [['V-C–I', 'Prorated credit (A + B ≥ 50, discontinued)', null, 40, score('reading') - raw('readAB')]]
+            : [['V-C', 'Written word – object matching', 'readC', 6], ['V-D', 'Written word – picture matching', 'readD', 6],
+            ['V-E', 'Picture – written word matching', 'readE', 6], ['V-F', 'Spoken word – written word matching', 'readF', 4],
+            ['V-G', 'Letter discrimination', 'readG', 6], ['V-H', 'Spelled word recognition', 'readH', 6],
+            ['V-I', 'Spelling', 'readI', 6]])
+    ]
+    const writingRows = () => [
+        ['VI-A', 'Writing on request', 'writeA', 6], ['VI-B', 'Written output', 'writeB', 34],
+        ['VI-C', 'Writing to dictation', 'writeC', 10],
+        ...(writingStopped()
+            ? [['VI-D–G', 'Prorated credit (A + B + C ≥ 40, discontinued)', null, 50, raw('writeABC')]]
+            : [['VI-D', 'Dictated or visually presented words', 'writeD', 10], ['VI-E', 'Alphabet and numbers', 'writeE', 22.5],
+            ['VI-F', 'Dictated letters and numbers', 'writeF', 7.5], ['VI-G', 'Copying a sentence', 'writeG', 10]])
+    ]
+    const toRow = ([num, item, s, max, response]) => {
+        if (s === null) return { num, item, max, points: response, response: 'Not given' }
+        const points = keysIn(s).length ? raw(s) : scores[s]
+        const text = typeof response === 'function' ? response() : `${fmt(points)} / ${max}`
+        return { num, item, max, points: points === undefined ? undefined : round1(points), response: points === undefined ? null : text }
+    }
+
+    const report = initReportForm('wab', ({ patient, admin, when }) => {
+        const sections = [
+            { title: 'Spontaneous speech', rows: reportRows.ss.map(toRow) },
+            { title: 'Auditory verbal comprehension', rows: reportRows.comp.map(toRow) },
+            { title: 'Repetition', rows: reportRows.rep.map(toRow) },
+            { title: 'Naming and word finding', rows: reportRows.naming.map(toRow) }
+        ]
+        if (score('reading') !== undefined) sections.push({ title: 'Reading', rows: readingRows().map(toRow) })
+        if (score('writing') !== undefined) sections.push({ title: 'Writing', rows: writingRows().map(toRow) })
+        if (score('praxis') !== undefined) sections.push({ title: 'Praxis', rows: reportRows.praxis.map(toRow) })
+        if (score('construction') !== undefined) {
+            sections.push({ title: 'Construction, visuospatial & calculation', rows: reportRows.construction.map(toRow) })
+        }
+
+        const r = interpret()
+        const aqKeys = ['ss', 'yesno', 'awr', 'seq', 'rep', 'objNaming', 'wordFluency', 'sentence', 'responsive'].flatMap(keysIn)
+        const c = cq()
+        return {
+            title: 'WAB Report',
+            subtitle: 'Western Aphasia Battery',
+            filename: 'WAB',
+            patient, admin, when,
+            details: [
+                ['Aphasia type', r ? (r.wnl ? 'None (within normal limits)' : r.type ? `${r.type} (suggested)` : 'Does not fit a classic type') : '—'],
+                ['Cortical Quotient', c !== undefined ? `${c} / 100` : 'Not completed']
+            ],
+            dense: true,
+            total: r ? r.total : undefined, max: 100,
+            interpretation: r
+                ? `Aphasia Quotient: ${r.wnl ? 'within normal limits' : `${r.sev.label.toLowerCase()} aphasia`}`
+                : `Incomplete: ${aqKeys.filter(k => scores[k] !== undefined).length} of ${aqKeys.length} AQ items scored`,
+            areasNote: r && r.type ? `Score profile most consistent with ${r.typeText}.` : '',
+            sections,
+            cutoffs: {
+                head: ['AQ', 'Severity'],
+                rows: [['93.8–100', 'Within normal limits'], ['76–93.7', 'Mild'], ['51–75', 'Moderate'],
+                ['26–50', 'Severe'], ['0–25', 'Very severe']]
+            }
+        }
+    })
+
+    document.getElementById('wab-reset-btn').addEventListener('click', () => {
+        Object.keys(scores).forEach(k => delete scores[k])
+        document.querySelectorAll('.selected').forEach(b => b.classList.remove('selected'))
+        document.querySelectorAll('.wab-num').forEach(input => { input.value = '' })
+        animalTally.reset()
+        resetTimer()
+        report.reset()
+        updateDisplay()
+    })
+
+    updateDisplay()
+}
 
 function initMOCA() {
     const items = document.querySelectorAll('.bims-item[data-question]')
